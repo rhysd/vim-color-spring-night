@@ -80,6 +80,10 @@ exe 'hi Todo guifg='s:fg2'  gui=inverse,bold'
 exe 'hi Type guifg='s:type 
 exe 'hi Underlined   gui=underline'
 
+hi Visual guibg=#A9667A
+hi Search guibg=#B9768A
+exe 'hi Todo guifg='s:var' guibg='s:bg
+
 " Ruby Highlighting
 exe 'hi rubyAttribute guifg='s:builtin
 exe 'hi rubyLocalVariableOrMethod guifg='s:var
