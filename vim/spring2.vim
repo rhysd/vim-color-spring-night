@@ -53,7 +53,17 @@ function! s:hi(name, fg, bg, attr) abort
     let guibg   = bg ? ('guibg=' . a:bg[0]) : ''
     let ctermfg = fg ? ('ctermfg=' . a:fg[1]) : ''
     let ctermbg = bg ? ('ctermbg=' . a:bg[1]) : ''
-    let attr = type(a:attr) != s:NUMBER ? ('gui=' . a:attr . ' cterm=' . a:attr) : ''
+
+    if type(a:attr) != s:NUMBER && !(g:calmnight_kill_italic && a:attr ==# 'italic')
+        let attr =  'gui=' . a:attr
+
+        " XXX: cterm=bold looks reversing the color. It's not intentional.
+        if a:attr ==# 'reverse' || a:attr ==# 'underline'
+            let attr .= ' cterm=' . a:attr
+        endif
+    else
+        let attr = ''
+    endif
 
     exe 'hi' a:name guifg guibg ctermfg ctermbg attr
 endfunction
