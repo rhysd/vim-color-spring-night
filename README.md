@@ -27,8 +27,8 @@ Copy `colors` directory into your `~/.vim` (or `~/vimfiles` on Windows) or use `
 
 Write below in your `.vimrc`.
 
-```
-:colorscheme spring_night
+```vim
+colorscheme spring-night
 ```
 
 

@@ -11,7 +11,7 @@ if version > 580
         syntax reset
     endif
 endif
-let g:colors_name = "spring"
+let g:colors_name = "spring-night"
 
 let g:calmnight_kill_italic = get(g:, 'calmnight_kill_italic', 0)
 
