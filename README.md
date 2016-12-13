@@ -7,13 +7,30 @@ It supports both GUI true colors and CUI 256 bit colors.
 Note that this color scheme is under construction.
 I'll fix many highlights incrementally and create a theme for [vim-airline][].
 
+
 ## On gVim
 
 ![screenshot for GUI](https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui.png?raw=true)
 
+
 ## On Terminal
 
 ![screenshot for CUI](https://github.com/rhysd/ss/blob/master/vim-color-spring-night/cui.png?raw=true)
+
+
+## Installation
+
+Copy `colors` directory into your `~/.vim` (or `~/vimfiles` on Windows) or use `:packadd` (Vim8). Or use your favorite plugin manager.
+
+
+## Usage
+
+Write below in your `.vimrc`.
+
+```
+:colorscheme spring_night
+```
+
 
 ## License
 
