@@ -1,6 +1,6 @@
-" Vim color file
-" spring
-" Created by rhysd &lt;lin90162@yahoo.co.jp&gt; with ThemeCreator (https://github.com/mswift42/themecreator)
+" Vim color scheme
+" spring-night
+" Aughr: rhysd <lin90162@yahoo.co.jp>
 
 set background=dark
 if version > 580
@@ -16,7 +16,7 @@ let g:colors_name = "spring"
 let g:calmnight_kill_italic = get(g:, 'calmnight_kill_italic', 0)
 
 " Define reusable colorvariables.
-let s:bg       = ['#334152', 232]
+let s:bg       = ['#334152', 233]
 let s:fg       = ['#fffeee', 230]
 let s:fg2      = ['#ebeadb', 224]
 let s:fg3      = ['#d6d5c8', 188]
@@ -25,7 +25,7 @@ let s:bg2      = ['#435060', 235]
 let s:bg3      = ['#545f6e', 59]
 let s:bg4      = ['#646f7c', 60]
 let s:bg5      = ['#a9667a', 132]
-let s:bg6      = ['#b9768a', 138]
+let s:bg6      = ['#b9768a', 175]
 let s:keyword  = ['#fda08b', 216]
 let s:builtin  = ['#fd8489', 210]
 let s:const    = ['#a9de9c', 150]
@@ -36,7 +36,6 @@ let s:type     = ['#a8d2eb', 153]
 let s:var      = ['#fedf81', 222]
 let s:warning  = ['#fc5554', 203]
 let s:warning2 = ['#fb8965', 209]
-let s:sign     = ['#8090a0', 233]
 let s:diff_fg  = ['#f8f8f8', 231]
 let s:diff_bg  = ['#46830c', 64]
 let s:diff_tmp = ['#ff0000', 196]
@@ -114,7 +113,7 @@ call s:hi('Underlined',   0,          0,          'underline')
 call s:hi('Visual',       0,          s:bg5,      0)
 call s:hi('Search',       0,          s:bg6,      'underline')
 call s:hi('Todo',         s:var,      s:bg,       'bold')
-call s:hi('SignColumn',   0,          s:sign,     0)
+call s:hi('SignColumn',   0,          s:bg2,     0)
 
 " Filetype specific
 call s:hi('rubyAttribute',             s:builtin, 0, 0)
