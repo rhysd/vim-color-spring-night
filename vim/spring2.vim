@@ -26,13 +26,12 @@ let s:bg3      = ['#545f6e', 59]
 let s:bg4      = ['#646f7c', 60]
 let s:bg5      = ['#a9667a', 132]
 let s:bg6      = ['#b9768a', 138]
-let s:bg7      = ['#fffff8', 233]
 let s:keyword  = ['#fda08b', 216]
 let s:builtin  = ['#fd8489', 210]
-let s:const    = ['#a9de9c', 151]
+let s:const    = ['#a9de9c', 150]
 let s:comment  = ['#8090a0', 60]
 let s:func     = ['#fd8489', 210]
-let s:str      = ['#a9dd9d', 151]
+let s:str      = ['#a9dd9d', 150]
 let s:type     = ['#a8d2eb', 153]
 let s:var      = ['#fedf81', 222]
 let s:warning  = ['#fc5554', 203]
@@ -99,7 +98,7 @@ call s:hi('Function', s:func, 0, 0)
 call s:hi('Identifier', s:type, 0, 'italic')
 call s:hi('Keyword', s:keyword, 0, 'bold')
 call s:hi('Label', s:var, 0, 0)
-call s:hi('NonText', s:bg4, s:bg2, 0)
+call s:hi('NonText', s:bg4, 0, 0)
 call s:hi('Number', s:const, 0, 0)
 call s:hi('Operater', s:keyword, 0, 0)
 call s:hi('PreProc', s:keyword, 0, 0)
@@ -116,7 +115,7 @@ call s:hi('Underlined', 0, 0, 'underline')
 call s:hi('Visual', 0, s:bg5, 0)
 call s:hi('Search', 0, s:bg6, 'underline')
 call s:hi('Todo', s:var, s:bg, 'bold')
-call s:hi('SignColumn', 0, s:comment, 0)
+call s:hi('SignColumn', 0, s:sign, 0)
 
 " Filetype specific
 call s:hi('rubyAttribute', s:builtin, 0, 0)
