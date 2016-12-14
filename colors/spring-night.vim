@@ -1,6 +1,7 @@
-" Vim color scheme
-" spring-night
-" Aughr: rhysd <lin90162@yahoo.co.jp>
+" spring-night : Calm-colored dark color scheme
+"
+" Author: rhysd <lin90162@yahoo.co.jp>
+" License: MIT
 
 set background=dark
 if version > 580
@@ -13,7 +14,7 @@ if version > 580
 endif
 let g:colors_name = "spring-night"
 
-let g:calmnight_kill_italic = get(g:, 'calmnight_kill_italic', 0)
+let g:spring_night_kill_italic = get(g:, 'spring_night_kill_italic', 0)
 
 " Define reusable colorvariables.
 let s:bg       = ['#334152', 233]
@@ -51,7 +52,7 @@ function! s:hi(name, fg, bg, attr) abort
     let ctermfg = fg ? ('ctermfg=' . a:fg[1]) : ''
     let ctermbg = bg ? ('ctermbg=' . a:bg[1]) : ''
 
-    if type(a:attr) != s:NUMBER && !(g:calmnight_kill_italic && a:attr ==# 'italic')
+    if type(a:attr) != s:NUMBER && !(g:spring_night_kill_italic && a:attr ==# 'italic')
         let attr =  'gui=' . a:attr
 
         if a:attr !=# 'italic'

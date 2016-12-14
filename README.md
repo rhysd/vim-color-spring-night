@@ -8,7 +8,7 @@ Note that this color scheme is under construction.
 I'll fix many highlights incrementally and create a theme for [vim-airline][].
 
 
-## On gVim
+## On gVim (or Terminal with True Color Support)
 
 ![screenshot for GUI](https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui.png?raw=true)
 
