@@ -8,14 +8,14 @@ Note that this color scheme is under construction.
 I'll fix many highlights incrementally and create a theme for [vim-airline][].
 
 
-## On gVim (or Terminal with True Color Support)
+## On gVim or Terminal with True Color Support (24bit color)
 
-![screenshot for GUI](https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui.png?raw=true)
+![screenshot for 24bit color](https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui.png?raw=true)
 
 
-## On Terminal
+## On Terminal (8bit color)
 
-![screenshot for CUI](https://github.com/rhysd/ss/blob/master/vim-color-spring-night/cui.png?raw=true)
+![screenshot for 8bit color](https://github.com/rhysd/ss/blob/master/vim-color-spring-night/cui.png?raw=true)
 
 
 ## Installation
