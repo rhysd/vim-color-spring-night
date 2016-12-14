@@ -38,7 +38,6 @@ let s:error    = ['#fc5554', 203]
 let s:warning  = ['#fb8965', 209]
 let s:diff_fg  = ['#f8f8f8', 231]
 let s:diff_bg  = ['#46830c', 64]
-let s:diff_tmp = ['#ff0000', 196]
 
 let s:NUMBER = type(0)
 
@@ -85,7 +84,7 @@ call s:hi('Conditional',  s:keyword,  0,          0)
 call s:hi('Constant',     s:const,    0,          0)
 call s:hi('Define',       s:keyword,  0,          0)
 call s:hi('DiffAdd',      s:diff_fg,  s:diff_bg,  'bold')
-call s:hi('DiffDelete',   s:diff_tmp, 0,          0)
+call s:hi('DiffDelete',   s:fg,       s:error,    0)
 call s:hi('DiffChange',   s:fg,       s:var,      0)
 call s:hi('DiffText',     s:fg,       s:builtin,  'bold')
 call s:hi('ErrorMsg',     s:bg,       s:error,    'bold')
