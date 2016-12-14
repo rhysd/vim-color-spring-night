@@ -116,6 +116,10 @@ call s:hi('FoldColumn',   0,          s:bg2,     0)
 call s:hi('Folded',       s:fg,       s:bg4,     0)
 
 " Filetype specific
-call s:hi('diffAdded',        s:str,      0,       0)
-call s:hi('diffRemoved',      s:error,    0,       0)
-call s:hi('javaScriptBraces', s:keyword,  0,       0)
+call s:hi('diffAdded',             s:str,     0, 0)
+call s:hi('diffRemoved',           s:error,   0, 0)
+call s:hi('javaScriptBraces',      s:keyword, 0, 0)
+call s:hi('GitGutterAdd',          s:str,     0, 0)
+call s:hi('GitGutterChange',       s:var,     0, 0)
+call s:hi('GitGutterChangeDelete', s:var,     0, 0)
+call s:hi('GitGutterDelete',       s:error,   0, 0)
