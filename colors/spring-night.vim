@@ -35,7 +35,7 @@ let s:func     = ['#fd8489', 210]
 let s:str      = ['#a9dd9d', 150]
 let s:type     = ['#a8d2eb', 153]
 let s:var      = ['#fedf81', 222]
-let s:error    = ['#fc5554', 203]
+let s:error    = ['#fd8489', 210]
 let s:warning  = ['#fb8965', 209]
 
 let s:NUMBER = type(0)
@@ -87,6 +87,7 @@ call s:hi('DiffDelete',   s:bg,       s:error,    'bold')
 call s:hi('DiffChange',   s:bg,       s:var,      'bold')
 call s:hi('DiffText',     s:fg,       s:bg,       0)
 call s:hi('ErrorMsg',     s:bg,       s:error,    'bold')
+call s:hi('Error',        s:error,    s:bg,       'bold')
 call s:hi('WarningMsg',   s:bg,       s:warning,  0)
 call s:hi('Float',        s:const,    0,          0)
 call s:hi('Function',     s:func,     0,          0)
@@ -111,21 +112,10 @@ call s:hi('Visual',       0,          s:bg5,      0)
 call s:hi('Search',       0,          s:bg6,      'underline')
 call s:hi('Todo',         s:var,      s:bg,       'bold')
 call s:hi('SignColumn',   0,          s:bg2,     0)
+call s:hi('FoldColumn',   0,          s:bg2,     0)
+call s:hi('Folded',       s:fg,       s:bg4,     0)
 
 " Filetype specific
-call s:hi('rubyAttribute',             s:builtin, 0, 0)
-call s:hi('rubyLocalVariableOrMethod', s:var,     0, 0)
-call s:hi('rubyGlobalVariable',        s:var,     0, 'italic')
-call s:hi('rubyInstanceVariable',      s:var,     0, 0)
-call s:hi('rubyKeyword',               s:keyword, 0, 0)
-call s:hi('rubyKeywordAsMethod',       s:keyword, 0, 'bold')
-call s:hi('rubyClassDeclaration',      s:keyword, 0, 'bold')
-call s:hi('rubyClass',                 s:keyword, 0, 'bold')
-call s:hi('rubyNumber',                s:const,   0, 0)
-call s:hi('pythonBuiltinFunc',         s:builtin, 0, 0)
-call s:hi('goBuiltins',                s:builtin, 0, 0)
-call s:hi('javaScriptBraces',          s:keyword, 0, 'bold')
-call s:hi('htmlLink',                  s:var,     0, 'underline')
-call s:hi('htmlStatement',             s:keyword, 0, 0)
-call s:hi('htmlSpecialTagName',        s:keyword, 0, 0)
-call s:hi('mkdCode',                   s:builtin, 0, 0)
+call s:hi('diffAdded',        s:str,      0,       0)
+call s:hi('diffRemoved',      s:error,    0,       0)
+call s:hi('javaScriptBraces', s:keyword,  0,       0)
