@@ -15,12 +15,13 @@ endif
 let g:colors_name = "spring-night"
 
 let g:spring_night_kill_italic = get(g:, 'spring_night_kill_italic', 0)
+let g:spring_night_white_fg = get(g:, 'spring_night_white_fg', 0)
 
 " Define reusable colorvariables.
 let s:bg         = ['#334152', 233]
 let s:bgemphasis = ['#435060', 235]
 let s:bgstrong   = ['#536273', 238]
-let s:fg         = ['#fffeee', 231]
+let s:fg         = ['#fffeee', g:spring_night_white_fg ? 231 : 230]
 let s:palepink   = ['#ebeadb', 224]
 let s:yellow     = ['#fffaaa', 229]
 let s:white      = ['#ffffff', 231]
