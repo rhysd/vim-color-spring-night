@@ -17,7 +17,6 @@ let g:colors_name = "spring-night"
 let s:gui_running = has('gui_running')
 
 let g:spring_night_kill_italic = get(g:, 'spring_night_kill_italic', 0)
-let g:spring_night_white_fg = get(g:, 'spring_night_white_fg', 0)
 let g:spring_night_high_contrast = get(g:, 'spring_night_high_contrast',
             \ !s:gui_running && has('termguicolors') && &termguicolors ?
             \   ['cui'] : [])
