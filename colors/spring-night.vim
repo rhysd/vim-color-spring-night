@@ -30,11 +30,12 @@ let s:gray       = ['#545f6e', 59]
 let s:light      = ['#646f7c', 60]
 let s:sakura     = ['#a9667a', 132]
 let s:orange     = ['#fda08b', 216]
-let s:lightgreen = ['#a9de9c', 150]
 let s:weakfg     = ['#8090a0', 103]
 let s:green      = ['#a9dd9d', 150]
+let s:darkgreen  = ['#5f8770', 65]
 let s:skyblue    = ['#a8d2eb', 153]
 let s:gold       = ['#fedf81', 222]
+let s:darkgold   = ['#685800', 58]
 let s:red        = ['#fd8489', 210]
 let s:mildred    = ['#ab6560', 167]
 let s:mikan      = ['#fb8965', 209]
@@ -68,7 +69,7 @@ endfunction
 
 "         Name,           Foreground,   Background,   Attribute
 call s:hi('Boolean',      s:red,        0,            0)
-call s:hi('Character',    s:lightgreen, 0,            0)
+call s:hi('Character',    s:green,      0,            0)
 call s:hi('ColorColumn',  0,            s:bgemphasis, 0)
 call s:hi('Comment',      s:weakfg,     0,            0)
 call s:hi('Conditional',  s:orange,     0,            0)
@@ -78,11 +79,7 @@ call s:hi('CursorColumn', 0,            s:bgemphasis, 0)
 call s:hi('CursorLineNr', s:skyblue,    s:bgstrong,   0)
 call s:hi('Cursorline',   0,            s:bgemphasis, 0)
 call s:hi('Define',       s:orange,     0,            0)
-call s:hi('DiffAdd',      s:bg,         s:green,      'bold')
-call s:hi('DiffChange',   s:bg,         s:gold,       'bold')
-call s:hi('DiffDelete',   s:bg,         s:red,        'bold')
-call s:hi('DiffText',     s:fg,         s:bg,         0)
-call s:hi('Directory',    s:lightgreen, 0,            0)
+call s:hi('Directory',    s:green,      0,            0)
 call s:hi('Error',        s:red,        s:bg,         'bold')
 call s:hi('ErrorMsg',     s:fg,         s:mildred,    'bold')
 call s:hi('Float',        s:red,        0,            0)
@@ -126,20 +123,24 @@ call s:hi('WildMenu',     0,            s:gold,       0)
 "
 " Filetype specific
 "
-call s:hi('GitGutterAdd',          s:green,   0,     0)
-call s:hi('GitGutterChange',       s:gold,    0,     0)
-call s:hi('GitGutterChangeDelete', s:gold,    0,     0)
-call s:hi('GitGutterDelete',       s:red,     0,     0)
-call s:hi('diffAdded',             s:green,   0,     0)
-call s:hi('diffRemoved',           s:red,     0,     0)
-call s:hi('gitCommitOverflow',     0,         s:red, 0)
-call s:hi('goBuiltins',            s:red,     0,     0)
 " Markdown is highlighted with HTML highlights in     gVim but link text doesn't
 " have a color. So define it here.
-call s:hi('htmlLinkText',          s:skyblue, 0,     0)
-call s:hi('javaScriptBraces',      s:orange,  0,     0)
-call s:hi('markdownUrl',           s:weakfg,  0,     0)
-call s:hi('pythonBuiltin',         s:red,     0,     0)
-call s:hi('vimCommand',            s:skyblue, 0,     0)
-call s:hi('qfFileName',            s:gold,    0,     0)
+call s:hi('DiffAdd',               0,         s:darkgreen, 'bold')
+call s:hi('DiffChange',            0,         s:darkgold,  'bold')
+call s:hi('DiffDelete',            0,         s:mildred,   'bold')
+call s:hi('DiffText',              0,         s:bg,        0)
+call s:hi('GitGutterAdd',          s:green,   0,           0)
+call s:hi('GitGutterChange',       s:gold,    0,           0)
+call s:hi('GitGutterChangeDelete', s:gold,    0,           0)
+call s:hi('GitGutterDelete',       s:red,     0,           0)
+call s:hi('diffAdded',             s:green,   0,           0)
+call s:hi('diffRemoved',           s:red,     0,           0)
+call s:hi('gitCommitOverflow',     0,         s:red,       0)
+call s:hi('goBuiltins',            s:red,     0,           0)
+call s:hi('htmlLinkText',          s:skyblue, 0,           0)
+call s:hi('javaScriptBraces',      s:orange,  0,           0)
+call s:hi('markdownUrl',           s:weakfg,  0,           0)
+call s:hi('pythonBuiltin',         s:red,     0,           0)
+call s:hi('qfFileName',            s:gold,    0,           0)
+call s:hi('vimCommand',            s:skyblue, 0,           0)
 
