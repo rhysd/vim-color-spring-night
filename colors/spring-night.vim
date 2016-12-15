@@ -14,14 +14,23 @@ if version > 580
 endif
 let g:colors_name = "spring-night"
 
+let s:gui_running = has('gui_running')
+
 let g:spring_night_kill_italic = get(g:, 'spring_night_kill_italic', 0)
 let g:spring_night_white_fg = get(g:, 'spring_night_white_fg', 0)
+let g:spring_night_high_contrast = get(g:, 'spring_night_high_contrast',
+            \ !s:gui_running && has('termguicolors') && &termguicolors ?
+            \   ['cui'] : [])
+
+let s:should_high_contrast =
+    \ (s:gui_running && index(g:spring_night_high_contrast, 'gui') >= 0) ||
+    \ (!s:gui_running && index(g:spring_night_high_contrast, 'cui') >= 0)
 
 " Define reusable colorvariables.
-let s:bg         = ['#334152', 233]
+let s:bg         = [s:should_high_contrast ? '#132132' : '#334152', 233]
 let s:bgemphasis = ['#435060', 235]
 let s:bgstrong   = ['#536273', 238]
-let s:fg         = ['#fffeee', g:spring_night_white_fg ? 231 : 230]
+let s:fg         = ['#fffeee', s:should_high_contrast ? 231 : 230]
 let s:hiddenfg   = ['#607080', 60]
 let s:weakfg     = ['#90a0b0', 103]
 let s:palepink   = ['#ebeadb', 224]
