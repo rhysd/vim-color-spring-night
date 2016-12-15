@@ -5,7 +5,7 @@ Calm Spring Color Scheme for Vim
 It supports both GUI true colors and CUI 256 bit colors.
 
 Note that this color scheme is under construction.
-I'll fix many highlights incrementally and create a theme for [vim-airline][].
+I'll fix many highlights incrementally.
 
 
 ## On gVim or Terminal with True Color Support (24bit color)
@@ -29,6 +29,12 @@ Write below in your `.vimrc`.
 
 ```vim
 colorscheme spring-night
+```
+
+This package provides a theme for [vim-airline][].
+
+```vim
+let g:airline_theme = 'spring_night'
 ```
 
 
