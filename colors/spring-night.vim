@@ -22,6 +22,8 @@ let s:bg         = ['#334152', 233]
 let s:bgemphasis = ['#435060', 235]
 let s:bgstrong   = ['#536273', 238]
 let s:fg         = ['#fffeee', g:spring_night_white_fg ? 231 : 230]
+let s:hiddenfg   = ['#607080', 60]
+let s:weakfg     = ['#90a0b0', 103]
 let s:palepink   = ['#ebeadb', 224]
 let s:yellow     = ['#fffaaa', 229]
 let s:white      = ['#ffffff', 231]
@@ -30,7 +32,6 @@ let s:gray       = ['#545f6e', 59]
 let s:light      = ['#646f7c', 60]
 let s:sakura     = ['#a9667a', 132]
 let s:orange     = ['#fda08b', 216]
-let s:weakfg     = ['#8090a0', 103]
 let s:green      = ['#a9dd9d', 150]
 let s:darkgreen  = ['#5f8770', 65]
 let s:skyblue    = ['#a8d2eb', 153]
@@ -105,7 +106,7 @@ call s:hi('Question',     s:skyblue,    0,            0)
 call s:hi('Search',       s:NONE,       s:sakura,     'underline')
 call s:hi('SignColumn',   0,            s:bgemphasis, 0)
 call s:hi('Special',      s:yellow,     0,            'bold')
-call s:hi('SpecialKey',   s:palepink,   s:bgemphasis, 0)
+call s:hi('SpecialKey',   s:hiddenfg,   0,            0)
 call s:hi('SpellBad',     0,            s:mildred,    0)
 call s:hi('SpellCap',     0,            s:light,      0)
 call s:hi('SpellLocal',   0,            s:bgemphasis, 0)
