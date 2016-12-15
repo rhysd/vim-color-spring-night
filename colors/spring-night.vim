@@ -120,18 +120,19 @@ call s:hi('SpellRare',    0,            s:sakura,     0)
 "
 " Filetype specific
 "
-call s:hi('GitGutterAdd',          s:green,   0, 0)
-call s:hi('GitGutterChange',       s:gold,    0, 0)
-call s:hi('GitGutterChangeDelete', s:gold,    0, 0)
-call s:hi('GitGutterDelete',       s:red,     0, 0)
-call s:hi('diffAdded',             s:green,   0, 0)
-call s:hi('diffRemoved',           s:red,     0, 0)
-call s:hi('goBuiltins',            s:red,     0, 0)
-" Markdown is highlighted with HTML highlights in gVim but link text doesn't
+call s:hi('GitGutterAdd',          s:green,   0,     0)
+call s:hi('GitGutterChange',       s:gold,    0,     0)
+call s:hi('GitGutterChangeDelete', s:gold,    0,     0)
+call s:hi('GitGutterDelete',       s:red,     0,     0)
+call s:hi('diffAdded',             s:green,   0,     0)
+call s:hi('diffRemoved',           s:red,     0,     0)
+call s:hi('gitCommitOverflow',     0,         s:red, 0)
+call s:hi('goBuiltins',            s:red,     0,     0)
+" Markdown is highlighted with HTML highlights in     gVim but link text doesn't
 " have a color. So define it here.
-call s:hi('htmlLinkText',          s:skyblue, 0, 0)
-call s:hi('javaScriptBraces',      s:orange,  0, 0)
-call s:hi('markdownUrl',           s:weakfg,  0, 0)
-call s:hi('pythonBuiltin',         s:red,     0, 0)
-call s:hi('vimCommand',            s:skyblue, 0, 0)
+call s:hi('htmlLinkText',          s:skyblue, 0,     0)
+call s:hi('javaScriptBraces',      s:orange,  0,     0)
+call s:hi('markdownUrl',           s:weakfg,  0,     0)
+call s:hi('pythonBuiltin',         s:red,     0,     0)
+call s:hi('vimCommand',            s:skyblue, 0,     0)
 
