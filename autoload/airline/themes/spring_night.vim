@@ -5,43 +5,49 @@
 " Usage:
 "   let g:airline_theme = 'spring_night'
 
-" Color Definitions {{{
+
+" Color Table {{{
+" Common colors
+let s:FG = ['#334152', 233]
+let s:BG = ['#435060', 235]
+let s:INFO = ['#40403c', 238]
 
 " Normal mode
 "          [ guifg, guibg, ctermfg, ctermbg, opts ]
-let s:N1 = ['#334152', '#fedf81', 233, 222] " mode: gold
-let s:N2 = ['#fedf81', '#40403c', 222, 238] " info: inverted gold
-let s:N3 = ['#fffeee', '#435060', 230, 235] " statusline: normal
-let s:N4 = ['#334152', '#a9de9c', 233, 150] " mode modified: green
+let s:N1 = [ s:FG[0],   '#fedf81', s:FG[1], 222       ] " mode: gold
+let s:N2 = [ '#fedf81', s:INFO[0], 222,     s:INFO[1] ] " info: inverted gold
+let s:N3 = [ '#fffeee', s:BG[0],   230,     s:BG[1]   ] " statusline: normal
+let s:N4 = [ s:FG[0],   '#a9de9c', s:FG[1], 150       ] " mode modified: green
 
 " Insert mode
-let s:I1 = ['#334152', '#a8d2eb', 233, 153] " skyblue
-let s:I2 = ['#a8d2eb', '#40403c', 153, 238]
-let s:I3 = ['#c8f2ff', '#435060', 189, 235] " paleskyblue
+let s:I1 = [ s:FG[0],   '#a8d2eb', s:FG[1], 153       ] " skyblue
+let s:I2 = [ '#a8d2eb', s:INFO[0], 153,     s:INFO[1] ]
+let s:I3 = [ '#c8f2ff', s:BG[0],   189,     s:BG[1]   ] " paleskyblue
 
 " Visual mode
-let s:V1 = ['#334152', '#e996aa', 233, 175] " palesakura
-let s:V2 = ['#e996aa', '#40403c', 175, 238]
-let s:V3 = ['#ebeadb', '#435060', 224, 235]
-let s:V4 = ['#d9869a', 132] " sakura
+let s:V1 = [ s:FG[0],   '#e996aa', s:FG[1], 175       ] " palesakura
+let s:V2 = [ '#e996aa', s:INFO[0], 175,     s:INFO[1] ]
+let s:V3 = [ '#ebeadb', s:BG[0],   224,     s:BG[1]   ]
+let s:V4 = [ '#d9869a', 132 ] " sakura
 
 " Replace mode
-let s:R1 = ['#334152', '#fd8489', 233, 210] " red
-let s:R2 = ['#fd8489', '#40403c', 210, 238]
-let s:R3 = ['#ffbfaf', '#435060', 217, 235] " palered
-let s:R4 = ['#ff6f57', 203] " deeper red
+let s:R1 = [ s:FG[0],   '#fd8489', s:FG[1], 210       ] " red
+let s:R2 = [ '#fd8489', s:INFO[0], 210,     s:INFO[1] ]
+let s:R3 = [ '#ffbfaf', s:BG[0],   217,     s:BG[1]   ] " palered
+let s:R4 = [ '#ff6f57', 203 ] " deeper red
 
 " Paste mode
-let s:PA = ['#fb8965', 209] " mikan
+let s:PA = [ '#fb8965', 209 ] " mikan
 
 " Info modified
-let s:IM = ['#40403c', 238]
+let s:IM = s:INFO
 
 " Inactive mode
-let s:IA = ['#767676', s:N3[1], 243, s:N3[3], '']
+let s:IA = [ '#767676', s:N3[1], 243, s:N3[3], '' ]
 
 " }}}
 
+" Placement {{{
 let g:airline#themes#spring_night#palette = {}
 
 let g:airline#themes#spring_night#palette.accents = {
@@ -83,5 +89,5 @@ let g:airline#themes#spring_night#palette.insert_paste = {
 
 let g:airline#themes#spring_night#palette.inactive = airline#themes#generate_color_map(s:IA, s:IA, s:IA)
 let g:airline#themes#spring_night#palette.inactive_modified = {
-    \ 'airline_c': [ s:N4[1] , ''      , s:N4[3] , ''      , ''     ] }
-
+    \ 'airline_c': [s:N4[1], '', s:N4[3], '', '']}
+" }}}
