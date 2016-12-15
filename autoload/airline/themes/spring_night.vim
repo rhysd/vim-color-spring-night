@@ -10,7 +10,7 @@
 " Common colors
 let s:FG = ['#334152', 233]
 let s:BG = ['#435060', 235]
-let s:INFO = ['#40403c', 238]
+let s:INFO = ['#646f7c', 238]
 
 " Normal mode
 "          [ guifg, guibg, ctermfg, ctermbg, opts ]
