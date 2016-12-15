@@ -18,12 +18,13 @@ let g:spring_night_kill_italic = get(g:, 'spring_night_kill_italic', 0)
 
 " Define reusable colorvariables.
 let s:bg         = ['#334152', 233]
+let s:bgemphasis = ['#435060', 235]
+let s:bgstrong   = ['#536273', 238]
 let s:fg         = ['#fffeee', 230]
 let s:palepink   = ['#ebeadb', 224]
 let s:yellow     = ['#fffaaa', 229]
 let s:white      = ['#ffffff', 231]
-let s:purple     = ['#c2c1b5', 145]
-let s:bgemphasis = ['#435060', 235]
+let s:purple     = ['#e7d5ff', 189]
 let s:gray       = ['#545f6e', 59]
 let s:light      = ['#646f7c', 60]
 let s:sakura     = ['#a9667a', 132]
@@ -68,7 +69,8 @@ call s:hi('Cursor',       s:bg,         s:fg,         0)
 call s:hi('Cursorline',   0,            s:bgemphasis, 0)
 call s:hi('CursorColumn', 0,            s:bgemphasis, 0)
 call s:hi('ColorColumn',  0,            s:bgemphasis, 0)
-call s:hi('LineNr',       s:purple,     s:bgemphasis, 0)
+call s:hi('LineNr',       s:weakfg,     s:bgemphasis, 0)
+call s:hi('CursorLineNr', s:skyblue,    s:bgstrong,   0)
 call s:hi('VertSplit',    s:gray,       0,            0)
 call s:hi('MatchParen',   s:bg,         s:palesakura, 'underline')
 call s:hi('StatusLine',   s:palepink,   s:gray,       'bold')

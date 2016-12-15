@@ -22,7 +22,7 @@ let s:N4 = [ s:FG[0],   '#a9de9c', s:FG[1], 150       ] " mode modified: green
 " Insert mode
 let s:I1 = [ s:FG[0],   '#a8d2eb', s:FG[1], 153       ] " skyblue
 let s:I2 = [ '#a8d2eb', s:INFO[0], 153,     s:INFO[1] ]
-let s:I3 = [ '#c8f2ff', s:BG[0],   189,     s:BG[1]   ] " paleskyblue
+let s:I3 = [ '#e7d5ff', s:BG[0],   189,     s:BG[1]   ] " purple
 
 " Visual mode
 let s:V1 = [ s:FG[0],   '#e996aa', s:FG[1], 175       ] " palesakura
