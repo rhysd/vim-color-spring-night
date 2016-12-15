@@ -20,7 +20,7 @@ let g:spring_night_kill_italic = get(g:, 'spring_night_kill_italic', 0)
 let s:bg         = ['#334152', 233]
 let s:bgemphasis = ['#435060', 235]
 let s:bgstrong   = ['#536273', 238]
-let s:fg         = ['#fffeee', 230]
+let s:fg         = ['#fffeee', 231]
 let s:palepink   = ['#ebeadb', 224]
 let s:yellow     = ['#fffaaa', 229]
 let s:white      = ['#ffffff', 231]
@@ -76,6 +76,7 @@ call s:hi('MatchParen',   s:bg,         s:palesakura, 'underline')
 call s:hi('StatusLine',   s:palepink,   s:gray,       'bold')
 call s:hi('Pmenu',        s:fg,         s:bgemphasis, 0)
 call s:hi('PmenuSel',     0,            s:gray,       0)
+call s:hi('WildMenu',     0,            s:gold,       0)
 call s:hi('Directory',    s:lightgreen, 0,            0)
 call s:hi('Boolean',      s:red,        0,            0)
 call s:hi('Character',    s:lightgreen, 0,            0)
