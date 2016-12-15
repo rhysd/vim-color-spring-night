@@ -21,6 +21,7 @@ let s:bg         = ['#334152', 233]
 let s:fg         = ['#fffeee', 230]
 let s:palepink   = ['#ebeadb', 224]
 let s:yellow     = ['#fffaaa', 229]
+let s:white      = ['#ffffff', 231]
 let s:purple     = ['#c2c1b5', 145]
 let s:bgemphasis = ['#435060', 235]
 let s:gray       = ['#545f6e', 59]
@@ -96,13 +97,13 @@ call s:hi('NonText',      s:light,      0,            0)
 call s:hi('Number',       s:red,        0,            0)
 call s:hi('Operater',     s:orange,     0,            0)
 call s:hi('PreProc',      s:orange,     0,            0)
-call s:hi('Special',      s:yellow,     s:bgemphasis, 0)
+call s:hi('Special',      s:yellow,     0,            'bold')
 call s:hi('SpecialKey',   s:palepink,   s:bgemphasis, 0)
 call s:hi('Statement',    s:skyblue,    0,            0)
 call s:hi('StorageClass', s:skyblue,    0,            'italic')
 call s:hi('String',       s:green,      0,            0)
 call s:hi('Tag',          s:orange,     0,            0)
-call s:hi('Title',        s:fg,         0,            'bold')
+call s:hi('Title',        s:gold,       0,            'bold')
 call s:hi('Todo',         s:bg,         s:red,        'bold')
 call s:hi('Type',         s:skyblue,    0,            0)
 call s:hi('Underlined',   s:skyblue,    0,            'underline')
@@ -116,15 +117,21 @@ call s:hi('SpellCap',     0,            s:light,      0)
 call s:hi('SpellLocal',   0,            s:bgemphasis, 0)
 call s:hi('SpellRare',    0,            s:sakura,     0)
 
+"
 " Filetype specific
-call s:hi('diffAdded',             s:green,   0, 0)
-call s:hi('diffRemoved',           s:red,     0, 0)
-call s:hi('javaScriptBraces',      s:orange,  0, 0)
+"
 call s:hi('GitGutterAdd',          s:green,   0, 0)
 call s:hi('GitGutterChange',       s:gold,    0, 0)
 call s:hi('GitGutterChangeDelete', s:gold,    0, 0)
 call s:hi('GitGutterDelete',       s:red,     0, 0)
+call s:hi('diffAdded',             s:green,   0, 0)
+call s:hi('diffRemoved',           s:red,     0, 0)
 call s:hi('goBuiltins',            s:red,     0, 0)
+" Markdown is highlighted with HTML highlights in gVim but link text doesn't
+" have a color. So define it here.
+call s:hi('htmlLinkText',          s:skyblue, 0, 0)
+call s:hi('javaScriptBraces',      s:orange,  0, 0)
+call s:hi('markdownUrl',           s:weakfg,  0, 0)
 call s:hi('pythonBuiltin',         s:red,     0, 0)
 call s:hi('vimCommand',            s:skyblue, 0, 0)
 
