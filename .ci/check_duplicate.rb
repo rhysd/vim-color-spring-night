@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
-File.read(File.join(File.dirname(__dir__), 'colors', 'spring-night.vim'))
+# XXX: Ruby on Travis CI is v1.9. __dir__ is unavailable.
+File.read(File.join(File.dirname(File.dirname(__FILE__)), 'colors', 'spring-night.vim'))
   .split("\n")
   .select{|s| s.start_with? "call s:hi('" }
   .map{|s| s =~ /^call s:hi\('([^']*)',/; $1}
