@@ -2,6 +2,7 @@
 "
 " Author: rhysd <lin90162@yahoo.co.jp>
 " License: MIT
+"   Copyright (c) 2016 rhysd
 
 set background=dark
 if v:version > 580
@@ -131,7 +132,7 @@ call s:hi('Title',        s:gold,       0,            'bold')
 call s:hi('Todo',         s:bg,         s:red,        'bold')
 call s:hi('Type',         s:gold,       0,            0)
 call s:hi('Underlined',   s:skyblue,    0,            'underline')
-call s:hi('VertSplit',    s:gray,       0,            0)
+call s:hi('VertSplit',    s:bgemphasis, s:bg,         0)
 call s:hi('Visual',       0,            s:sakura,     0)
 call s:hi('WarningMsg',   s:bg,         s:mikan,      0)
 call s:hi('WildMenu',     0,            s:gold,       0)
