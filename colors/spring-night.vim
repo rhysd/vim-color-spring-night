@@ -162,6 +162,8 @@ call s:hi('htmlLinkText',          s:skyblue, 0,           0)
 call s:hi('javaScriptBraces',      s:orange,  0,           0)
 call s:hi('markdownUrl',           s:weakfg,  0,           0)
 call s:hi('pythonBuiltin',         s:red,     0,           0)
+call s:hi('rubyFunction',          s:yellow,  0,           0)
+call s:hi('rubyIdentifier',        s:yellow,  0,           0)
 call s:hi('qfFileName',            s:gold,    0,           0)
 call s:hi('vimCommand',            s:skyblue, 0,           0)
 
