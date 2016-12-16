@@ -8,7 +8,7 @@ if v:version > 580
     " no guarantees for version 5.8 and below, but this makes it stop
     " complaining
     hi clear
-    if exists('syntax_on')
+    if exists('g:syntax_on')
         syntax reset
     endif
 endif
@@ -21,15 +21,15 @@ let g:spring_night_high_contrast = get(g:, 'spring_night_high_contrast',
             \ !s:gui_running && has('termguicolors') && &termguicolors ?
             \   ['cui'] : [])
 
-let s:should_high_contrast =
+let s:high_contrast =
     \ (s:gui_running && index(g:spring_night_high_contrast, 'gui') >= 0) ||
     \ (!s:gui_running && index(g:spring_night_high_contrast, 'cui') >= 0)
 
 " Define reusable colorvariables.
-let s:bg         = [s:should_high_contrast ? '#132132' : '#334152', 233]
+let s:bg         = [s:high_contrast ? '#132132' : '#334152', 233]
 let s:bgemphasis = ['#435060', 235]
 let s:bgstrong   = ['#536273', 238]
-let s:fg         = ['#fffeee', s:should_high_contrast ? 231 : 230]
+let s:fg         = ['#fffeee', s:high_contrast ? 231 : 230]
 let s:hiddenfg   = ['#607080', 60]
 let s:weakfg     = ['#8090a0', 103]
 let s:palepink   = ['#ebeadb', 224]
@@ -50,19 +50,18 @@ let s:mildred    = ['#ab6560', 167]
 let s:mikan      = ['#fb8965', 209]
 let s:NONE       = ['NONE', 'NONE']
 
-let s:NUMBER = type(0)
+let s:NUMBER_TYPE = type(0)
 
-" function! s:hi(name, fg, bg, ...)
 function! s:hi(name, fg, bg, attr) abort
-    let fg = type(a:fg) != s:NUMBER
-    let bg = type(a:bg) != s:NUMBER
+    let has_fg = type(a:fg) != s:NUMBER_TYPE
+    let has_bg = type(a:bg) != s:NUMBER_TYPE
 
-    let guifg   = fg ? ('guifg=' . a:fg[0]) : ''
-    let guibg   = bg ? ('guibg=' . a:bg[0]) : ''
-    let ctermfg = fg ? ('ctermfg=' . a:fg[1]) : ''
-    let ctermbg = bg ? ('ctermbg=' . a:bg[1]) : ''
+    let guifg   = has_fg ? ('guifg=' . a:fg[0]) : ''
+    let guibg   = has_bg ? ('guibg=' . a:bg[0]) : ''
+    let ctermfg = has_fg ? ('ctermfg=' . a:fg[1]) : ''
+    let ctermbg = has_bg ? ('ctermbg=' . a:bg[1]) : ''
 
-    if type(a:attr) != s:NUMBER && !(g:spring_night_kill_italic && a:attr ==# 'italic')
+    if type(a:attr) != s:NUMBER_TYPE && !(g:spring_night_kill_italic && a:attr ==# 'italic')
         let attr =  'gui=' . a:attr
 
         if a:attr !=# 'italic'
@@ -140,7 +139,7 @@ call s:hi('WildMenu',     0,            s:gold,       0)
 "
 " Filetype specific
 "
-" Markdown is highlighted with HTML highlights in     gVim but link text doesn't
+" Markdown is highlighted with HTML highlights in gVim but link text doesn't
 " have a color. So define it here.
 call s:hi('DiffAdd',               0,         s:darkgreen, 'bold')
 call s:hi('DiffChange',            0,         s:darkgold,  'bold')
