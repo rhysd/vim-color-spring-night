@@ -1,0 +1,10 @@
+language: python
+install:
+    - pip install vim-vint
+before_script:
+    - uname -a
+    - vim --version
+script:
+    - vint --warning $(git ls-files | grep -e '\.vim$' | grep -v vital) --color
+    - vim -E -c 'set t_Co=256 rtp+=.' -c 'try | colorscheme spring-night | catch | cquit | endtry' -c 'quit'
+    - ruby .ci/check_duplicate.rb
