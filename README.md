@@ -1,5 +1,6 @@
 Calm Spring Color Scheme for Vim
 ================================
+[![Build Status](https://travis-ci.org/rhysd/vim-color-spring-night.svg?branch=travis)](https://travis-ci.org/rhysd/vim-color-spring-night)
 
 `spring-night` is a low contrast calm color scheme for Vim.
 
