@@ -64,6 +64,8 @@ You can customize some behaviors of this colorscheme.
 If you find some odd highlight, I'll be happy if you report it to [issues](https://github.com/rhysd/vim-color-spring-night/issues/new) with how to reproduce.
 And pull requests are of course welcome :smile:
 
+For colors palette, please see [the source code directly](https://github.com/rhysd/vim-color-spring-night/blob/master/colors/spring-night.vim).
+The variable definitions are color table of this colorscheme.
 
 ## License
 
