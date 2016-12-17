@@ -18,11 +18,11 @@ Calm Spring Color Scheme for Vim
 | ![Vim script on gVim (MacVim)][] | ![Go on gVim (MacVim)][] |
 
 
-## On Translucent Terminal (64bit color)
+## On Translucent Terminal (24bit color)
 
 | Vim script                           | Go                           |
 |--------------------------------------|------------------------------|
-| ![Vim script on Vim (64bit color)][] | ![Go on Vim (64bit color)][] |
+| ![Vim script on Vim (24bit color)][] | ![Go on Vim (24bit color)][] |
 
 
 ## On Translucent Terminal (8bit color)
@@ -95,7 +95,7 @@ Licensed under the MIT license.
 [vim-gitgutter]: https://github.com/airblade/vim-gitgutter
 [Vim script on gVim (MacVim)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui-vim.jpg?raw=true
 [Go on gVim (MacVim)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui-go.jpg?raw=true
-[Vim script on Vim (64bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-64bit-vim.jpg?raw=true
-[Go on Vim (64bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-64bit-go.jpg?raw=true
+[Vim script on Vim (24bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-64bit-vim.jpg?raw=true
+[Go on Vim (24bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-64bit-go.jpg?raw=true
 [Vim script on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-vim.jpg?raw=true
 [Go on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-go.jpg?raw=true
