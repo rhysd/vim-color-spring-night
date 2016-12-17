@@ -2,12 +2,13 @@ Calm Spring Color Scheme for Vim
 ================================
 [![Build Status](https://travis-ci.org/rhysd/vim-color-spring-night.svg?branch=travis)](https://travis-ci.org/rhysd/vim-color-spring-night)
 
-`spring-night` is a low contrast calm color scheme for Vim.
+`spring-night` is a low contrast calm color scheme for Vim. It's colored with deep blue background and shiny yellow foreground and *sakura*:cherry_blossom: text selection.
 
-It supports:
 - Both GUI 24bit colors and CUI 256 bit colors.
-- Aware of running Vim on translucent window
-- Enable to tweak contrast
+- Aware of running Vim on translucent window.
+- Enable to tweak contrast.
+- Optimized for many filetypes.
+- Support [vim-gitgutter][].
 
 
 ## On gVim or Terminal with True Color Support (24bit color)
@@ -74,3 +75,4 @@ Licensed under the MIT license.
     THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [vim-airline]: https://github.com/vim-airline/vim-airline
+[vim-gitgutter]: https://github.com/airblade/vim-gitgutter
