@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>~/.go/src/github.com/rhysd/dot-github/generator.go.html</title>
+<meta name="Generator" content="Vim/8.0">
+<meta name="plugin-version" content="vim7.4_v2">
+<meta name="syntax" content="go">
+<meta name="settings" content="use_css,pre_wrap,no_foldcolumn,expand_tabs,prevent_copy=">
+<meta name="colorscheme" content="spring-night">
+<style type="text/css">
+<!--
+pre { white-space: pre-wrap; font-family: monospace; color: #fffeeb; background-color: #334152; }
+body { font-family: monospace; color: #fffeeb; background-color: #334152; }
+* { font-size: 1em; }
+.String { color: #a9dd9d; }
+.Conditional { color: #a8d2eb; }
+.Keyword { color: #fffaaa; font-weight: bold; }
+.Statement { color: #a8d2eb; font-weight: bold; }
+.goBuiltins { color: #fd8489; }
+.Type { color: #fedf81; font-weight: bold; }
+.Number { color: #fd8489; }
+.Boolean { color: #fd8489; }
+-->
+</style>
+
+<script type='text/javascript'>
+<!--
+
+-->
+</script>
+</head>
+<body>
+<pre id='vimCodeElement'>
+<span class="Statement">package</span> main
+
+<span class="Statement">import</span> (
+    <span class="String">&quot;fmt&quot;</span>
+    <span class="String">&quot;os&quot;</span>
+    <span class="String">&quot;path&quot;</span>
+    <span class="String">&quot;strings&quot;</span>
+    <span class="String">&quot;text/template&quot;</span>
+)
+
+<span class="Keyword">type</span> Generator <span class="Keyword">struct</span> {
+    templateDir  <span class="Type">string</span>
+    dotGithubDir <span class="Type">string</span>
+    repo         *Repository
+    FileCreated  <span class="Type">bool</span>
+}
+
+<span class="Keyword">func</span> NewGenerator(temp <span class="Type">string</span>, repo *Repository) *Generator {
+    dotdir := path.Join(repo.Path, <span class="String">&quot;.github&quot;</span>)
+    <span class="Conditional">if</span> _, err := os.Stat(dotdir); os.IsNotExist(err) {
+        <span class="Conditional">if</span> err := os.MkdirAll(dotdir, os.ModeDir|os.ModePerm); err != <span class="Boolean">nil</span> {
+            <span class="goBuiltins">panic</span>(err)
+        }
+    }
+    <span class="Statement">return</span> &amp;Generator{
+        temp,
+        dotdir,
+        repo,
+        <span class="Boolean">false</span>,
+    }
+}
+
+<span class="Keyword">type</span> Placeholders <span class="Keyword">struct</span> {
+    IsPullRequest  <span class="Type">bool</span>
+    IsIssue        <span class="Type">bool</span>
+    IsContributing <span class="Type">bool</span>
+    RepoUser       <span class="Type">string</span>
+    RepoName       <span class="Type">string</span>
+}
+
+<span class="Keyword">func</span> (g *Generator) applyTemplate(src_path <span class="Type">string</span>, dst_path <span class="Type">string</span>) {
+    dst, err := os.Create(dst_path)
+    <span class="Conditional">if</span> err != <span class="Boolean">nil</span> {
+        <span class="goBuiltins">panic</span>(err)
+    }
+    <span class="Statement">defer</span> dst.Close()
+
+    tmpl, err := template.ParseFiles(src_path)
+    <span class="Conditional">if</span> err != <span class="Boolean">nil</span> {
+        <span class="goBuiltins">panic</span>(err)
+    }
+
+    holders := Placeholders{
+        strings.Contains(dst_path, <span class="String">&quot;PULL_REQUEST_TEMPLATE.md&quot;</span>),
+        strings.Contains(dst_path, <span class="String">&quot;ISSUE_TEMPLATE.md&quot;</span>),
+        strings.Contains(dst_path, <span class="String">&quot;CONTRIBUTING.md&quot;</span>),
+        g.repo.User,
+        g.repo.Name,
+    }
+
+    <span class="Conditional">if</span> err := tmpl.Execute(dst, holders); err != <span class="Boolean">nil</span> {
+        <span class="goBuiltins">panic</span>(err)
+    }
+
+    fmt.Println(<span class="String">&quot;Created &quot;</span> + dst_path)
+}
+
+<span class="Keyword">func</span> (g *Generator) generateFile(name <span class="Type">string</span>, fallback <span class="Type">string</span>) {
+    src := path.Join(g.templateDir, name)
+    <span class="Conditional">if</span> <span class="goBuiltins">len</span>(fallback) != <span class="Number">0</span> {
+        <span class="Conditional">if</span> _, err := os.Stat(src); os.IsNotExist(err) {
+            src = path.Join(g.templateDir, fallback)
+        }
+    }
+    <span class="Conditional">if</span> _, err := os.Stat(src); os.IsNotExist(err) {
+        <span class="Statement">return</span>
+    }
+    dst := path.Join(g.dotGithubDir, name)
+    g.applyTemplate(src, dst)
+    g.FileCreated = <span class="Boolean">true</span>
+}
+
+<span class="Keyword">func</span> (g *Generator) GenerateIssueTemplate() {
+    g.generateFile(<span class="String">&quot;ISSUE_TEMPLATE.md&quot;</span>, <span class="String">&quot;ISSUE_AND_PULL_REQUEST_TEMPLATE.md&quot;</span>)
+}
+
+<span class="Keyword">func</span> (g *Generator) GeneratePRTemplate() {
+    g.generateFile(<span class="String">&quot;PULL_REQUEST_TEMPLATE.md&quot;</span>, <span class="String">&quot;ISSUE_AND_PULL_REQUEST_TEMPLATE.md&quot;</span>)
+}
+
+<span class="Keyword">func</span> (g *Generator) GenerateContributingTemplate() {
+    g.generateFile(<span class="String">&quot;CONTRIBUTING.md&quot;</span>, <span class="String">&quot;&quot;</span>)
+}
+
+<span class="Keyword">func</span> (g *Generator) GenerateAllTemplates() {
+    g.GenerateIssueTemplate()
+    g.GeneratePRTemplate()
+    g.GenerateContributingTemplate()
+}
+</pre>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->

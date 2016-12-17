@@ -1,0 +1,418 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>~/.vim/bundle/clever-f.vim/autoload/clever_f.vim.html</title>
+<meta name="Generator" content="Vim/8.0">
+<meta name="plugin-version" content="vim7.4_v2">
+<meta name="syntax" content="vim">
+<meta name="settings" content="use_css,pre_wrap,no_foldcolumn,expand_tabs,prevent_copy=">
+<meta name="colorscheme" content="spring-night">
+<style type="text/css">
+<!--
+pre { white-space: pre-wrap; font-family: monospace; color: #fffeeb; background-color: #334152; }
+body { font-family: monospace; color: #fffeeb; background-color: #334152; }
+* { font-size: 1em; }
+.Function { color: #f0aa8a; }
+.Identifier { color: #fedf81; }
+.Statement { color: #a8d2eb; font-weight: bold; }
+.PreProc { color: #f0aa8a; }
+.Type { color: #fedf81; font-weight: bold; }
+.String { color: #a9dd9d; }
+.vimCommand { color: #a8d2eb; }
+.Normal { color: #fffeeb; background-color: #334152; padding-bottom: 1px; }
+.Comment { color: #8090a0; }
+.Special { color: #fffaaa; font-weight: bold; }
+.Number { color: #fd8489; }
+-->
+</style>
+
+<script type='text/javascript'>
+<!--
+
+-->
+</script>
+</head>
+<body>
+<pre id='vimCodeElement'>
+<span class="vimCommand">let</span> <span class="Identifier">s:save_cpo</span> <span class="Statement">=</span> &amp;cpo
+<span class="vimCommand">set</span><span class="Normal"> </span><span class="PreProc">cpo</span><span class="PreProc">&amp;vim</span>
+
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_across_no_line</span>          <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_across_no_line'</span>, <span class="Number">0</span><span class="Special">)</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_ignore_case</span>             <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_ignore_case'</span>, <span class="Number">0</span><span class="Special">)</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_use_migemo</span>              <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_use_migemo'</span>, <span class="Number">0</span><span class="Special">)</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_fix_key_direction</span>       <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_fix_key_direction'</span>, <span class="Number">0</span><span class="Special">)</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_show_prompt</span>             <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_show_prompt'</span>, <span class="Number">0</span><span class="Special">)</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_smart_case</span>              <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_smart_case'</span>, <span class="Number">0</span><span class="Special">)</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_chars_match_any_signs</span>   <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_chars_match_any_signs'</span>, <span class="String">''</span><span class="Special">)</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_mark_cursor</span>             <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_mark_cursor'</span>, <span class="Number">1</span><span class="Special">)</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_hide_cursor_on_cmdline</span>  <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_hide_cursor_on_cmdline'</span>, <span class="Number">1</span><span class="Special">)</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_timeout_ms</span>              <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_timeout_ms'</span>, <span class="Number">0</span><span class="Special">)</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_mark_char</span>               <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_mark_char'</span>, <span class="Number">1</span><span class="Special">)</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_repeat_last_char_inputs</span> <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_repeat_last_char_inputs'</span>, [<span class="String">&quot;\&lt;CR&gt;&quot;</span>]<span class="Special">)</span>
+
+<span class="Comment">&quot; below variables must be set before loading this script</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_mark_cursor_color</span>       <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_mark_cursor_color'</span>, <span class="String">'Cursor'</span><span class="Special">)</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_mark_char_color</span>         <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_mark_char_color'</span>, <span class="String">'CleverFDefaultLabel'</span><span class="Special">)</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:clever_f_clean_labels_eagerly</span>    <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>g:, <span class="String">'clever_f_clean_labels_eagerly'</span>, <span class="Number">1</span><span class="Special">)</span>
+
+<span class="Comment">&quot; highlight labels</span>
+<span class="vimCommand">augroup</span> plugin<span class="Statement">-</span>clever<span class="Statement">-</span><span class="vimCommand">f</span><span class="Statement">-</span>highlight
+    <span class="vimCommand">autocmd</span>!
+    <span class="vimCommand">autocmd</span> <span class="Type">ColorScheme</span> * highlight default CleverFDefaultLabel ctermfg<span class="Statement">=</span><span class="vimCommand">red</span> ctermbg<span class="Statement">=</span>NONE cterm<span class="Statement">=</span>bold,underline guifg<span class="Statement">=</span><span class="vimCommand">red</span> guibg<span class="Statement">=</span>NONE <span class="vimCommand">gui</span><span class="Statement">=</span>bold,underline
+<span class="vimCommand">augroup</span> END
+<span class="vimCommand">highlight</span> default CleverFDefaultLabel <span class="Type">ctermfg</span>=red <span class="Type">ctermbg</span>=<span class="PreProc">NONE</span> <span class="Type">cterm</span>=<span class="PreProc">bold</span>,<span class="PreProc">underline</span> <span class="Type">guifg</span>=red <span class="Type">guibg</span>=<span class="PreProc">NONE</span> <span class="Type">gui</span>=<span class="PreProc">bold</span>,<span class="PreProc">underline</span>
+
+<span class="vimCommand">if</span> <span class="Identifier">g:clever_f_mark_cursor</span>
+    <span class="vimCommand">execute</span> <span class="String">'highlight link CleverFCursor'</span> <span class="Identifier">g:clever_f_mark_cursor_color</span>
+<span class="vimCommand">endif</span>
+<span class="vimCommand">if</span> <span class="Identifier">g:clever_f_mark_char</span>
+    <span class="vimCommand">execute</span> <span class="String">'highlight link CleverFChar'</span> <span class="Identifier">g:clever_f_mark_char_color</span>
+<span class="vimCommand">endif</span>
+
+<span class="vimCommand">if</span> <span class="Identifier">g:clever_f_clean_labels_eagerly</span>
+    <span class="vimCommand">augroup</span> plugin<span class="Statement">-</span>clever<span class="Statement">-</span><span class="vimCommand">f</span><span class="Statement">-</span>permanent<span class="Statement">-</span>finalizer
+        <span class="vimCommand">autocmd</span>!
+        <span class="vimCommand">autocmd</span> <span class="Type">WinEnter</span>,<span class="Type">WinLeave</span>,<span class="Type">CmdWinLeave</span> * <span class="vimCommand">if</span> <span class="vimCommand">g</span>:clever_f_mark_char | <span class="Function">call</span> s:remove_highlight<span class="Special">()</span> | <span class="vimCommand">endif</span>
+    <span class="vimCommand">augroup</span> END
+<span class="vimCommand">endif</span>
+<span class="vimCommand">augroup</span> plugin<span class="Statement">-</span>clever<span class="Statement">-</span><span class="vimCommand">f</span><span class="Statement">-</span>finalizer
+    <span class="vimCommand">autocmd</span>!
+<span class="vimCommand">augroup</span> END
+
+<span class="Comment">&quot; initialize the internal state</span>
+<span class="vimCommand">let</span> <span class="Identifier">s:last_mode</span> <span class="Statement">=</span> <span class="String">''</span>
+<span class="vimCommand">let</span> <span class="Identifier">s:previous_map</span> <span class="Statement">=</span> <span class="Special">{}</span>
+<span class="vimCommand">let</span> <span class="Identifier">s:previous_pos</span> <span class="Statement">=</span> <span class="Special">{}</span>
+<span class="vimCommand">let</span> <span class="Identifier">s:first_move</span> <span class="Statement">=</span> <span class="Special">{}</span>
+<span class="vimCommand">let</span> <span class="Identifier">s:migemo_dicts</span> <span class="Statement">=</span> <span class="Special">{}</span>
+<span class="vimCommand">let</span> <span class="Identifier">s:previous_char_num</span> <span class="Statement">=</span> <span class="Special">{}</span>
+<span class="vimCommand">let</span> <span class="Identifier">s:timestamp</span> <span class="Statement">=</span> [<span class="Number">0</span>, <span class="Number">0</span>]
+
+<span class="Comment">&quot; keys are mode string returned from mode()</span>
+<span class="vimCommand">function</span>! clever_f#reset<span class="Special">()</span>
+    <span class="vimCommand">let</span> <span class="Identifier">s:previous_map</span> <span class="Statement">=</span> <span class="Special">{}</span>
+    <span class="vimCommand">let</span> <span class="Identifier">s:previous_pos</span> <span class="Statement">=</span> <span class="Special">{}</span>
+    <span class="vimCommand">let</span> <span class="Identifier">s:first_move</span> <span class="Statement">=</span> <span class="Special">{}</span>
+    <span class="vimCommand">let</span> <span class="Identifier">s:migemo_dicts</span> <span class="Statement">=</span> <span class="Special">{}</span>
+
+<span class="Comment">    &quot;</span> <span class="PreProc">Note:</span>
+<span class="Comment">    &quot; [0, 0] may be invalid because the representation of</span>
+<span class="Comment">    &quot; return value of reltime() is implentation-depended.</span>
+    <span class="vimCommand">let</span> <span class="Identifier">s:timestamp</span> <span class="Statement">=</span> [<span class="Number">0</span>, <span class="Number">0</span>]
+
+    <span class="vimCommand">call</span> <span class="Function">s:remove_highlight</span><span class="Special">()</span>
+
+    <span class="vimCommand">return</span> <span class="String">''</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="Comment">&quot; hidden API for debug</span>
+<span class="vimCommand">function</span>! clever_f#_reset_all<span class="Special">()</span>
+    <span class="vimCommand">call</span> clever_f#<span class="Function">reset</span><span class="Special">()</span>
+    <span class="vimCommand">let</span> <span class="Identifier">s:last_mode</span> <span class="Statement">=</span> <span class="String">''</span>
+    <span class="vimCommand">let</span> <span class="Identifier">s:previous_char_num</span> <span class="Statement">=</span> <span class="Special">{}</span>
+    <span class="vimCommand">autocmd</span>! plugin<span class="Statement">-</span>clever<span class="Statement">-</span><span class="vimCommand">f</span><span class="Statement">-</span>finalizer
+    <span class="vimCommand">unlet</span>! <span class="Identifier">s:moved_forward</span>
+
+    <span class="vimCommand">return</span> <span class="String">''</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! <span class="Special">s:</span>remove_highlight<span class="Special">()</span>
+    <span class="vimCommand">for</span> <span class="vimCommand">h</span> <span class="vimCommand">in</span> <span class="Function">filter</span><span class="Special">(</span><span class="Function">getmatches</span><span class="Special">()</span>, <span class="String">'v:val.group ==# &quot;CleverFChar&quot;'</span><span class="Special">)</span>
+        <span class="vimCommand">call</span> <span class="Function">matchdelete</span><span class="Special">(</span>h<span class="Statement">.</span>id<span class="Special">)</span>
+    <span class="vimCommand">endfor</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! <span class="Special">s:</span>is_timedout<span class="Special">()</span>
+    <span class="vimCommand">let</span> <span class="Identifier">cur</span> <span class="Statement">=</span> <span class="Function">reltime</span><span class="Special">()</span>
+    <span class="vimCommand">let</span> <span class="Identifier">rel</span> <span class="Statement">=</span> <span class="Function">reltimestr</span><span class="Special">(</span><span class="Function">reltime</span><span class="Special">(</span>s:timestamp, cur<span class="Special">))</span>
+    <span class="vimCommand">let</span> <span class="Identifier">elapsed_ms</span> <span class="Statement">=</span> <span class="Function">float2nr</span><span class="Special">(</span><span class="Function">str2float</span><span class="Special">(</span>rel<span class="Special">)</span> * <span class="Number">1000.0</span><span class="Special">)</span>
+    <span class="vimCommand">let</span> <span class="Identifier">s:timestamp</span> <span class="Statement">=</span> cur
+    <span class="vimCommand">return</span> elapsed_ms <span class="Statement">&gt;</span> <span class="Identifier">g:clever_f_timeout_ms</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! <span class="Special">s:</span>mark_char_in_current_line<span class="Special">(</span>map, char<span class="Special">)</span>
+    <span class="vimCommand">let</span> <span class="Identifier">regex</span> <span class="Statement">=</span> <span class="String">'\%'</span> <span class="Statement">.</span> <span class="Function">line</span><span class="Special">(</span><span class="String">'.'</span><span class="Special">)</span> <span class="Statement">.</span> <span class="String">'l'</span> <span class="Statement">.</span> <span class="Function">s:generate_pattern</span><span class="Special">(</span><span class="Identifier">a:map</span>, <span class="Identifier">a:char</span><span class="Special">)</span>
+    <span class="vimCommand">call</span> <span class="Function">matchadd</span><span class="Special">(</span><span class="String">'CleverFChar'</span>, regex , <span class="Number">999</span><span class="Special">)</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="Comment">&quot;</span> <span class="PreProc">Note:</span>
+<span class="Comment">&quot; \x80\xfd` seems to be sent by a terminal.</span>
+<span class="Comment">&quot; Below is a workaround for the sequence.</span>
+<span class="vimCommand">function</span>! <span class="Special">s:</span>getchar<span class="Special">()</span>
+    <span class="vimCommand">while</span> <span class="Number">1</span>
+        <span class="vimCommand">let</span> <span class="Identifier">cn</span> <span class="Statement">=</span> <span class="Function">getchar</span><span class="Special">()</span>
+        <span class="vimCommand">if</span> <span class="Function">type</span><span class="Special">(</span>cn<span class="Special">)</span> <span class="Statement">!=</span> <span class="Function">type</span><span class="Special">(</span><span class="String">''</span><span class="Special">)</span> <span class="Statement">||</span> <span class="vimCommand">cn</span> <span class="Statement">!=#</span> <span class="String">&quot;\x80\xfd`&quot;</span>
+            <span class="vimCommand">return</span> <span class="vimCommand">cn</span>
+        <span class="vimCommand">endif</span>
+    <span class="vimCommand">endwhile</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! clever_f#find_with<span class="Special">(</span>map<span class="Special">)</span>
+    <span class="vimCommand">if</span> <span class="Identifier">a:map</span> <span class="Statement">!~#</span> <span class="String">'^[fFtT]$'</span>
+        <span class="vimCommand">echoerr</span> <span class="String">'Invalid mapping: '</span> <span class="Statement">.</span> <span class="Identifier">a:map</span>
+        <span class="vimCommand">return</span> <span class="String">''</span>
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">let</span> <span class="Identifier">current_pos</span> <span class="Statement">=</span> <span class="Function">getpos</span><span class="Special">(</span><span class="String">'.'</span><span class="Special">)</span>[<span class="Number">1</span> : <span class="Number">2</span>]
+
+    <span class="vimCommand">let</span> <span class="Identifier">mode</span> <span class="Statement">=</span> <span class="Function">mode</span><span class="Special">(</span><span class="Number">1</span><span class="Special">)</span>
+    <span class="vimCommand">if</span> current_pos <span class="Statement">!=</span> <span class="Function">get</span><span class="Special">(</span>s:previous_pos, mode, [<span class="Number">0</span>, <span class="Number">0</span>]<span class="Special">)</span>
+        <span class="vimCommand">let</span> <span class="Identifier">back</span> <span class="Statement">=</span> <span class="Number">0</span>
+        <span class="vimCommand">if</span> <span class="Identifier">g:clever_f_mark_cursor</span>
+            <span class="vimCommand">let</span> <span class="Identifier">cursor_marker</span> <span class="Statement">=</span> <span class="Function">matchadd</span><span class="Special">(</span><span class="String">'CleverFCursor'</span>, <span class="String">'\%#'</span>, <span class="Number">999</span><span class="Special">)</span>
+            <span class="vimCommand">redraw</span>
+        <span class="vimCommand">endif</span>
+        <span class="vimCommand">if</span> <span class="Identifier">g:clever_f_hide_cursor_on_cmdline</span>
+            <span class="vimCommand">let</span> <span class="Identifier">guicursor_save</span> <span class="Statement">=</span> &amp;guicursor
+            <span class="vimCommand">set</span><span class="Normal"> </span><span class="PreProc">guicursor</span><span class="Normal">=n</span><span class="Statement">:</span><span class="Normal">block-NON</span><span class="Normal">E</span>
+            <span class="vimCommand">let</span> <span class="Identifier">t_ve_save</span> <span class="Statement">=</span> &amp;t_ve
+            <span class="vimCommand">set</span><span class="Normal"> </span><span class="PreProc">t_ve</span><span class="Normal">=</span>
+        <span class="vimCommand">endif</span>
+        <span class="vimCommand">try</span>
+            <span class="vimCommand">if</span> <span class="Identifier">g:clever_f_show_prompt</span> | <span class="vimCommand">echon</span> <span class="String">&quot;clever-f: &quot;</span> | <span class="vimCommand">endif</span>
+            <span class="vimCommand">let</span> <span class="Identifier">s:previous_map</span>[<span class="vimCommand">mode</span>] <span class="Statement">=</span> <span class="Identifier">a:map</span>
+            <span class="vimCommand">let</span> <span class="Identifier">s:first_move</span>[<span class="vimCommand">mode</span>] <span class="Statement">=</span> <span class="Number">1</span>
+            <span class="vimCommand">let</span> <span class="Identifier">cn</span> <span class="Statement">=</span> <span class="Function">s:getchar</span><span class="Special">()</span>
+            <span class="vimCommand">if</span> <span class="Function">index</span><span class="Special">(</span><span class="Function">map</span><span class="Special">(</span><span class="Function">deepcopy</span><span class="Special">(</span>g:clever_f_repeat_last_char_inputs<span class="Special">)</span>, <span class="String">'char2nr(v:val)'</span><span class="Special">)</span>, cn<span class="Special">)</span> <span class="Statement">==</span> <span class="Statement">-</span><span class="Number">1</span>
+                <span class="vimCommand">let</span> <span class="Identifier">s:previous_char_num</span>[<span class="vimCommand">mode</span>] <span class="Statement">=</span> <span class="vimCommand">cn</span>
+            <span class="vimCommand">else</span>
+                <span class="vimCommand">if</span> <span class="Function">has_key</span><span class="Special">(</span>s:previous_char_num, s:last_mode<span class="Special">)</span>
+                    <span class="vimCommand">let</span> <span class="Identifier">s:previous_char_num</span>[<span class="vimCommand">mode</span>] <span class="Statement">=</span> <span class="Identifier">s:previous_char_num</span>[<span class="Identifier">s:last_mode</span>]
+                <span class="vimCommand">else</span>
+                    <span class="vimCommand">echohl</span> ErrorMsg | <span class="vimCommand">echo</span> <span class="String">'Previous input not found.'</span> <span class="vimCommand">|</span> <span class="vimCommand">echohl</span> None
+                    <span class="vimCommand">return</span> <span class="String">''</span>
+                <span class="vimCommand">endif</span>
+            <span class="vimCommand">endif</span>
+            <span class="vimCommand">let</span> <span class="Identifier">s:last_mode</span> <span class="Statement">=</span> <span class="vimCommand">mode</span>
+
+            <span class="vimCommand">if</span> <span class="Identifier">g:clever_f_timeout_ms</span> <span class="Statement">&gt;</span> <span class="Number">0</span>
+                <span class="vimCommand">let</span> <span class="Identifier">s:timestamp</span> <span class="Statement">=</span> <span class="Function">reltime</span><span class="Special">()</span>
+            <span class="vimCommand">endif</span>
+
+            <span class="vimCommand">if</span> <span class="Identifier">g:clever_f_mark_char</span>
+                <span class="vimCommand">call</span> <span class="Function">s:remove_highlight</span><span class="Special">()</span>
+                <span class="vimCommand">if</span> <span class="Function">index</span><span class="Special">(</span>[<span class="String">'n'</span>, <span class="String">'v'</span>, <span class="String">'V'</span>, <span class="String">&quot;\&lt;C-v&gt;&quot;</span>, <span class="String">'s'</span>, <span class="String">'ce'</span>], mode<span class="Special">)</span> <span class="Statement">!=</span> <span class="Statement">-</span><span class="Number">1</span>
+                    <span class="vimCommand">augroup</span> plugin<span class="Statement">-</span>clever<span class="Statement">-</span><span class="vimCommand">f</span><span class="Statement">-</span>finalizer
+                        <span class="vimCommand">autocmd</span> <span class="Type">CursorMoved</span> &lt;buffer&gt; <span class="vimCommand">call</span> <span class="Function">s:maybe_finalize</span><span class="Special">()</span>
+                        <span class="vimCommand">autocmd</span> <span class="Type">InsertEnter</span> &lt;buffer&gt; <span class="vimCommand">call</span> <span class="Function">s:finalize</span><span class="Special">()</span>
+                    <span class="vimCommand">augroup</span> END
+                    <span class="vimCommand">call</span> <span class="Function">s:mark_char_in_current_line</span><span class="Special">(</span>s:previous_map[mode], s:previous_char_num[mode]<span class="Special">)</span>
+                <span class="vimCommand">endif</span>
+            <span class="vimCommand">endif</span>
+
+            <span class="vimCommand">if</span> <span class="Identifier">g:clever_f_show_prompt</span> | <span class="vimCommand">redraw</span>! | <span class="vimCommand">endif</span>
+        <span class="vimCommand">finally</span>
+            <span class="vimCommand">if</span> <span class="Identifier">g:clever_f_mark_cursor</span> | <span class="vimCommand">call</span> <span class="Function">matchdelete</span><span class="Special">(</span>cursor_marker<span class="Special">)</span> | <span class="vimCommand">endif</span>
+            <span class="vimCommand">if</span> <span class="Identifier">g:clever_f_hide_cursor_on_cmdline</span>
+                <span class="vimCommand">set</span><span class="Normal"> </span><span class="PreProc">guicursor</span><span class="PreProc">&amp;</span>
+                <span class="vimCommand">let</span> &amp;guicursor <span class="Statement">=</span> guicursor_save
+                <span class="vimCommand">let</span> &amp;t_ve <span class="Statement">=</span> t_ve_save
+            <span class="vimCommand">endif</span>
+        <span class="vimCommand">endtry</span>
+    <span class="vimCommand">else</span>
+<span class="Comment">        &quot; when repeated</span>
+        <span class="vimCommand">let</span> <span class="Identifier">back</span> <span class="Statement">=</span> <span class="Identifier">a:map</span> <span class="Statement">=~#</span> <span class="String">'\u'</span>
+        <span class="vimCommand">if</span> <span class="Identifier">g:clever_f_fix_key_direction</span>
+            <span class="vimCommand">let</span> <span class="Identifier">back</span> <span class="Statement">=</span> <span class="Identifier">s:previous_map</span>[<span class="vimCommand">mode</span>] <span class="Statement">=~#</span> <span class="String">'\u'</span> ? !back : back
+        <span class="vimCommand">endif</span>
+
+<span class="Comment">        &quot; reset and retry if timed out</span>
+        <span class="vimCommand">if</span> <span class="Identifier">g:clever_f_timeout_ms</span> <span class="Statement">&gt;</span> <span class="Number">0</span> <span class="Statement">&amp;&amp;</span> <span class="Function">s:is_timedout</span><span class="Special">()</span>
+            <span class="vimCommand">call</span> clever_f#<span class="Function">reset</span><span class="Special">()</span>
+            <span class="vimCommand">return</span> clever_f#<span class="Function">find_with</span><span class="Special">(</span><span class="Identifier">a:map</span><span class="Special">)</span>
+        <span class="vimCommand">endif</span>
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">return</span> clever_f#<span class="Function">repeat</span><span class="Special">(</span>back<span class="Special">)</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! clever_f#repeat<span class="Special">(</span>back<span class="Special">)</span>
+    <span class="vimCommand">let</span> <span class="Identifier">mode</span> <span class="Statement">=</span> <span class="Function">mode</span><span class="Special">(</span><span class="Number">1</span><span class="Special">)</span>
+    <span class="vimCommand">let</span> <span class="Identifier">pmap</span> <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>s:previous_map, mode, <span class="String">&quot;&quot;</span><span class="Special">)</span>
+    <span class="vimCommand">let</span> <span class="Identifier">prev_char_num</span> <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>s:previous_char_num, mode, <span class="Number">0</span><span class="Special">)</span>
+
+    <span class="vimCommand">if</span> pmap <span class="Statement">==#</span> <span class="String">''</span>
+        <span class="vimCommand">return</span> <span class="String">''</span>
+    <span class="vimCommand">endif</span>
+
+<span class="Comment">    &quot; ignore special characters like \&lt;Left&gt;</span>
+    <span class="vimCommand">if</span> <span class="Function">type</span><span class="Special">(</span>prev_char_num<span class="Special">)</span> <span class="Statement">==</span> <span class="Function">type</span><span class="Special">(</span><span class="String">&quot;&quot;</span><span class="Special">)</span> <span class="Statement">&amp;&amp;</span> <span class="Function">char2nr</span><span class="Special">(</span>prev_char_num<span class="Special">)</span> <span class="Statement">==</span> <span class="Number">128</span>
+        <span class="vimCommand">return</span> <span class="String">''</span>
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">if</span> <span class="Identifier">a:back</span>
+        <span class="vimCommand">let</span> <span class="Identifier">pmap</span> <span class="Statement">=</span> <span class="Function">s:swapcase</span><span class="Special">(</span>pmap<span class="Special">)</span>
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">if</span> <span class="vimCommand">mode</span> <span class="Statement">==?</span> <span class="String">'v'</span> <span class="Statement">||</span> <span class="vimCommand">mode</span> <span class="Statement">==#</span> <span class="String">&quot;\&lt;C-v&gt;&quot;</span>
+        <span class="vimCommand">let</span> <span class="Identifier">cmd</span> <span class="Statement">=</span> <span class="Function">s:move_cmd_for_visualmode</span><span class="Special">(</span>pmap, prev_char_num<span class="Special">)</span>
+    <span class="vimCommand">else</span>
+        <span class="vimCommand">let</span> <span class="Identifier">inclusive</span> <span class="Statement">=</span> <span class="vimCommand">mode</span> <span class="Statement">==#</span> <span class="String">'no'</span> <span class="Statement">&amp;&amp;</span> pmap <span class="Statement">=~#</span> <span class="String">'\l'</span>
+        <span class="vimCommand">let</span> <span class="Identifier">cmd</span> <span class="Statement">=</span> <span class="Function">printf</span><span class="Special">(</span><span class="String">&quot;%s:\&lt;C-u&gt;call clever_f#find(%s, %s)\&lt;CR&gt;&quot;</span>,
+<span class="Special">                    \</span>    inclusive ? <span class="String">'v'</span> : <span class="String">''</span>,
+<span class="Special">                    \</span>    <span class="Function">string</span><span class="Special">(</span>pmap<span class="Special">)</span>, prev_char_num<span class="Special">)</span>
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">return</span> cmd
+<span class="vimCommand">endfunction</span>
+
+<span class="Comment">&quot; absolutely moved forward?</span>
+<span class="vimCommand">function</span>! <span class="Special">s:</span>moves_forward<span class="Special">(</span>p, n<span class="Special">)</span>
+    <span class="vimCommand">if</span> <span class="Identifier">a:p</span>[<span class="Number">0</span>] <span class="Statement">!=</span> <span class="Identifier">a:n</span>[<span class="Number">0</span>]
+        <span class="vimCommand">return</span> <span class="Identifier">a:p</span>[<span class="Number">0</span>] <span class="Statement">&lt;</span> <span class="Identifier">a:n</span>[<span class="Number">0</span>]
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">if</span> <span class="Identifier">a:p</span>[<span class="Number">1</span>] <span class="Statement">!=</span> <span class="Identifier">a:n</span>[<span class="Number">1</span>]
+        <span class="vimCommand">return</span> <span class="Identifier">a:p</span>[<span class="Number">1</span>] <span class="Statement">&lt;</span> <span class="Identifier">a:n</span>[<span class="Number">1</span>]
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">return</span> <span class="Number">0</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! clever_f#find<span class="Special">(</span>map, char_num<span class="Special">)</span>
+    <span class="vimCommand">let</span> <span class="Identifier">before_pos</span> <span class="Statement">=</span> <span class="Function">getpos</span><span class="Special">(</span><span class="String">'.'</span><span class="Special">)</span>[<span class="Number">1</span> : <span class="Number">2</span>]
+    <span class="vimCommand">let</span> <span class="Identifier">next_pos</span> <span class="Statement">=</span> <span class="Function">s:next_pos</span><span class="Special">(</span><span class="Identifier">a:map</span>, <span class="Identifier">a:char_num</span>, v:count1<span class="Special">)</span>
+    <span class="vimCommand">if</span> next_pos <span class="Statement">==</span> [<span class="Number">0</span>, <span class="Number">0</span>]
+        <span class="vimCommand">return</span>
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">let</span> <span class="Identifier">moves_forward</span> <span class="Statement">=</span> <span class="Function">s:moves_forward</span><span class="Special">(</span>before_pos, next_pos<span class="Special">)</span>
+
+<span class="Comment">    &quot; update highlight when cursor moves across lines</span>
+    <span class="vimCommand">let</span> <span class="Identifier">mode</span> <span class="Statement">=</span> <span class="Function">mode</span><span class="Special">(</span><span class="Number">1</span><span class="Special">)</span>
+    <span class="vimCommand">if</span> <span class="Identifier">g:clever_f_mark_char</span>
+        <span class="vimCommand">if</span> next_pos[<span class="Number">0</span>] <span class="Statement">!=</span> before_pos[<span class="Number">0</span>]
+<span class="Special">            \</span> <span class="Statement">||</span> <span class="Special">(</span><span class="Identifier">a:map</span> <span class="Statement">==?</span> <span class="String">'t'</span> <span class="Statement">&amp;&amp;</span> !s:first_move[mode] <span class="Statement">&amp;&amp;</span> clever_f#helper#<span class="Function">xor</span><span class="Special">(</span>s:moved_forward, moves_forward<span class="Special">))</span>
+            <span class="vimCommand">call</span> <span class="Function">s:remove_highlight</span><span class="Special">()</span>
+            <span class="vimCommand">call</span> <span class="Function">s:mark_char_in_current_line</span><span class="Special">(</span><span class="Identifier">a:map</span>, <span class="Identifier">a:char_num</span><span class="Special">)</span>
+        <span class="vimCommand">endif</span>
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">let</span> <span class="Identifier">s:moved_forward</span> <span class="Statement">=</span> moves_forward
+    <span class="vimCommand">let</span> <span class="Identifier">s:previous_pos</span>[<span class="vimCommand">mode</span>] <span class="Statement">=</span> next_pos
+    <span class="vimCommand">let</span> <span class="Identifier">s:first_move</span>[<span class="vimCommand">mode</span>] <span class="Statement">=</span> <span class="Number">0</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! <span class="Special">s:</span>finalize<span class="Special">()</span>
+    <span class="vimCommand">autocmd</span>! plugin<span class="Statement">-</span>clever<span class="Statement">-</span><span class="vimCommand">f</span><span class="Statement">-</span>finalizer
+    <span class="vimCommand">call</span> <span class="Function">s:remove_highlight</span><span class="Special">()</span>
+    <span class="vimCommand">let</span> <span class="Identifier">s:moved_forward</span> <span class="Statement">=</span> <span class="Number">0</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! <span class="Special">s:</span>maybe_finalize<span class="Special">()</span>
+    <span class="vimCommand">let</span> <span class="Identifier">pp</span> <span class="Statement">=</span> <span class="Function">get</span><span class="Special">(</span>s:previous_pos, s:last_mode, [<span class="Number">0</span>, <span class="Number">0</span>]<span class="Special">)</span>
+    <span class="vimCommand">if</span> <span class="Function">getpos</span><span class="Special">(</span><span class="String">'.'</span><span class="Special">)</span>[<span class="Number">1</span> : <span class="Number">2</span>] <span class="Statement">!=</span> <span class="vimCommand">pp</span>
+        <span class="vimCommand">call</span> <span class="Function">s:finalize</span><span class="Special">()</span>
+    <span class="vimCommand">endif</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! <span class="Special">s:</span>move_cmd_for_visualmode<span class="Special">(</span>map, char_num<span class="Special">)</span>
+    <span class="vimCommand">let</span> <span class="Identifier">next_pos</span> <span class="Statement">=</span> <span class="Function">s:next_pos</span><span class="Special">(</span><span class="Identifier">a:map</span>, <span class="Identifier">a:char_num</span>, v:count1<span class="Special">)</span>
+    <span class="vimCommand">if</span> next_pos <span class="Statement">==</span> [<span class="Number">0</span>, <span class="Number">0</span>]
+        <span class="vimCommand">return</span> <span class="String">''</span>
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">let</span> <span class="Identifier">m</span> <span class="Statement">=</span> <span class="Function">mode</span><span class="Special">(</span><span class="Number">1</span><span class="Special">)</span>
+    <span class="vimCommand">call</span> <span class="Function">setpos</span><span class="Special">(</span><span class="String">&quot;''&quot;</span>, [<span class="Number">0</span>] <span class="Statement">+</span> next_pos <span class="Statement">+</span> [<span class="Number">0</span>]<span class="Special">)</span>
+    <span class="vimCommand">let</span> <span class="Identifier">s:previous_pos</span>[<span class="vimCommand">m</span>] <span class="Statement">=</span> next_pos
+    <span class="vimCommand">let</span> <span class="Identifier">s:first_move</span>[<span class="vimCommand">m</span>] <span class="Statement">=</span> <span class="Number">0</span>
+
+    <span class="vimCommand">return</span> <span class="String">&quot;``&quot;</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! <span class="Special">s:</span>search<span class="Special">(</span>pat, flag<span class="Special">)</span>
+    <span class="vimCommand">if</span> <span class="Identifier">g:clever_f_across_no_line</span>
+        <span class="vimCommand">return</span> <span class="Function">search</span><span class="Special">(</span><span class="Identifier">a:pat</span>, <span class="Identifier">a:flag</span>, <span class="Function">line</span><span class="Special">(</span><span class="String">'.'</span><span class="Special">))</span>
+    <span class="vimCommand">else</span>
+        <span class="vimCommand">return</span> <span class="Function">search</span><span class="Special">(</span><span class="Identifier">a:pat</span>, <span class="Identifier">a:flag</span><span class="Special">)</span>
+    <span class="vimCommand">endif</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! <span class="Special">s:</span>should_use_migemo<span class="Special">(</span>char<span class="Special">)</span>
+    <span class="vimCommand">if</span> !<span class="Identifier">g:clever_f_use_migemo</span> <span class="Statement">||</span> <span class="Identifier">a:char</span> <span class="Statement">!~#</span> <span class="String">'^\a$'</span>
+        <span class="vimCommand">return</span> <span class="Number">0</span>
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">if</span> !<span class="Identifier">g:clever_f_across_no_line</span>
+        <span class="vimCommand">return</span> <span class="Number">1</span>
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">return</span> clever_f#helper#<span class="Function">include_multibyte_char</span><span class="Special">(</span><span class="Function">getline</span><span class="Special">(</span><span class="String">'.'</span><span class="Special">))</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! <span class="Special">s:</span>load_migemo_dict<span class="Special">()</span>
+    <span class="vimCommand">let</span> <span class="Identifier">enc</span> <span class="Statement">=</span> &amp;<span class="Identifier">l:encoding</span>
+    <span class="vimCommand">if</span> enc <span class="Statement">==#</span> <span class="String">'utf-8'</span>
+        <span class="vimCommand">return</span> clever_f#migemo#utf8#<span class="Function">load_dict</span><span class="Special">()</span>
+    <span class="vimCommand">elseif</span> enc <span class="Statement">==#</span> <span class="String">'cp932'</span>
+        <span class="vimCommand">return</span> clever_f#migemo#cp932#<span class="Function">load_dict</span><span class="Special">()</span>
+    <span class="vimCommand">elseif</span> enc <span class="Statement">==#</span> <span class="String">'euc-jp'</span>
+        <span class="vimCommand">return</span> clever_f#migemo#eucjp#<span class="Function">load_dict</span><span class="Special">()</span>
+    <span class="vimCommand">else</span>
+        <span class="vimCommand">let</span> <span class="Identifier">g:clever_f_use_migemo</span> <span class="Statement">=</span> <span class="Number">0</span>
+        <span class="vimCommand">throw</span> <span class="String">&quot;Error: &quot;</span> <span class="Statement">.</span> enc <span class="Statement">.</span> <span class="String">&quot; is not supported. Migemo is disabled.&quot;</span>
+    <span class="vimCommand">endif</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! <span class="Special">s:</span>generate_pattern<span class="Special">(</span>map, char_num<span class="Special">)</span>
+    <span class="vimCommand">let</span> <span class="Identifier">char</span> <span class="Statement">=</span> <span class="Function">type</span><span class="Special">(</span><span class="Identifier">a:char_num</span><span class="Special">)</span> <span class="Statement">==</span> <span class="Function">type</span><span class="Special">(</span><span class="Number">0</span><span class="Special">)</span> ? <span class="Function">nr2char</span><span class="Special">(</span><span class="Identifier">a:char_num</span><span class="Special">)</span> : <span class="Identifier">a:char_num</span>
+    <span class="vimCommand">let</span> <span class="Identifier">regex</span> <span class="Statement">=</span> char
+
+    <span class="vimCommand">let</span> <span class="Identifier">should_use_migemo</span> <span class="Statement">=</span> <span class="Function">s:should_use_migemo</span><span class="Special">(</span>char<span class="Special">)</span>
+    <span class="vimCommand">if</span> should_use_migemo
+        <span class="vimCommand">if</span> !<span class="Function">has_key</span><span class="Special">(</span>s:migemo_dicts, &amp;l:encoding<span class="Special">)</span>
+            <span class="vimCommand">let</span> <span class="Identifier">s:migemo_dicts</span>[&amp;<span class="Identifier">l:encoding</span>] <span class="Statement">=</span> <span class="Function">s:load_migemo_dict</span><span class="Special">()</span>
+        <span class="vimCommand">endif</span>
+        <span class="vimCommand">let</span> <span class="Identifier">regex</span> <span class="Statement">=</span> <span class="Identifier">s:migemo_dicts</span>[&amp;<span class="Identifier">l:encoding</span>][regex] <span class="Statement">.</span> <span class="String">'\&amp;\%('</span> <span class="Statement">.</span> char <span class="Statement">.</span> <span class="String">'\|\A\)'</span>
+    <span class="vimCommand">elseif</span> <span class="Function">stridx</span><span class="Special">(</span>g:clever_f_chars_match_any_signs, char<span class="Special">)</span> <span class="Statement">!=</span> <span class="Statement">-</span><span class="Number">1</span>
+        <span class="vimCommand">let</span> <span class="Identifier">regex</span> <span class="Statement">=</span> <span class="String">'\[!&quot;#$%&amp;''()=~|\-^\\@`[\]{};:+*&lt;&gt;,.?_/]'</span>
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">if</span> <span class="Identifier">a:map</span> <span class="Statement">==#</span> <span class="String">'t'</span>
+        <span class="vimCommand">let</span> <span class="Identifier">regex</span> <span class="Statement">=</span> <span class="String">'\_.\ze'</span> <span class="Statement">.</span> regex
+    <span class="vimCommand">elseif</span> <span class="Identifier">a:map</span> <span class="Statement">==#</span> <span class="String">'T'</span>
+        <span class="vimCommand">let</span> <span class="Identifier">regex</span> <span class="Statement">=</span> regex <span class="Statement">.</span> <span class="String">'\@&lt;=\_.'</span>
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">if</span> !should_use_migemo
+        <span class="vimCommand">let</span> <span class="Identifier">regex</span> <span class="Statement">=</span> <span class="String">'\V'</span><span class="Statement">.</span>regex
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">return</span> <span class="Special">((</span>g:clever_f_smart_case <span class="Statement">&amp;&amp;</span> char <span class="Statement">=~#</span> <span class="String">'\l'</span><span class="Special">)</span> <span class="Statement">||</span> g:clever_f_ignore_case ? <span class="String">'\c'</span> : <span class="String">'\C'</span><span class="Special">)</span> <span class="Statement">.</span> regex
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! <span class="Special">s:</span>next_pos<span class="Special">(</span>map, char_num, count<span class="Special">)</span>
+    <span class="vimCommand">let</span> <span class="Identifier">mode</span> <span class="Statement">=</span> <span class="Function">mode</span><span class="Special">(</span><span class="Number">1</span><span class="Special">)</span>
+    <span class="vimCommand">let</span> <span class="Identifier">search_flag</span> <span class="Statement">=</span> <span class="Identifier">a:map</span> <span class="Statement">=~#</span> <span class="String">'\l'</span> ? <span class="String">'W'</span> : <span class="String">'bW'</span>
+    <span class="vimCommand">let</span> <span class="Identifier">cnt</span> <span class="Statement">=</span> <span class="Identifier">a:count</span>
+    <span class="vimCommand">let</span> <span class="Identifier">pattern</span> <span class="Statement">=</span> <span class="Function">s:generate_pattern</span><span class="Special">(</span><span class="Identifier">a:map</span>, <span class="Identifier">a:char_num</span><span class="Special">)</span>
+
+    <span class="vimCommand">if</span> <span class="Identifier">a:map</span> <span class="Statement">==?</span> <span class="String">'t'</span> <span class="Statement">&amp;&amp;</span> <span class="Function">get</span><span class="Special">(</span>s:first_move, mode, <span class="Number">1</span><span class="Special">)</span>
+
+        <span class="vimCommand">if</span> !<span class="Function">s:search</span><span class="Special">(</span>pattern, search_flag <span class="Statement">.</span> <span class="String">'c'</span><span class="Special">)</span>
+            <span class="vimCommand">return</span> [<span class="Number">0</span>, <span class="Number">0</span>]
+        <span class="vimCommand">endif</span>
+        <span class="vimCommand">let</span> <span class="Identifier">cnt</span> <span class="Statement">-=</span> <span class="Number">1</span>
+    <span class="vimCommand">endif</span>
+
+    <span class="vimCommand">while</span> <span class="Number">0</span> <span class="Statement">&lt;</span> cnt
+        <span class="vimCommand">if</span> !<span class="Function">s:search</span><span class="Special">(</span>pattern, search_flag<span class="Special">)</span>
+            <span class="vimCommand">return</span> [<span class="Number">0</span>, <span class="Number">0</span>]
+        <span class="vimCommand">endif</span>
+        <span class="vimCommand">let</span> <span class="Identifier">cnt</span> <span class="Statement">-=</span> <span class="Number">1</span>
+    <span class="vimCommand">endwhile</span>
+
+    <span class="vimCommand">return</span> <span class="Function">getpos</span><span class="Special">(</span><span class="String">'.'</span><span class="Special">)</span>[<span class="Number">1</span> : <span class="Number">2</span>]
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">function</span>! <span class="Special">s:</span>swapcase<span class="Special">(</span>char<span class="Special">)</span>
+    <span class="vimCommand">return</span> <span class="Identifier">a:char</span> <span class="Statement">=~#</span> <span class="String">'\u'</span> ? <span class="Function">tolower</span><span class="Special">(</span><span class="Identifier">a:char</span><span class="Special">)</span> : <span class="Function">toupper</span><span class="Special">(</span><span class="Identifier">a:char</span><span class="Special">)</span>
+<span class="vimCommand">endfunction</span>
+
+<span class="vimCommand">let</span> &amp;cpo <span class="Statement">=</span> <span class="Identifier">s:save_cpo</span>
+<span class="vimCommand">unlet</span> <span class="Identifier">s:save_cpo</span>
+</pre>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->

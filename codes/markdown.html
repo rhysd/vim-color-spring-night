@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>~/.vim/bundle/vim-color-spring-night/README.md.html</title>
+<meta name="Generator" content="Vim/8.0">
+<meta name="plugin-version" content="vim7.4_v2">
+<meta name="syntax" content="markdown">
+<meta name="settings" content="use_css,pre_wrap,no_foldcolumn,expand_tabs,prevent_copy=">
+<meta name="colorscheme" content="spring-night">
+<style type="text/css">
+<!--
+pre { white-space: pre-wrap; font-family: monospace; color: #fffeeb; background-color: #334152; }
+body { font-family: monospace; color: #fffeeb; background-color: #334152; }
+* { font-size: 1em; }
+.Title { color: #fedf81; font-weight: bold; }
+.htmlItalic { font-style: italic; }
+.Identifier { color: #fedf81; }
+.Statement { color: #a8d2eb; font-weight: bold; }
+.PreProc { color: #f0aa8a; }
+.Type { color: #fedf81; font-weight: bold; }
+.Underlined { color: #a8d2eb; text-decoration: underline; }
+.markdownUrl { color: #8090a0; }
+.String { color: #a9dd9d; }
+.vimCommand { color: #a8d2eb; }
+.htmlBold { background-color: #435060; padding-bottom: 1px; }
+.CursorLine { background-color: #435060; padding-bottom: 1px; }
+.htmlTagName { color: #f0aa8a; }
+.Special { color: #fffaaa; font-weight: bold; }
+-->
+</style>
+
+<script type='text/javascript'>
+<!--
+
+-->
+</script>
+</head>
+<body>
+<pre id='vimCodeElement'>
+<code>
+<span class="Title">Calm Spring Color Scheme for Vim </span>[![<span class="Underlined">Build Status</span>][]](<span class="markdownUrl">https://travis-ci.org/rhysd/vim-color-spring-night</span>)
+<span class="PreProc">================================</span>
+
+<span class="CursorLine">`spring-night`</span> is a low contrast calm color scheme for Vim. It's colored with deep blue background, shiny yellow foreground and <span class="htmlItalic">*</span><span class="htmlItalic">sakura</span><span class="htmlItalic">*</span><span class="PreProc">:cherry_blossom:</span> text selection.
+
+<span class="htmlTagName">-</span> Both GUI 24bit colors and CUI 256 bit colors.
+<span class="htmlTagName">-</span> Aware of running Vim on translucent window.
+<span class="htmlTagName">-</span> Enable to tweak contrast.
+<span class="htmlTagName">-</span> Optimized for many filetypes.
+<span class="htmlTagName">-</span> Support [<span class="Underlined">vim-gitgutter</span>][].
+
+
+<span class="Special">##</span><span class="Title"> On gVim (MacVim)</span>
+
+<span class="Special">|</span> Vim script                       <span class="Special">|</span> Go                       <span class="Special">|</span>
+<span class="Special">|</span><span class="Type">----------------------------------</span><span class="Special">|</span><span class="Type">--------------------------</span><span class="Special">|</span>
+<span class="Special">|</span> ![<span class="Underlined">Vim script on gVim (MacVim)</span>][] <span class="Special">|</span> ![<span class="Underlined">Go on gVim (MacVim)</span>][] <span class="Special">|</span>
+
+
+<span class="Special">##</span><span class="Title"> On Translucent Terminal (24bit color)</span>
+
+<span class="Special">|</span> Vim script                           <span class="Special">|</span> Go                           <span class="Special">|</span>
+<span class="Special">|</span><span class="Type">--------------------------------------</span><span class="Special">|</span><span class="Type">------------------------------</span><span class="Special">|</span>
+<span class="Special">|</span> ![<span class="Underlined">Vim script on Vim (24bit color)</span>][] <span class="Special">|</span> ![<span class="Underlined">Go on Vim (24bit color)</span>][] <span class="Special">|</span>
+
+
+<span class="Special">##</span><span class="Title"> On Translucent Terminal (8bit color)</span>
+
+<span class="Special">|</span> Vim script                          <span class="Special">|</span> Go                          <span class="Special">|</span>
+<span class="Special">|</span><span class="Type">-------------------------------------</span><span class="Special">|</span><span class="Type">-----------------------------</span><span class="Special">|</span>
+<span class="Special">|</span> ![<span class="Underlined">Vim script on Vim (8bit color)</span>][] <span class="Special">|</span> ![<span class="Underlined">Go on Vim (8bit color)</span>][] <span class="Special">|</span>
+
+
+<span class="Special">##</span><span class="Title"> Installation</span>
+
+Copy <span class="CursorLine">`colors`</span> directory into your <span class="CursorLine">`~/.vim`</span> (or <span class="CursorLine">`~/vimfiles`</span> on Windows) or use <span class="CursorLine">`:packadd`</span> (Vim8). Or use your favorite plugin manager.
+
+
+<span class="Special">##</span><span class="Title"> Usage</span>
+
+Write below in your <span class="CursorLine">`.vimrc`</span>.
+
+<span class="Special">```vim</span>
+<span class="vimCommand">colorscheme</span> <span class="Identifier">spring</span><span class="Statement">-</span><span class="Identifier">night</span>
+<span class="Special">```</span>
+
+This package provides a theme for [<span class="Underlined">vim-airline</span>][].
+
+<span class="Special">```vim</span>
+<span class="vimCommand">let</span> <span class="Identifier">g:airline_theme</span> <span class="Statement">=</span> <span class="String">'spring_night'</span>
+<span class="Special">```</span>
+
+
+<span class="Special">##</span><span class="Title"> Customize</span>
+
+You can customize some behaviors of this colorscheme.
+
+<span class="htmlTagName">-</span> <span class="htmlBold">**</span><span class="htmlBold">`g:spring</span><span class="htmlItalic">_</span><span class="htmlItalic">night</span><span class="htmlItalic">_</span><span class="htmlBold">kill</span><span class="htmlItalic">_</span><span class="htmlItalic">itralic`</span><span class="htmlBold">**</span>: If <span class="CursorLine">`1`</span>, this colorscheme does not use italic attribute. Default value is <span class="CursorLine">`0`</span>.
+<span class="htmlTagName">-</span> <span class="htmlBold">**</span><span class="htmlBold">`g:spring</span><span class="htmlItalic">_</span><span class="htmlItalic">night</span><span class="htmlItalic">_</span><span class="htmlBold">high</span><span class="htmlItalic">_</span><span class="htmlItalic">contrast`</span><span class="htmlBold">**</span>: List of string. If it includes <span class="CursorLine">`'cui'`</span>, it uses high contrast version on Vim in terminal. If it includes <span class="CursorLine">`'gui'`</span>, it uses high contrast version on gVim. Default value depends on <span class="CursorLine">`termguicolors`</span> option.
+
+
+<span class="Special">##</span><span class="Title"> Contribution</span>
+
+If you find some odd highlight, I'll be happy if you report it to [<span class="Underlined">issues</span>](<span class="markdownUrl">https://github.com/rhysd/vim-color-spring-night/issues/new</span>) with how to reproduce.
+And pull requests are of course welcome <span class="PreProc">:smile:</span>
+
+For colors palette, please see [<span class="Underlined">the source code directly</span>](<span class="markdownUrl">https://github.com/rhysd/vim-color-spring-night/blob/master/colors/spring-night.vim</span>).
+The variable definitions are color table of this colorscheme.
+
+<span class="Special">##</span><span class="Title"> License</span>
+
+Licensed under the MIT license.
+
+    MIT License
+
+    Copyright (c) 2016 rhysd
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the &quot;Software&quot;), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+    of the Software, and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+    INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+    PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+    LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+    THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+[<span class="Type">vim-airline</span>]: <span class="markdownUrl"><a href="https://github.com/vim-airline/vim-airline">https://github.com/vim-airline/vim-airline</a></span>
+[<span class="Type">vim-gitgutter</span>]: <span class="markdownUrl"><a href="https://github.com/airblade/vim-gitgutter">https://github.com/airblade/vim-gitgutter</a></span>
+[<span class="Type">Vim script on gVim (MacVim)</span>]: <span class="markdownUrl"><a href="https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui-vim.jpg?raw=true">https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui-vim.jpg?raw=true</a></span>
+[<span class="Type">Go on gVim (MacVim)</span>]: <span class="markdownUrl">https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui-go.jpg?raw=true</span>
+[<span class="Type">Vim script on Vim (24bit color)</span>]: <span class="markdownUrl">https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-64bit-vim.jpg?raw=true</span>
+[<span class="Type">Go on Vim (24bit color)</span>]: <span class="markdownUrl">https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-64bit-go.jpg?raw=true</span>
+[<span class="Type">Vim script on Vim (8bit color)</span>]: <span class="markdownUrl">https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-vim.jpg?raw=true</span>
+[<span class="Type">Go on Vim (8bit color)</span>]: <span class="markdownUrl">https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-go.jpg?raw=true</span>
+[<span class="Type">Build Status</span>]: <span class="markdownUrl">https://travis-ci.org/rhysd/vim-color-spring-night.svg?branch=travis</span>
+</code>
+</pre>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->

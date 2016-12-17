@@ -1,0 +1,280 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>~/Dev/github.com/rhysd/Dachs/samples/random.dcs.html</title>
+<meta name="Generator" content="Vim/8.0">
+<meta name="plugin-version" content="vim7.4_v2">
+<meta name="syntax" content="dachs">
+<meta name="settings" content="use_css,pre_wrap,no_foldcolumn,expand_tabs,prevent_copy=">
+<meta name="colorscheme" content="spring-night">
+<style type="text/css">
+<!--
+pre { white-space: pre-wrap; font-family: monospace; color: #fffeeb; background-color: #334152; }
+body { font-family: monospace; color: #fffeeb; background-color: #334152; }
+* { font-size: 1em; }
+.Function { color: #f0aa8a; }
+.Conditional { color: #a8d2eb; }
+.Identifier { color: #fedf81; }
+.Statement { color: #a8d2eb; font-weight: bold; }
+.PreProc { color: #f0aa8a; }
+.Type { color: #fedf81; font-weight: bold; }
+.String { color: #a9dd9d; }
+.Define { color: #f0aa8a; }
+.Special { color: #fffaaa; font-weight: bold; }
+.Number { color: #fd8489; }
+/* #vimCodeElement { width: 100%; } */
+-->
+</style>
+
+<script type='text/javascript'>
+<!--
+
+-->
+</script>
+</head>
+<body>
+<pre id='vimCodeElement'>
+<span class="PreProc">import</span> std.numeric
+
+<span class="Define">class</span> <span class="Type">Xor128</span>
+    <span class="Statement">-</span> x : <span class="Type">uint</span>
+    , y : <span class="Type">uint</span>
+    , z : <span class="Type">uint</span>
+    , w : <span class="Type">uint</span>
+
+    <span class="Define">init</span>(<span class="Identifier">@x</span>, <span class="Identifier">@y</span>, <span class="Identifier">@z</span>, <span class="Identifier">@w</span>)
+    <span class="Define">end</span>
+
+    <span class="Define">init</span>
+        <span class="Identifier">@x</span> := __builtin_read_cycle_counter()
+        <span class="Identifier">@y</span> := __builtin_read_cycle_counter()
+        <span class="Identifier">@z</span> := __builtin_read_cycle_counter()
+        <span class="Identifier">@w</span> := __builtin_read_cycle_counter()
+    <span class="Define">end</span>
+
+    <span class="Define">func</span> <span class="Function">new_seed</span>(seeds)
+        <span class="Identifier">@x</span> = seeds[<span class="Number">0u</span> % seeds.size]
+        <span class="Identifier">@y</span> = seeds[<span class="Number">1u</span> % seeds.size]
+        <span class="Identifier">@z</span> = seeds[<span class="Number">2u</span> % seeds.size]
+        <span class="Identifier">@w</span> = seeds[<span class="Number">3u</span> % seeds.size]
+    <span class="Define">end</span>
+
+    <span class="Define">func</span> <span class="Function">gen</span>
+        <span class="Identifier">t</span> := <span class="Identifier">@x</span> ^ (<span class="Identifier">@x</span> &lt;&lt; <span class="Number">11u</span>)
+        <span class="Identifier">w</span> := <span class="Identifier">@w</span>
+        <span class="Identifier">@x</span> = <span class="Identifier">@y</span>
+        <span class="Identifier">@y</span> = <span class="Identifier">@z</span>
+        <span class="Identifier">@z</span> = <span class="Identifier">@w</span>
+        <span class="Identifier">@w</span> = (w ^ (w &lt;&lt; <span class="Number">19u</span>)) ^ (t ^ (t &lt;&lt; <span class="Number">8u</span>))
+        <span class="Statement">ret</span> <span class="Identifier">@w</span>
+    <span class="Define">end</span>
+<span class="Define">end</span>
+
+<span class="Define">class</span> <span class="Type">LCG</span>
+    seed : <span class="Type">int</span>
+
+    <span class="Define">init</span>(<span class="Identifier">@seed</span>)
+    <span class="Define">end</span>
+
+    <span class="Define">init</span>
+        <span class="Identifier">@seed</span> := __builtin_read_cycle_counter()
+    <span class="Define">end</span>
+
+    <span class="Define">func</span> <span class="Function">new_seed</span>(seeds)
+        <span class="Identifier">@seed</span> = <span class="Number">0</span>
+        <span class="Identifier">i</span> := <span class="Number">0u</span>
+        <span class="Statement">for</span> i &lt; seeds.size
+            <span class="Identifier">@seed</span> ^= seeds[i]
+            i += <span class="Number">1u</span>
+        <span class="Statement">end</span>
+    <span class="Define">end</span>
+
+    <span class="Define">func</span> <span class="Function">gen</span>
+        <span class="Identifier">x</span> := <span class="Identifier">@seed</span>
+        <span class="Identifier">high</span> := x / <span class="Number">127773</span>
+        <span class="Identifier">low</span> := x % <span class="Number">127773</span>
+        <span class="Type">var</span> <span class="Identifier">t</span> := <span class="Number">16807</span> * low - <span class="Number">2836</span> * high
+
+        <span class="Conditional">if</span> t &lt;= <span class="Number">0</span>
+            t += 0x7fffffff
+        <span class="Conditional">end</span>
+
+        <span class="Identifier">@seed</span> = t
+        <span class="Statement">ret</span> t
+    <span class="Define">end</span>
+<span class="Define">end</span>
+
+<span class="Define">class</span> <span class="Type">Mt19937</span>
+    mt, mti
+    n, m
+    matrix_a
+    upper_mask
+    lower_mask
+
+    <span class="Define">init</span>(seeds)
+        <span class="Identifier">@mt</span> := <span class="Statement">new</span> [<span class="Type">uint</span>]{<span class="Number">624u</span>, <span class="Number">0u</span>}
+        <span class="Identifier">@mti</span> := <span class="Number">625u</span>
+        <span class="Identifier">@n</span> := <span class="Number">624u</span>
+        <span class="Identifier">@m</span> := <span class="Number">397u</span>
+        <span class="Identifier">@matrix_a</span> := 0x9908b0dfu
+        <span class="Identifier">@upper_mask</span> := 0x80000000u
+        <span class="Identifier">@lower_mask</span> := 0x7fffffffu
+        <span class="Identifier">@init_by_array</span>(seeds)
+    <span class="Define">end</span>
+
+    <span class="Define">init</span>
+        <span class="Identifier">@mt</span> := <span class="Statement">new</span> [<span class="Type">uint</span>]{<span class="Number">624u</span>, <span class="Number">0u</span>}
+        <span class="Identifier">@mti</span> := <span class="Number">625u</span>
+        <span class="Identifier">@n</span> := <span class="Number">624u</span>
+        <span class="Identifier">@m</span> := <span class="Number">397u</span>
+        <span class="Identifier">@matrix_a</span> := 0x9908b0dfu
+        <span class="Identifier">@upper_mask</span> := 0x80000000u
+        <span class="Identifier">@lower_mask</span> := 0x7fffffffu
+        <span class="Identifier">@init_by_array</span>([
+                    __builtin_read_cycle_counter(),
+                    __builtin_read_cycle_counter(),
+                    __builtin_read_cycle_counter(),
+                ])
+    <span class="Define">end</span>
+
+    <span class="Define">func</span> <span class="Function">new_seed</span>(seeds)
+        <span class="Identifier">@init_by_array</span>(seeds)
+    <span class="Define">end</span>
+
+  <span class="Statement">-</span> <span class="Define">func</span> <span class="Function">init_genrand</span>(s)
+        <span class="Identifier">@mt</span>[<span class="Number">0u</span>] = s
+        <span class="Identifier">@mti</span> = <span class="Number">1u</span>
+        <span class="Statement">for</span> <span class="Identifier">@mti</span> &lt; <span class="Identifier">@n</span>
+            <span class="Identifier">@mt</span>[<span class="Identifier">@mti</span>] = <span class="Number">1812433253u</span> * (<span class="Identifier">@mt</span>[<span class="Identifier">@mti</span>-<span class="Number">1u</span>] ^ (<span class="Identifier">@mt</span>[<span class="Identifier">@mti</span>-<span class="Number">1u</span>] &gt;&gt; <span class="Number">30u</span>)) + <span class="Identifier">@mti</span>
+            <span class="Identifier">@mti</span> += <span class="Number">1u</span>
+        <span class="Statement">end</span>
+    <span class="Define">end</span>
+
+  <span class="Statement">-</span> <span class="Define">func</span> <span class="Function">init_by_array</span>(init_key) : ()
+        <span class="Identifier">key_len</span> := init_key.size
+        <span class="Identifier">@init_genrand</span>(<span class="Number">19650218u</span>)
+
+        <span class="Type">var</span> <span class="Identifier">i</span> := <span class="Number">1u</span>
+        <span class="Type">var</span> <span class="Identifier">j</span> := <span class="Number">0u</span>
+        <span class="Type">var</span> <span class="Identifier">k</span> := <span class="Conditional">if</span> <span class="Identifier">@n</span> &gt; key_len <span class="Conditional">then</span> <span class="Identifier">@n</span> <span class="Conditional">else</span> key_len <span class="Define">end</span>
+
+        for k &gt; <span class="Number">0u</span>
+            <span class="Identifier">@mt</span>[i] = <span class="Identifier">@mt</span>[i] ^ (<span class="Identifier">@mt</span>[i<span class="Statement">-</span><span class="Number">1u</span>] ^ (<span class="Identifier">@mt</span>[i<span class="Statement">-</span><span class="Number">1u</span>] &gt;&gt; <span class="Number">30u</span>) * <span class="Number">1664525u</span>) <span class="Statement">+</span> init_key[j] <span class="Statement">+</span> j
+            i <span class="Statement">+</span>= <span class="Number">1u</span>
+            j <span class="Statement">+</span>= <span class="Number">1u</span>
+
+            if i &gt;= <span class="Identifier">@n</span>
+                <span class="Identifier">@mt</span>[<span class="Number">0u</span>] = <span class="Identifier">@mt</span>[<span class="Identifier">@n</span><span class="Statement">-</span><span class="Number">1u</span>]
+                i = <span class="Number">1u</span>
+            <span class="Define">end</span>
+
+            if j &gt;= key_len
+                j = <span class="Number">0u</span>
+            end
+
+            k -= <span class="Number">1u</span>
+        end
+
+        k = <span class="Identifier">@n</span> - <span class="Number">1u</span>
+
+        for k &gt; <span class="Number">0u</span>
+            <span class="Identifier">@mt</span>[i] = <span class="Identifier">@mt</span>[i] ^ (<span class="Identifier">@mt</span>[i-<span class="Number">1u</span>] ^ (<span class="Identifier">@mt</span>[i-<span class="Number">1u</span>] &gt;&gt; <span class="Number">30u</span>) * <span class="Number">1566083941u</span>) - i
+            i += <span class="Number">1u</span>
+            if i &gt;= <span class="Identifier">@n</span>
+                <span class="Identifier">@mt</span>[<span class="Number">0u</span>] = <span class="Identifier">@mt</span>[<span class="Identifier">@n</span>-<span class="Number">1u</span>]
+                i = <span class="Number">1u</span>
+            end
+
+            k -= <span class="Number">1u</span>
+        end
+
+        <span class="Identifier">@mt</span>[<span class="Number">0u</span>] = 0x80000000u
+    end
+
+    <span class="Define">func</span> <span class="Function">gen</span>
+        <span class="Type">var</span> y : <span class="Type">uint</span>
+
+        <span class="Conditional">if</span> <span class="Identifier">@mti</span> &gt;= <span class="Identifier">@n</span>
+            <span class="Identifier">mag01</span> := [<span class="Number">0u</span>, <span class="Identifier">@matrix_a</span>]
+
+            <span class="Identifier">@init_genrand</span>(<span class="Number">5489u</span>) <span class="Conditional">if</span> <span class="Identifier">@mti</span> == <span class="Identifier">@n</span> + <span class="Number">1u</span>
+
+            <span class="Type">var</span> <span class="Identifier">kk</span> := <span class="Number">0u</span>
+
+            <span class="Statement">for</span> kk &lt; <span class="Identifier">@n</span> - <span class="Identifier">@m</span>
+                y = (<span class="Identifier">@mt</span>[kk] &amp; <span class="Identifier">@upper_mask</span>) | (<span class="Identifier">@mt</span>[kk+<span class="Number">1u</span>] &amp; <span class="Identifier">@lower_mask</span>)
+                <span class="Identifier">@mt</span>[kk] = (<span class="Identifier">@mt</span>[kk+<span class="Identifier">@m</span>] ^ (y &gt;&gt; <span class="Number">1u</span>)) ^ mag01[y % <span class="Number">2u</span>]
+                kk += <span class="Number">1u</span>
+            <span class="Statement">end</span>
+
+            <span class="Statement">for</span> kk &lt; <span class="Identifier">@n</span> - <span class="Number">1u</span>
+                y = (<span class="Identifier">@mt</span>[kk] &amp; <span class="Identifier">@upper_mask</span>) | (<span class="Identifier">@mt</span>[kk+<span class="Number">1u</span>] &amp; <span class="Identifier">@lower_mask</span>)
+                <span class="Identifier">@mt</span>[kk] = (<span class="Identifier">@mt</span>[kk+<span class="Identifier">@m</span>-<span class="Identifier">@n</span>] ^ (y &gt;&gt; <span class="Number">1u</span>)) ^ mag01[y % <span class="Number">2u</span>]
+                kk += <span class="Number">1u</span>
+            <span class="Statement">end</span>
+
+            y = (<span class="Identifier">@mt</span>[<span class="Identifier">@n</span>-<span class="Number">1u</span>] &amp; <span class="Identifier">@upper_mask</span>) | (<span class="Identifier">@mt</span>[<span class="Number">0u</span>] &amp; <span class="Identifier">@lower_mask</span>)
+            <span class="Identifier">@mt</span>[<span class="Identifier">@n</span>-<span class="Number">1u</span>] = (<span class="Identifier">@mt</span>[<span class="Identifier">@m</span>-<span class="Number">1u</span>] ^ (y &gt;&gt; <span class="Number">1u</span>)) ^ mag01[y % <span class="Number">2u</span>]
+            <span class="Identifier">@mti</span> = <span class="Number">0u</span>
+        <span class="Conditional">end</span>
+
+        y = <span class="Identifier">@mt</span>[<span class="Identifier">@mti</span>]
+        <span class="Identifier">@mti</span> += <span class="Number">1u</span>
+
+        y = y ^ (y &gt;&gt; <span class="Number">11u</span>)
+        y = y ^ ((y &lt;&lt; <span class="Number">7u</span>) &amp; 0x9d2c5680u)
+        y = y ^ ((y &lt;&lt; <span class="Number">15u</span>) &amp; 0xefc60000u)
+        y = y ^ (y &gt;&gt; <span class="Number">18u</span>)
+
+        <span class="Statement">ret</span> y
+    <span class="Define">end</span>
+end
+
+<span class="Define">class</span> <span class="Type">Random</span>
+    generator
+
+    <span class="Define">init</span>(<span class="Identifier">@generator</span>)
+    <span class="Define">end</span>
+
+    <span class="Define">init</span>
+        <span class="Identifier">@generator</span> := <span class="Statement">new</span> <span class="Identifier">Mt19937</span>{[0x123u, 0x234u, 0x345u, 0x456u]}
+    <span class="Define">end</span>
+
+    <span class="Define">func</span> <span class="Function">new_seed</span>(seeds)
+        <span class="Identifier">@generator</span>.new_seed(seeds)
+    <span class="Define">end</span>
+
+    <span class="Define">func</span> <span class="Function">gen</span>
+        <span class="Statement">ret</span> <span class="Identifier">@generator</span>.gen
+    <span class="Define">end</span>
+<span class="Define">end</span>
+
+<span class="Define">func</span> <span class="Function">main</span>
+    <span class="Identifier">test</span> := <span class="Statement">-&gt;</span> n, r <span class="Statement">do</span>
+        n.println
+        <span class="Number">5</span>.times <span class="Statement">do</span>
+            r.gen.println
+        <span class="Statement">end</span>
+        println(<span class="Special">&quot;&quot;</span>)
+    <span class="Statement">end</span>
+
+    <span class="Statement">begin</span>
+        <span class="Identifier">r</span> := <span class="Statement">new</span> <span class="Identifier">Random</span>{<span class="Statement">new</span> <span class="Identifier">LCG</span>{<span class="Number">1</span>}}
+        <span class="Special">&quot;</span><span class="String">LCG</span><span class="Special">&quot;</span>.test r
+    <span class="Statement">end</span>
+
+    <span class="Statement">begin</span>
+        <span class="Identifier">r</span> := <span class="Statement">new</span> <span class="Identifier">Random</span>{<span class="Statement">new</span> <span class="Identifier">Xor128</span>{<span class="Number">123456789u</span>, <span class="Number">362436069u</span>, <span class="Number">521288629u</span>, <span class="Number">88675123u</span>}}
+        <span class="Special">&quot;</span><span class="String">Xor128</span><span class="Special">&quot;</span>.test r
+    <span class="Statement">end</span>
+
+    <span class="Statement">begin</span>
+        <span class="Identifier">r</span> := <span class="Statement">new</span> <span class="Identifier">Random</span>{<span class="Statement">new</span> <span class="Identifier">Mt19937</span>{[0x123u, 0x234u, 0x345u, 0x456u]}}
+        <span class="Special">&quot;</span><span class="String">Mt19937</span><span class="Special">&quot;</span>.test r
+    <span class="Statement">end</span>
+<span class="Define">end</span>
+</pre>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
