@@ -40,7 +40,7 @@ let s:purple     = ['#e7d5ff', 189]
 let s:gray       = ['#545f6e', 59]
 let s:light      = ['#646f7c', 60]
 let s:sakura     = ['#a9667a', 132]
-let s:orange     = ['#fda08b', 216]
+let s:orange     = ['#f0aa8a', 216]
 let s:green      = ['#a9dd9d', 150]
 let s:darkgreen  = ['#5f8770', 65]
 let s:skyblue    = ['#a8d2eb', 153]
@@ -64,7 +64,6 @@ function! s:hi(name, fg, bg, attr) abort
 
     if type(a:attr) != s:NUMBER_TYPE && !(g:spring_night_kill_italic && a:attr ==# 'italic')
         let attr =  'gui=' . a:attr
-
         if a:attr !=# 'italic'
             let attr .= ' cterm=' . a:attr
         endif
