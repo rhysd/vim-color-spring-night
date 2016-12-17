@@ -33,6 +33,7 @@ let s:bgstrong   = ['#536273', 238]
 let s:fg         = ['#fffeeb', s:high_contrast ? 231 : 230]
 let s:hiddenfg   = ['#607080', 60]
 let s:weakfg     = ['#8090a0', 103]
+let s:weakerfg   = ['#788898', 102]
 let s:palepink   = ['#ebeadb', 224]
 let s:yellow     = ['#fffaaa', 229]
 let s:white      = ['#ffffff', 231]
@@ -98,7 +99,7 @@ call s:hi('Function',     s:orange,     0,            0)
 call s:hi('Identifier',   s:gold,       0,            'italic')
 call s:hi('Keyword',      s:yellow,     0,            'bold')
 call s:hi('Label',        s:skyblue,    0,            0)
-call s:hi('LineNr',       s:weakfg,     s:bgemphasis, 0)
+call s:hi('LineNr',       s:weakerfg,   s:bgemphasis, 0)
 call s:hi('MatchParen',   s:bg,         s:sakura,     'underline')
 call s:hi('ModeMsg',      s:gold,       0,            0)
 call s:hi('MoreMsg',      s:green,      0,            0)
