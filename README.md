@@ -30,6 +30,7 @@ Calm Spring Color Scheme for Vim [![Build Status][]](https://travis-ci.org/rhysd
 |-------------------------------------|-----------------------------|
 | ![Vim script on Vim (8bit color)][] | ![Go on Vim (8bit color)][] |
 
+If you want to see more code, please visit [demo page site][].
 
 ## Installation
 
@@ -92,6 +93,7 @@ Licensed under the MIT license.
     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
     THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+[demo page site]: https://rhysd.github.io/vim-color-spring-night
 [vim-airline]: https://github.com/vim-airline/vim-airline
 [vim-gitgutter]: https://github.com/airblade/vim-gitgutter
 [Vim script on gVim (MacVim)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui-vim.jpg?raw=true
