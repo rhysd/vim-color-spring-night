@@ -1,6 +1,5 @@
-Calm Spring Color Scheme for Vim
+Calm Spring Color Scheme for Vim [![Build Status][]](https://travis-ci.org/rhysd/vim-color-spring-night)
 ================================
-[![Build Status](https://travis-ci.org/rhysd/vim-color-spring-night.svg?branch=travis)](https://travis-ci.org/rhysd/vim-color-spring-night)
 
 `spring-night` is a low contrast calm color scheme for Vim. It's colored with deep blue background, shiny yellow foreground and *sakura*:cherry_blossom: text selection.
 
@@ -99,3 +98,4 @@ Licensed under the MIT license.
 [Go on Vim (24bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-64bit-go.jpg?raw=true
 [Vim script on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-vim.jpg?raw=true
 [Go on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-go.jpg?raw=true
+[Build Status]: https://travis-ci.org/rhysd/vim-color-spring-night.svg?branch=travis
