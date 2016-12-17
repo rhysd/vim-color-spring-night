@@ -26,7 +26,7 @@ let s:high_contrast =
     \ (s:gui_running && index(g:spring_night_high_contrast, 'gui') >= 0) ||
     \ (!s:gui_running && index(g:spring_night_high_contrast, 'cui') >= 0)
 
-" Define reusable colorvariables.
+" Define reusable color palette.
 let s:bg         = [s:high_contrast ? '#132132' : '#334152', 233]
 let s:bgemphasis = ['#435060', 235]
 let s:bgstrong   = ['#536273', 238]
@@ -160,6 +160,7 @@ call s:hi('gitCommitSummary',      s:yellow,  0,            0)
 call s:hi('goBuiltins',            s:red,     0,            0)
 call s:hi('htmlLinkText',          s:skyblue, 0,            0)
 call s:hi('htmlBold',              0,         s:bgemphasis, 0)
+call s:hi('htmlTagName',           s:orange,  0,            0)
 call s:hi('javaScriptBraces',      s:fg,      0,            0)
 call s:hi('typescriptBraces',      s:fg,      0,            0)
 call s:hi('markdownUrl',           s:weakfg,  0,            0)
