@@ -11,14 +11,25 @@ Calm Spring Color Scheme for Vim
 - Support [vim-gitgutter][].
 
 
-## On gVim or Terminal with True Color Support (24bit color)
+## On gVim (MacVim)
 
-![screenshot for 24bit color](https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui.png?raw=true)
+| Vim script                       | Go                       |
+|----------------------------------|--------------------------|
+| ![Vim script on gVim (MacVim)][] | ![Go on gVim (MacVim)][] |
 
 
-## On Terminal (8bit color)
+## On Translucent Terminal (64bit color)
 
-![screenshot for 8bit color](https://github.com/rhysd/ss/blob/master/vim-color-spring-night/cui.png?raw=true)
+| Vim script                           | Go                           |
+|--------------------------------------|------------------------------|
+| ![Vim script on Vim (64bit color)][] | ![Go on Vim (64bit color)][] |
+
+
+## On Translucent Terminal (8bit color)
+
+| Vim script                          | Go                          |
+|-------------------------------------|-----------------------------|
+| ![Vim script on Vim (8bit color)][] | ![Go on Vim (8bit color)][] |
 
 
 ## Installation
@@ -82,3 +93,9 @@ Licensed under the MIT license.
 
 [vim-airline]: https://github.com/vim-airline/vim-airline
 [vim-gitgutter]: https://github.com/airblade/vim-gitgutter
+[Vim script on gVim (MacVim)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui-vim.jpg?raw=true
+[Go on gVim (MacVim)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui-go.jpg?raw=true
+[Vim script on Vim (64bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-64bit-vim.jpg?raw=true
+[Go on Vim (64bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-64bit-go.jpg?raw=true
+[Vim script on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-vim.jpg?raw=true
+[Go on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-go.jpg?raw=true
