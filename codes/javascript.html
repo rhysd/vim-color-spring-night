@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>~/Develop/github.com/rhysd/heredocument/index.js.html</title>
+<meta name="Generator" content="Vim/8.0">
+<meta name="plugin-version" content="vim7.4_v2">
+<meta name="syntax" content="javascript">
+<meta name="settings" content="use_css,pre_wrap,no_foldcolumn,expand_tabs,prevent_copy=">
+<meta name="colorscheme" content="spring-night">
+<style type="text/css">
+<!--
+pre { white-space: pre-wrap; font-family: monospace; color: #fffeeb; background-color: #334152; }
+body { font-family: monospace; color: #fffeeb; background-color: #334152; }
+* { font-size: 1em; }
+.Function { color: #fda08b; }
+.Conditional { color: #a8d2eb; }
+.Keyword { color: #fffaaa; font-weight: bold; }
+.Identifier { color: #fedf81; font-style: italic; }
+.Label { color: #a8d2eb; }
+.Statement { color: #a8d2eb; font-weight: bold; }
+.Type { color: #fedf81; font-weight: bold; }
+.String { color: #a9dd9d; }
+.javaScriptBraces { color: #fffeeb; }
+.Comment { color: #8090a0; }
+.Normal { color: #fffeeb; background-color: #334152; padding-bottom: 1px; }
+.Special { color: #fffaaa; font-weight: bold; }
+.Number { color: #fd8489; }
+.Boolean { color: #fd8489; }
+-->
+</style>
+
+<script type='text/javascript'>
+<!--
+
+-->
+</script>
+</head>
+<body>
+<pre id='vimCodeElement'>
+<span class="Identifier">const</span> RE_EMPTY_LINE <span class="Normal">=</span> <span class="String">/^\s*$/</span><span class="Statement">;</span>
+<span class="Identifier">const</span> DEFAULT_OPTIONS <span class="Normal">=</span> <span class="javaScriptBraces">{</span>
+    <span class="Label">tabSize</span>: <span class="Number">8</span><span class="Normal">,</span>
+    <span class="Label">inputNewline</span>: <span class="String">'\n'</span><span class="Normal">,</span>
+    <span class="Label">newlineAtEnd</span>: <span class="Boolean">true</span>
+<span class="javaScriptBraces">}</span><span class="Statement">;</span>
+
+<span class="Keyword">function</span> <span class="Function">getTrimmedLines</span><span class="Normal">(</span><span class="Special">strings</span><span class="Normal">,</span><span class="Special"> args</span><span class="Normal">,</span><span class="Special"> opts</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+    <span class="Identifier">const</span> input <span class="Normal">=</span> <span class="Function">[]</span><span class="Statement">;</span>
+    <span class="Statement">for</span> <span class="Normal">(</span><span class="Identifier">let</span> i <span class="Normal">=</span> <span class="Number">0</span><span class="Statement">;</span> i <span class="Normal">&lt;</span> strings.<span class="Keyword">length</span><span class="Statement">;</span> ++i<span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+        input.<span class="Keyword">push</span><span class="Normal">(</span>strings[i]<span class="Normal">)</span><span class="Statement">;</span>
+        <span class="Conditional">if</span> <span class="Normal">(</span>args.<span class="Keyword">length</span> <span class="Normal">&gt;</span> i<span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+            input.<span class="Keyword">push</span><span class="Normal">(</span>args[i]<span class="Normal">)</span><span class="Statement">;</span>
+        <span class="javaScriptBraces">}</span>
+    <span class="javaScriptBraces">}</span>
+
+    <span class="Identifier">const</span> lines <span class="Normal">=</span> input.<span class="Keyword">join</span><span class="Normal">(</span><span class="String">''</span><span class="Normal">)</span>.<span class="Keyword">split</span><span class="Normal">(</span>opts.inputNewline<span class="Normal">)</span><span class="Statement">;</span>
+
+    <span class="Comment">// Note: Trim first newline just after first '`'</span>
+    <span class="Conditional">if</span> <span class="Normal">(</span>lines.<span class="Keyword">length</span> <span class="Normal">&gt;</span> <span class="Number">0</span> <span class="Normal">&amp;&amp;</span> lines[<span class="Number">0</span>].<span class="Keyword">length</span> <span class="Normal">===</span> <span class="Number">0</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+        <span class="Comment">// Newline just after first ` it should be split to ''</span>
+        lines.<span class="Keyword">shift</span><span class="Normal">()</span><span class="Statement">;</span>
+    <span class="javaScriptBraces">}</span>
+
+    <span class="Identifier">const</span> lastIndex <span class="Normal">=</span> lines.<span class="Keyword">length</span> - <span class="Number">1</span><span class="Statement">;</span>
+    <span class="Conditional">if</span> <span class="Normal">(</span>lines.<span class="Keyword">length</span> <span class="Normal">&gt;</span> <span class="Number">0</span> <span class="Normal">&amp;&amp;</span> RE_EMPTY_LINE.<span class="Keyword">test</span><span class="Normal">(</span>lines[lastIndex]<span class="Normal">))</span> <span class="javaScriptBraces">{</span>
+        <span class="Conditional">if</span> <span class="Normal">(</span>opts.newlineAtEnd<span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+            lines[lastIndex] <span class="Normal">=</span> <span class="String">''</span><span class="Statement">;</span>
+        <span class="javaScriptBraces">}</span> <span class="Conditional">else</span> <span class="javaScriptBraces">{</span>
+            <span class="Comment">// When EOL at the end of string should not be added,</span>
+            <span class="Comment">// it means that simply remove the empty line at the end</span>
+            <span class="Comment">// of string.</span>
+            lines.<span class="Keyword">pop</span><span class="Normal">()</span><span class="Statement">;</span>
+        <span class="javaScriptBraces">}</span>
+    <span class="javaScriptBraces">}</span>
+
+    <span class="Statement">return</span> lines<span class="Statement">;</span>
+<span class="javaScriptBraces">}</span>
+
+<span class="Keyword">function</span> <span class="Function">indentOf</span><span class="Normal">(</span><span class="Special">line</span><span class="Normal">,</span><span class="Special"> opts</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+    <span class="Identifier">let</span> count <span class="Normal">=</span> <span class="Number">0</span><span class="Statement">;</span>
+    <span class="Statement">for</span> <span class="Normal">(</span><span class="Identifier">let</span> i <span class="Normal">=</span> <span class="Number">0</span><span class="Statement">;</span> i <span class="Normal">&lt;</span> line.<span class="Keyword">length</span><span class="Statement">;</span> ++i<span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+        <span class="Identifier">const</span> c <span class="Normal">=</span> line[i]<span class="Statement">;</span>
+        <span class="Conditional">if</span> <span class="Normal">(</span>c <span class="Normal">===</span> <span class="String">' '</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+            count += <span class="Number">1</span><span class="Statement">;</span>
+        <span class="javaScriptBraces">}</span> <span class="Conditional">else</span> <span class="Conditional">if</span> <span class="Normal">(</span>c <span class="Normal">===</span> <span class="String">'\t'</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+            count += opts.tabSize<span class="Statement">;</span>
+        <span class="javaScriptBraces">}</span> <span class="Conditional">else</span> <span class="javaScriptBraces">{</span>
+            <span class="Conditional">break</span><span class="Statement">;</span>
+        <span class="javaScriptBraces">}</span>
+    <span class="javaScriptBraces">}</span>
+    <span class="Statement">return</span> count<span class="Statement">;</span>
+<span class="javaScriptBraces">}</span>
+
+<span class="Keyword">function</span> <span class="Function">commonIndentFromLines</span><span class="Normal">(</span><span class="Special">lines</span><span class="Normal">,</span><span class="Special"> opts</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+    <span class="Identifier">let</span> pad <span class="Normal">=</span> <span class="Number">-1</span><span class="Statement">;</span>
+    <span class="Statement">for</span> <span class="Normal">(</span><span class="Identifier">const</span> l <span class="Statement">of</span> lines<span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+        <span class="Conditional">if</span> <span class="Normal">(</span>l.<span class="Keyword">length</span> <span class="Normal">===</span> <span class="Number">0</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+            <span class="Conditional">continue</span><span class="Statement">;</span>
+        <span class="javaScriptBraces">}</span>
+        <span class="Conditional">if</span> <span class="Normal">(</span>pad <span class="Normal">&lt;</span> <span class="Number">0</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+            pad <span class="Normal">=</span> indentOf<span class="Normal">(</span>l<span class="Normal">,</span> opts<span class="Normal">)</span><span class="Statement">;</span>
+            <span class="Conditional">continue</span><span class="Statement">;</span>
+        <span class="javaScriptBraces">}</span>
+        pad <span class="Normal">=</span> <span class="Type">Math</span>.<span class="Keyword">min</span><span class="Normal">(</span>pad<span class="Normal">,</span> indentOf<span class="Normal">(</span>l<span class="Normal">,</span> opts<span class="Normal">))</span><span class="Statement">;</span>
+    <span class="javaScriptBraces">}</span>
+
+    <span class="Comment">// pad &lt; 0 means there are empty lines only</span>
+    <span class="Statement">return</span> pad <span class="Normal">&gt;=</span> <span class="Number">0</span> <span class="Normal">?</span> pad : <span class="Number">0</span><span class="Statement">;</span>
+<span class="javaScriptBraces">}</span>
+
+<span class="Keyword">function</span> <span class="Function">trimCommonIndent</span><span class="Normal">(</span><span class="Special">pad</span><span class="Normal">,</span><span class="Special"> line</span><span class="Normal">,</span><span class="Special"> opts</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+    <span class="Identifier">let</span> idx <span class="Normal">=</span> <span class="Number">0</span><span class="Statement">;</span>
+    <span class="Statement">while</span> <span class="Normal">(</span>pad <span class="Normal">&gt;</span> <span class="Number">0</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+        <span class="Conditional">if</span> <span class="Normal">(</span>line[idx] <span class="Normal">===</span> <span class="String">' '</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+            pad -= <span class="Number">1</span><span class="Statement">;</span>
+        <span class="javaScriptBraces">}</span> <span class="Conditional">else</span> <span class="Conditional">if</span> <span class="Normal">(</span>line[idx] <span class="Normal">===</span> <span class="String">'\t'</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+            pad -= opts.tabSize<span class="Statement">;</span>
+        <span class="javaScriptBraces">}</span> <span class="Conditional">else</span> <span class="javaScriptBraces">{</span>
+            <span class="Statement">throw</span> <span class="Type">Error</span><span class="Normal">(</span><span class="String">`FATAL: Char is not whitespace: '</span><span class="Label">${</span>line[idx]<span class="Label">}</span><span class="String">' at </span><span class="Label">${</span>idx<span class="Label">}</span><span class="String"> in '</span><span class="Label">${</span>line<span class="Label">}</span><span class="String">' (pad: </span><span class="Label">${</span>pad<span class="Label">}</span><span class="String">)`</span><span class="Normal">)</span><span class="Statement">;</span>
+        <span class="javaScriptBraces">}</span>
+        ++idx<span class="Statement">;</span>
+    <span class="javaScriptBraces">}</span>
+
+    <span class="Conditional">if</span> <span class="Normal">(</span>pad <span class="Normal">===</span> <span class="Number">0</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+        <span class="Statement">return</span> line.<span class="Keyword">slice</span><span class="Normal">(</span>idx<span class="Normal">)</span><span class="Statement">;</span>
+    <span class="javaScriptBraces">}</span>
+
+    <span class="Statement">return</span> <span class="String">' '</span>.<span class="Keyword">repeat</span><span class="Normal">(</span>-pad<span class="Normal">)</span> + line.<span class="Keyword">slice</span><span class="Normal">(</span>idx<span class="Normal">)</span><span class="Statement">;</span>
+<span class="javaScriptBraces">}</span>
+
+<span class="Keyword">function</span> <span class="Function">heredoc</span><span class="Normal">(</span><span class="Special">strings</span><span class="Normal">,</span><span class="Special"> </span>...<span class="Special">args</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+    <span class="Conditional">if</span> <span class="Normal">(</span>!<span class="Type">Array</span>.<span class="Keyword">isArray</span><span class="Normal">(</span>strings<span class="Normal">))</span> <span class="javaScriptBraces">{</span>
+        <span class="Comment">// When setting up options</span>
+        <span class="Comment">// e.g.</span>
+        <span class="Comment">//   const heredoc = require('heredocument')({</span>
+        <span class="Comment">//      tabSize: 4</span>
+        <span class="Comment">//   });</span>
+        <span class="Statement">return</span> heredoc.<span class="Keyword">bind</span><span class="Normal">(</span><span class="Type">Object</span>.<span class="Keyword">assign</span><span class="Normal">(</span><span class="javaScriptBraces">{}</span><span class="Normal">,</span> DEFAULT_OPTIONS<span class="Normal">,</span> strings<span class="Normal">))</span><span class="Statement">;</span>
+    <span class="javaScriptBraces">}</span>
+
+    <span class="Identifier">const</span> lines <span class="Normal">=</span> getTrimmedLines<span class="Normal">(</span>strings<span class="Normal">,</span> args<span class="Normal">,</span> <span class="Type">this</span><span class="Normal">)</span><span class="Statement">;</span>
+    <span class="Conditional">if</span> <span class="Normal">(</span>lines.<span class="Keyword">length</span> <span class="Normal">===</span> <span class="Number">0</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+        <span class="Statement">return</span> <span class="String">''</span><span class="Statement">;</span>
+    <span class="javaScriptBraces">}</span>
+
+    <span class="Identifier">const</span> newline <span class="Normal">=</span> <span class="Type">this</span>.outputNewline !== <span class="Boolean">undefined</span> <span class="Normal">?</span> <span class="Type">this</span>.outputNewline : <span class="Type">this</span>.inputNewline<span class="Statement">;</span>
+    <span class="Identifier">const</span> pad <span class="Normal">=</span> commonIndentFromLines<span class="Normal">(</span>lines<span class="Normal">,</span> <span class="Type">this</span><span class="Normal">)</span><span class="Statement">;</span>
+    <span class="Conditional">if</span> <span class="Normal">(</span>pad <span class="Normal">&lt;=</span> <span class="Number">0</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+        <span class="Statement">return</span> lines.<span class="Keyword">join</span><span class="Normal">(</span>newline<span class="Normal">)</span><span class="Statement">;</span>
+    <span class="javaScriptBraces">}</span>
+
+    <span class="Statement">for</span> <span class="Normal">(</span><span class="Identifier">let</span> i <span class="Normal">=</span> <span class="Number">0</span><span class="Statement">;</span> i <span class="Normal">&lt;</span> lines.<span class="Keyword">length</span><span class="Statement">;</span> ++i<span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+        <span class="Identifier">const</span> l <span class="Normal">=</span> lines[i]<span class="Statement">;</span>
+        <span class="Conditional">if</span> <span class="Normal">(</span>l.<span class="Keyword">length</span> <span class="Normal">===</span> <span class="Number">0</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+            <span class="Conditional">continue</span><span class="Statement">;</span>
+        <span class="javaScriptBraces">}</span>
+
+        lines[i] <span class="Normal">=</span> trimCommonIndent<span class="Normal">(</span>pad<span class="Normal">,</span> l<span class="Normal">,</span> <span class="Type">this</span><span class="Normal">)</span><span class="Statement">;</span>
+    <span class="javaScriptBraces">}</span>
+
+    <span class="Statement">return</span> lines.<span class="Keyword">join</span><span class="Normal">(</span>newline<span class="Normal">)</span><span class="Statement">;</span>
+<span class="javaScriptBraces">}</span>
+
+<span class="Identifier">const</span> exported <span class="Normal">=</span> heredoc.<span class="Keyword">bind</span><span class="Normal">(</span>DEFAULT_OPTIONS<span class="Normal">)</span><span class="Statement">;</span>
+exported.DEFAULT_OPTIONS <span class="Normal">=</span> DEFAULT_OPTIONS<span class="Statement">;</span>
+exported.commonIndentFromLines <span class="Normal">=</span> commonIndentFromLines<span class="Statement">;</span>
+
+<span class="Conditional">if</span> <span class="Normal">(</span><span class="Identifier">typeof</span> module !== <span class="String">'undefined'</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+    exported.<span class="Keyword">default</span> <span class="Normal">=</span> exported<span class="Statement">;</span>
+    <span class="Type">module</span>.exports <span class="Normal">=</span> exported<span class="Statement">;</span>
+<span class="javaScriptBraces">}</span>
+<span class="Conditional">if</span> <span class="Normal">(</span><span class="Identifier">typeof</span> window !== <span class="String">'undefined'</span><span class="Normal">)</span> <span class="javaScriptBraces">{</span>
+    <span class="Type">window</span>.Heredoc <span class="Normal">=</span> exported<span class="Statement">;</span>
+<span class="javaScriptBraces">}</span>
+</pre>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
