@@ -134,7 +134,7 @@ call s:hi('Type',         s:gold,       0,            0)
 call s:hi('Underlined',   s:skyblue,    0,            'underline')
 call s:hi('VertSplit',    s:bgemphasis, s:bg,         0)
 call s:hi('Visual',       0,            s:sakura,     0)
-call s:hi('WarningMsg',   s:bg,         s:mikan,      0)
+call s:hi('WarningMsg',   s:mikan,      s:bgemphasis, 0)
 call s:hi('WildMenu',     0,            s:gold,       0)
 call s:hi('Conceal',      s:mikan,      s:bg,         0)
 
