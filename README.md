@@ -7,7 +7,7 @@ Calm Spring Color Scheme for Vim [![Build Status][]](https://travis-ci.org/rhysd
 - Aware of running Vim on translucent window.
 - Enable to tweak contrast.
 - Optimized for many filetypes.
-- Support [vim-gitgutter][].
+- Support [vim-gitgutter][] and other some plugins.
 
 
 ## On gVim (MacVim)
@@ -60,6 +60,28 @@ You can customize some behaviors of this colorscheme.
 - **`g:spring_night_high_contrast`**: List of string. If it includes `'cui'`, it uses high contrast version on Vim in terminal. If it includes `'gui'`, it uses high contrast version on gVim. Default value depends on `termguicolors` option.
 
 
+## Supported Filetypes
+
+This colorscheme is especially optimized for below filetypes/plugins:
+
+- `c`
+- `cpp`
+- `diff`
+- `gitcommit`
+- `go`
+- `help`
+- `html`
+- `javascript`
+- `markdown`
+- `python`
+- `ruby`
+- `rust`
+- `typescript`
+- `vim`
+- `zsh`
+- [ctrlp]()
+- [vim-gitgutter]()
+
 ## Contribution
 
 If you find some odd highlight, I'll be happy if you report it to [issues](https://github.com/rhysd/vim-color-spring-night/issues/new) with how to reproduce.
@@ -103,3 +125,4 @@ Licensed under the MIT license.
 [Vim script on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-vim.jpg?raw=true
 [Go on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-go.jpg?raw=true
 [Build Status]: https://travis-ci.org/rhysd/vim-color-spring-night.svg?branch=travis
+[ctrlp]: https://github.com/ctrlpvim/ctrlp.vim
