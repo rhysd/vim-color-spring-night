@@ -79,8 +79,9 @@ This colorscheme is especially optimized for below filetypes/plugins:
 - `typescript`
 - `vim`
 - `zsh`
-- [ctrlp]()
-- [vim-gitgutter]()
+- [ctrlp][]
+- [vim-gitgutter][]
+- [vim-easymotion][]
 
 ## Contribution
 
@@ -118,6 +119,8 @@ Licensed under the MIT license.
 [demo page site]: https://rhysd.github.io/vim-color-spring-night
 [vim-airline]: https://github.com/vim-airline/vim-airline
 [vim-gitgutter]: https://github.com/airblade/vim-gitgutter
+[ctrlp]: https://github.com/ctrlpvim/ctrlp.vim
+[vim-easymotion]: https://github.com/easymotion/vim-easymotion
 [Vim script on gVim (MacVim)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui-vim.jpg?raw=true
 [Go on gVim (MacVim)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/gui-go.jpg?raw=true
 [Vim script on Vim (24bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-64bit-vim.jpg?raw=true
@@ -125,4 +128,3 @@ Licensed under the MIT license.
 [Vim script on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-vim.jpg?raw=true
 [Go on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-go.jpg?raw=true
 [Build Status]: https://travis-ci.org/rhysd/vim-color-spring-night.svg?branch=travis
-[ctrlp]: https://github.com/ctrlpvim/ctrlp.vim

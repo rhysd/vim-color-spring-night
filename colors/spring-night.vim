@@ -156,6 +156,8 @@ call s:hi('diffFile',              s:yellow,  0,            0)
 call s:hi('diffIndexLine',         s:gold,    0,            0)
 call s:hi('diffNewFile',           s:yellow,  0,            0)
 call s:hi('diffRemoved',           s:red,     0,            0)
+call s:hi('EasyMotionTarget',      s:red,     0,            'bold')
+call s:hi('EasyMotionShade',       s:weakfg,  s:bg,         0)
 call s:hi('gitCommitOverflow',     0,         s:red,        0)
 call s:hi('gitCommitSummary',      s:yellow,  0,            0)
 call s:hi('goBuiltins',            s:red,     0,            0)
@@ -174,4 +176,10 @@ call s:hi('rustEnumVariant',       s:gold,    0,            0)
 call s:hi('rustFuncCall',          s:yellow,  0,            0)
 call s:hi('typescriptBraces',      s:fg,      0,            0)
 call s:hi('vimCommand',            s:skyblue, 0,            0)
+if s:gui_running
+    call s:hi('EasyMotionIncCursor',s:bg,     s:fg,         0)
+else
+    " In terminal, cursor color is simply reversed
+    call s:hi('EasyMotionIncCursor',0,        0,            'reverse')
+endif
 
