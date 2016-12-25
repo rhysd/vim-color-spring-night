@@ -43,7 +43,7 @@ let s:PA = [ '#fb8965', 209 ] " mikan
 let s:IM = s:INFO
 
 " Inactive mode
-let s:IA = [ '#767676', s:N3[1], 243, s:N3[3], '' ]
+let s:IA = [ '#8090a0', s:N3[1], 103, s:N3[3], '' ]
 
 " }}}
 
