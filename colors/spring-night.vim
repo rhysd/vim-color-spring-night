@@ -176,6 +176,8 @@ call s:hi('rustEnumVariant',       s:gold,    0,            0)
 call s:hi('rustFuncCall',          s:yellow,  0,            0)
 call s:hi('typescriptBraces',      s:fg,      0,            0)
 call s:hi('vimCommand',            s:skyblue, 0,            0)
+call s:hi('zshDelimiter',          s:skyblue, 0,            0)
+call s:hi('zshPrecommand',         s:red,     0,            0)
 if s:gui_running
     call s:hi('EasyMotionIncCursor',s:bg,     s:fg,         0)
 else
