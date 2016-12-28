@@ -28,7 +28,7 @@ let s:high_contrast =
 
 " Define reusable color palette.
 let s:bg         = [s:high_contrast ? '#132132' : '#334152', 233]
-let s:bgemphasis = ['#435060', 235]
+let s:bgemphasis = ['#3a4b5c', 235]
 let s:bgstrong   = ['#536273', 238]
 let s:fg         = ['#fffeeb', s:high_contrast ? 231 : 230]
 let s:hiddenfg   = ['#607080', 60]
@@ -147,10 +147,10 @@ call s:hi('DiffAdd',               0,         s:darkgreen,  'bold')
 call s:hi('DiffChange',            0,         s:darkgold,   'bold')
 call s:hi('DiffDelete',            0,         s:mildred,    'bold')
 call s:hi('DiffText',              0,         s:bg,         0)
-call s:hi('GitGutterAdd',          s:green,   0,            0)
-call s:hi('GitGutterChange',       s:gold,    0,            0)
-call s:hi('GitGutterChangeDelete', s:gold,    0,            0)
-call s:hi('GitGutterDelete',       s:red,     0,            0)
+call s:hi('GitGutterAdd',          s:green,   s:bgemphasis, 0)
+call s:hi('GitGutterChange',       s:gold,    s:bgemphasis, 0)
+call s:hi('GitGutterChangeDelete', s:gold,    s:bgemphasis, 0)
+call s:hi('GitGutterDelete',       s:red,     s:bgemphasis, 0)
 call s:hi('diffAdded',             s:green,   0,            0)
 call s:hi('diffFile',              s:yellow,  0,            0)
 call s:hi('diffIndexLine',         s:gold,    0,            0)
