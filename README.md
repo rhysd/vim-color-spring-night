@@ -82,6 +82,7 @@ This colorscheme is especially optimized for below filetypes/plugins:
 - [ctrlp][]
 - [vim-gitgutter][]
 - [vim-easymotion][]
+- [clever-f.vim][]
 
 ## Contribution
 
@@ -128,3 +129,4 @@ Licensed under the MIT license.
 [Vim script on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-vim.jpg?raw=true
 [Go on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-go.jpg?raw=true
 [Build Status]: https://travis-ci.org/rhysd/vim-color-spring-night.svg?branch=travis
+[clever-f.vim]: https://github.com/rhysd/clever-f.vim
