@@ -143,6 +143,8 @@ call s:hi('WildMenu',     0,            s:gold,       0)
 "
 " Markdown is highlighted with HTML highlights in gVim but link text doesn't
 " have a color. So define it here.
+call s:hi('cmakeArguments',           s:yellow,  0,            0)
+call s:hi('cmakeOperators',           s:red,     0,            0)
 call s:hi('DiffAdd',                  0,         s:darkgreen,  'bold')
 call s:hi('DiffChange',               0,         s:darkgold,   'bold')
 call s:hi('DiffDelete',               0,         s:mildred,    'bold')
