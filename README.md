@@ -93,6 +93,12 @@ And pull requests are of course welcome :smile:
 For colors palette, please see [the source code directly](https://github.com/rhysd/vim-color-spring-night/blob/master/colors/spring-night.vim).
 The variable definitions are color table of this colorscheme.
 
+## Bonus: Slack Theme
+
+```
+#132132,#3a4b5c,#fedf81,#132132,#8090a0,#fffeeb,#a9dd9d,#a9667a
+```
+
 ## License
 
 Licensed under the MIT license.
