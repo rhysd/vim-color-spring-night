@@ -63,9 +63,10 @@ function! s:hi(name, fg, bg, attr) abort
     let ctermfg = has_fg ? ('ctermfg=' . a:fg[1]) : ''
     let ctermbg = has_bg ? ('ctermbg=' . a:bg[1]) : ''
 
-    if type(a:attr) != s:NUMBER_TYPE && !(g:spring_night_kill_italic && a:attr ==# 'italic')
+    let is_italic = a:attr ==# 'italic'
+    if type(a:attr) != s:NUMBER_TYPE && !(g:spring_night_kill_italic && is_italic)
         let attr =  'gui=' . a:attr
-        if a:attr !=# 'italic'
+        if !is_italic
             let attr .= ' cterm=' . a:attr
         endif
     else
@@ -138,7 +139,6 @@ call s:hi('Visual',       0,            s:sakura,     0)
 call s:hi('WarningMsg',   s:mikan,      s:bgemphasis, 0)
 call s:hi('WildMenu',     0,            s:gold,       0)
 
-"
 " Filetype specific
 "
 " Markdown is highlighted with HTML highlights in gVim but link text doesn't
