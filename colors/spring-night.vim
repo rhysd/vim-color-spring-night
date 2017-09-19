@@ -139,6 +139,8 @@ call s:hi('Visual',       0,            s:sakura,     0)
 call s:hi('WarningMsg',   s:mikan,      s:bgemphasis, 0)
 call s:hi('WildMenu',     0,            s:gold,       0)
 " TODO: call s:hi('QuickFixLine',     0,            0,       0)
+call s:hi('ALEWarning',   s:mikan,      s:bgemphasis, 0)
+call s:hi('ALEInfo',      0,            s:light,      0)
 
 " Filetype specific
 "

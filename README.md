@@ -85,6 +85,7 @@ This colorscheme is especially optimized for below filetypes/plugins:
 - [vim-easymotion][]
 - [clever-f.vim][]
 - [vimfiler.vim][]
+- [ale][]
 - ... and more
 
 ## Contribution
@@ -142,3 +143,4 @@ THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 [Build Status]: https://travis-ci.org/rhysd/vim-color-spring-night.svg?branch=travis
 [clever-f.vim]: https://github.com/rhysd/clever-f.vim
 [vimfiler.vim]: https://github.com/Shougo/vimfiler.vim
+[ale]: https://github.com/w0rp/ale
