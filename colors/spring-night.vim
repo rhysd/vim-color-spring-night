@@ -139,8 +139,26 @@ call s:hi('Visual',       0,            s:sakura,     0)
 call s:hi('WarningMsg',   s:mikan,      s:bgemphasis, 0)
 call s:hi('WildMenu',     0,            s:gold,       0)
 " TODO: call s:hi('QuickFixLine',     0,            0,       0)
-call s:hi('ALEWarning',   s:mikan,      s:bgemphasis, 0)
-call s:hi('ALEInfo',      0,            s:light,      0)
+
+" Plugin specific
+"
+" Some plugins introduce its own highlight definitions. Adjust them for
+" working fine with this colorscheme.
+call s:hi('ALEWarning',               s:mikan,   s:bgemphasis, 0)
+call s:hi('ALEInfo',                  0,         s:light,      0)
+call s:hi('GitGutterAdd',             s:green,   s:bgemphasis, 0)
+call s:hi('GitGutterChange',          s:yellow,  s:bgemphasis, 0)
+call s:hi('GitGutterChangeDelete',    s:gold,    s:bgemphasis, 0)
+call s:hi('GitGutterDelete',          s:red,     s:bgemphasis, 0)
+call s:hi('EasyMotionTarget',         s:red,     0,            'bold')
+call s:hi('EasyMotionShade',          s:weakfg,  s:bg,         0)
+if s:gui_running
+    call s:hi('EasyMotionIncCursor',  s:bg,      s:fg,         0)
+else
+    " In terminal, cursor color is simply reversed
+    call s:hi('EasyMotionIncCursor',  0,         0,            'reverse')
+endif
+
 
 " Filetype specific
 "
@@ -152,17 +170,11 @@ call s:hi('DiffAdd',                  0,         s:darkgreen,  'bold')
 call s:hi('DiffChange',               0,         s:darkgold,   'bold')
 call s:hi('DiffDelete',               s:fg,      s:mildred,    'bold')
 call s:hi('DiffText',                 0,         s:bg,         0)
-call s:hi('GitGutterAdd',             s:green,   s:bgemphasis, 0)
-call s:hi('GitGutterChange',          s:yellow,  s:bgemphasis, 0)
-call s:hi('GitGutterChangeDelete',    s:gold,    s:bgemphasis, 0)
-call s:hi('GitGutterDelete',          s:red,     s:bgemphasis, 0)
 call s:hi('diffAdded',                s:green,   0,            0)
 call s:hi('diffFile',                 s:yellow,  0,            0)
 call s:hi('diffIndexLine',            s:gold,    0,            0)
 call s:hi('diffNewFile',              s:yellow,  0,            0)
 call s:hi('diffRemoved',              s:red,     0,            0)
-call s:hi('EasyMotionTarget',         s:red,     0,            'bold')
-call s:hi('EasyMotionShade',          s:weakfg,  s:bg,         0)
 call s:hi('gitCommitOverflow',        0,         s:red,        0)
 call s:hi('gitCommitSummary',         s:yellow,  0,            0)
 call s:hi('gitCommitSelectedFile',    s:skyblue, 0,            0)
@@ -194,10 +206,3 @@ call s:hi('vimCommand',               s:skyblue, 0,            0)
 call s:hi('zshDelimiter',             s:skyblue, 0,            0)
 call s:hi('zshPrecommand',            s:red,     0,            0)
 call s:hi('CleverFChar',              s:bg,      s:red,        0)
-if s:gui_running
-    call s:hi('EasyMotionIncCursor',s:bg,     s:fg,         0)
-else
-    " In terminal, cursor color is simply reversed
-    call s:hi('EasyMotionIncCursor',0,        0,            'reverse')
-endif
-
