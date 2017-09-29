@@ -144,19 +144,22 @@ call s:hi('WildMenu',     0,            s:gold,       0)
 "
 " Some plugins introduce its own highlight definitions. Adjust them for
 " working fine with this colorscheme.
-call s:hi('ALEWarning',               s:mikan,   s:bgemphasis, 0)
-call s:hi('ALEInfo',                  0,         s:light,      0)
-call s:hi('GitGutterAdd',             s:green,   s:bgemphasis, 0)
-call s:hi('GitGutterChange',          s:yellow,  s:bgemphasis, 0)
-call s:hi('GitGutterChangeDelete',    s:gold,    s:bgemphasis, 0)
-call s:hi('GitGutterDelete',          s:red,     s:bgemphasis, 0)
-call s:hi('EasyMotionTarget',         s:red,     0,            'bold')
-call s:hi('EasyMotionShade',          s:weakfg,  s:bg,         0)
+call s:hi('ALEWarningSign',           s:orange,     s:bgemphasis, 'bold')
+call s:hi('ALEErrorSign',             s:bgemphasis, s:mildred,    'bold')
+call s:hi('ALEInfoSign',              0,            s:light,      0)
+call s:hi('ALEError',                 0,            s:mildred,    0)
+call s:hi('ALEWarning',               0,            s:darkgold,   0)
+call s:hi('GitGutterAdd',             s:green,      s:bgemphasis, 0)
+call s:hi('GitGutterChange',          s:yellow,     s:bgemphasis, 0)
+call s:hi('GitGutterChangeDelete',    s:gold,       s:bgemphasis, 0)
+call s:hi('GitGutterDelete',          s:red,        s:bgemphasis, 0)
+call s:hi('EasyMotionTarget',         s:red,        0,            'bold')
+call s:hi('EasyMotionShade',          s:weakfg,     s:bg,         0)
 if s:gui_running
-    call s:hi('EasyMotionIncCursor',  s:bg,      s:fg,         0)
+    call s:hi('EasyMotionIncCursor',  s:bg,         s:fg,         0)
 else
     " In terminal, cursor color is simply reversed
-    call s:hi('EasyMotionIncCursor',  0,         0,            'reverse')
+    call s:hi('EasyMotionIncCursor',  0,            0,            'reverse')
 endif
 
 
