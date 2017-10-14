@@ -57,6 +57,7 @@ let g:airline_theme = 'spring_night'
 You can customize some behaviors of this colorscheme.
 
 - **`g:spring_night_kill_italic`**: If `1`, this colorscheme does not use italic attribute. Default value is `0`.
+- **`g:spring_night_kill_bold`**: If `1`, this colorscheme does not use bold attribute. Default value is `0`.
 - **`g:spring_night_high_contrast`**: List of string. If it includes `'cui'`, it uses high contrast version on Vim in terminal. If it includes `'gui'`, it uses high contrast version on gVim. Default value depends on `termguicolors` option.
 
 

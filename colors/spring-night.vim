@@ -18,6 +18,7 @@ let g:colors_name = 'spring-night'
 let s:gui_running = has('gui_running')
 
 let g:spring_night_kill_italic = get(g:, 'spring_night_kill_italic', 0)
+let g:spring_night_kill_bold = get(g:, 'spring_night_kill_bold', 0)
 let g:spring_night_high_contrast = get(g:, 'spring_night_high_contrast',
             \ !s:gui_running && has('termguicolors') && &termguicolors ?
             \   ['cui'] : [])
@@ -64,7 +65,10 @@ function! s:hi(name, fg, bg, attr) abort
     let ctermbg = has_bg ? ('ctermbg=' . a:bg[1]) : ''
 
     let is_italic = a:attr ==# 'italic'
-    if type(a:attr) != s:NUMBER_TYPE && !(g:spring_night_kill_italic && is_italic)
+    let is_bold = a:attr ==# 'bold'
+    if type(a:attr) != s:NUMBER_TYPE &&
+        \ !(g:spring_night_kill_italic && is_italic) &&
+        \ !(g:spring_night_kill_bold && is_bold)
         let attr =  'gui=' . a:attr
         if !is_italic
             let attr .= ' cterm=' . a:attr
