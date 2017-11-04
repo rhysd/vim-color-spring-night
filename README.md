@@ -1,4 +1,4 @@
-Calm Spring Color Scheme for Vim [![Build Status][]](https://travis-ci.org/rhysd/vim-color-spring-night)
+Calm Spring Color Scheme for Vim [![Build Status][]][Travis CI]
 ================================
 
 `spring-night` is a low contrast calm color scheme for Vim. It's colored with deep blue background, shiny yellow foreground and *sakura*:cherry_blossom: text selection.
@@ -61,9 +61,9 @@ You can customize some behaviors of this colorscheme.
 - **`g:spring_night_high_contrast`**: List of string. If it includes `'cui'`, it uses high contrast version on Vim in terminal. If it includes `'gui'`, it uses high contrast version on gVim. Default value depends on `termguicolors` option.
 
 
-## Supported Filetypes
+## Optimized Filetypes
 
-This colorscheme is especially optimized for below filetypes/plugins:
+Color layouts are optimized in following filetypes/plugins:
 
 - `c`
 - `cpp`
@@ -142,6 +142,7 @@ THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 [Vim script on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-vim.jpg?raw=true
 [Go on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-go.jpg?raw=true
 [Build Status]: https://travis-ci.org/rhysd/vim-color-spring-night.svg?branch=travis
+[Travis CI]: https://travis-ci.org/rhysd/vim-color-spring-night
 [clever-f.vim]: https://github.com/rhysd/clever-f.vim
 [vimfiler.vim]: https://github.com/Shougo/vimfiler.vim
 [ale]: https://github.com/w0rp/ale
