@@ -1,7 +1,8 @@
 Calm Spring Color Scheme for Vim [![Build Status][]][Travis CI]
 ================================
 
-`spring-night` is a low contrast calm color scheme for Vim. It's colored with deep blue background, shiny yellow foreground and *sakura*:cherry_blossom: text selection.
+`spring-night` is a low contrast calm color scheme for Vim. It's colored with deep blue background,
+shiny yellow foreground and *sakura*:cherry_blossom: text selection.
 
 - Both GUI 24bit colors and CUI 256 bit colors.
 - Aware of running Vim on translucent window.
@@ -32,9 +33,11 @@ Calm Spring Color Scheme for Vim [![Build Status][]][Travis CI]
 
 If you want to see more code, please visit [demo page site][].
 
+
 ## Installation
 
-Copy `colors` directory into your `~/.vim` (or `~/vimfiles` on Windows) or use `:packadd` (Vim8). Or use your favorite plugin manager.
+Copy `colors` directory into your `~/.vim` (or `~/vimfiles` on Windows) or use `:packadd` (Vim8).
+Or use your favorite plugin manager.
 
 
 ## Usage
@@ -54,11 +57,14 @@ let g:airline_theme = 'spring_night'
 
 ## Customize
 
-You can customize some behaviors of this colorscheme.
+You can customize some behaviors of this colorscheme. Please note that these variable must be
+specified before running `:colorscheme`.
 
 - **`g:spring_night_kill_italic`**: If `1`, this colorscheme does not use italic attribute. Default value is `0`.
 - **`g:spring_night_kill_bold`**: If `1`, this colorscheme does not use bold attribute. Default value is `0`.
-- **`g:spring_night_high_contrast`**: List of string. If it includes `'cui'`, it uses high contrast version on Vim in terminal. If it includes `'gui'`, it uses high contrast version on gVim. Default value depends on `termguicolors` option.
+- **`g:spring_night_high_contrast`**: List of string. If it includes `'cui'`, it uses high contrast
+  version on Vim in terminal. If it includes `'gui'`, it uses high contrast version on gVim. Default
+  value depends on `termguicolors` option.
 
 
 ## Optimized Filetypes
