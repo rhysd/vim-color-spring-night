@@ -24,7 +24,6 @@ let g:spring_night_kill_bold = get(g:, 'spring_night_kill_bold', 0)
 let g:spring_night_high_contrast = get(g:, 'spring_night_high_contrast',
             \ !s:gui_running && s:true_colors ?
             \   ['cui'] : [])
-
 let s:high_contrast =
     \ (s:gui_running && index(g:spring_night_high_contrast, 'gui') >= 0) ||
     \ (!s:gui_running && index(g:spring_night_high_contrast, 'cui') >= 0)
@@ -124,6 +123,8 @@ call s:hi('Number',       s:red,        0,            0)
 call s:hi('Operater',     s:orange,     0,            0)
 call s:hi('Pmenu',        s:purple,     s:bgemphasis, 0)
 call s:hi('PmenuSel',     s:gold,       s:bgstrong,   0)
+call s:hi('PmenuSbar',    s:gold,       s:bgstrong,   0)
+call s:hi('PmenuThumb',   s:gold,       s:weakfg,     0)
 call s:hi('PreProc',      s:orange,     0,            0)
 call s:hi('Question',     s:skyblue,    0,            0)
 call s:hi('Search',       s:NONE,       s:sakura,     'underline')
