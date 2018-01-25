@@ -154,6 +154,8 @@ call s:hi('VertSplit',    s:bgemphasis, s:bg,         0)
 call s:hi('Visual',       0,            s:sakura,     0)
 call s:hi('WarningMsg',   s:mikan,      s:bgemphasis, 0)
 call s:hi('WildMenu',     0,            s:gold,       0)
+call s:hi('ToolbarLine',  s:weakfg,     s:bgstrong,   0)
+call s:hi('ToolbarButton',s:gold,       s:bg,         'bold')
 " TODO: call s:hi('QuickFixLine',     0,            0,       0)
 
 " Plugin specific
