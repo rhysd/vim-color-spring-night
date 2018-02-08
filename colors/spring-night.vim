@@ -36,7 +36,7 @@ let s:fg         = ['#fffeeb', s:high_contrast ? 231 : 230]
 let s:hiddenfg   = ['#607080', 60]
 let s:weakfg     = ['#8090a0', 103]
 let s:weakerfg   = ['#788898', 102]
-let s:palepink   = ['#ebeadb', 224]
+let s:palepink   = ['#e7c6b7', 181]
 let s:yellow     = ['#fffaaa', 229]
 let s:white      = ['#ffffff', 231]
 let s:purple     = ['#e7d5ff', 189]
@@ -277,7 +277,8 @@ call s:hi('qfLineNr',                 s:skyblue, 0,            0)
 call s:hi('rubyFunction',             s:yellow,  0,            0)
 call s:hi('rubyIdentifier',           s:yellow,  0,            0)
 call s:hi('rustEnumVariant',          s:gold,    0,            0)
-call s:hi('rustFuncCall',             s:yellow,  0,            0)
+call s:hi('rustFuncCall',             s:fg,      0,            0)
+call s:hi('rustCommentLineDoc',       s:palepink,0,            0)
 call s:hi('typescriptBraces',         s:fg,      0,            0)
 call s:hi('vimfilerColumn__SizeLine', s:weakfg,  0,            0)
 call s:hi('vimfilerClosedFile',       s:green,   0,            0)
