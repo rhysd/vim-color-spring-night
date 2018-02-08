@@ -52,6 +52,7 @@ let s:darkgold   = ['#685800', 58]
 let s:red        = ['#fd8489', 210]
 let s:mildred    = ['#ab6560', 167]
 let s:mikan      = ['#fb8965', 209]
+let s:darkblue   = ['#00091e', 235]
 let s:NONE       = ['NONE', 'NONE']
 
 let s:NUMBER_TYPE = type(0)
@@ -156,6 +157,13 @@ call s:hi('WarningMsg',   s:mikan,      s:bgemphasis, 0)
 call s:hi('WildMenu',     0,            s:gold,       0)
 call s:hi('ToolbarLine',  s:weakfg,     s:bgstrong,   0)
 call s:hi('ToolbarButton',s:gold,       s:bg,         'bold')
+if !has('nvim')
+    " On Terminal-Normal mode, foreground and background colors of the
+    " colorscheme is used. But some colors (especially blue) are not working
+    " well with this colorscheme. So specify Terminal highlight group to
+    " improve the visibility.
+    call s:hi('Terminal', s:fg,         s:darkblue,   0)
+endif
 " TODO: call s:hi('QuickFixLine',     0,            0,       0)
 
 " Plugin specific
