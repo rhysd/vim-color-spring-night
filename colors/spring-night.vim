@@ -53,6 +53,9 @@ let s:red        = ['#fd8489', 210]
 let s:mildred    = ['#ab6560', 167]
 let s:mikan      = ['#fb8965', 209]
 let s:darkblue   = ['#00091e', 235]
+let s:blue       = ['#7098e6', 69]
+let s:paleblue   = ['#98b8e6', 111]
+let s:lime       = ['#c9fd88', 149]
 let s:NONE       = ['NONE', 'NONE']
 
 let s:NUMBER_TYPE = type(0)
@@ -157,14 +160,60 @@ call s:hi('WarningMsg',   s:mikan,      s:bgemphasis, 0)
 call s:hi('WildMenu',     0,            s:gold,       0)
 call s:hi('ToolbarLine',  s:weakfg,     s:bgstrong,   0)
 call s:hi('ToolbarButton',s:gold,       s:bg,         'bold')
-if !has('nvim')
+" TODO: call s:hi('QuickFixLine',     0,            0,       0)
+
+" Terminal color configuration
+if has('nvim')
+    " Neovim terminal colors configuration
+    " See :help terminal-configuration
+    "
+    "    0: Black
+    "    1: Red
+    "    2: Green
+    "    3: Yellow
+    "    4: Blue
+    "    5: Magenta
+    "    6: Cyan
+    "    7: White
+    "    8: Bright Black
+    "    9: Bright Red
+    "   10: Bright Green
+    "   11: Bright Yellow
+    "   12: Bright Blue
+    "   13: Bright Magenta
+    "   14: Bright Cyan
+    "   15: Bright White
+    let s:i = s:gui_running || s:true_colors ? 0 : 1
+    let s:term_16_colors = [
+    \   s:bg[s:i],
+    \   s:red[s:i],
+    \   s:green[s:i],
+    \   s:gold[s:i],
+    \   s:blue[s:i],
+    \   s:purple[s:i],
+    \   s:skyblue[s:i],
+    \   s:fg[s:i],
+    \   s:bgemphasis[s:i],
+    \   s:mikan[s:i],
+    \   s:lime[s:i],
+    \   s:yellow[s:i],
+    \   s:paleblue[s:i],
+    \   s:palepink[s:i],
+    \   s:skyblue[s:i],
+    \   s:white[s:i],
+    \ ]
+    for s:i in range(len(s:term_16_colors))
+        let g:terminal_color_{s:i} = s:term_16_colors[s:i]
+    endfor
+    unlet s:i
+    " TODO: Maybe TerminalCursor and TerminalCursorNC need to be optimized
+else
     " On Terminal-Normal mode, foreground and background colors of the
     " colorscheme is used. But some colors (especially blue) are not working
     " well with this colorscheme. So specify Terminal highlight group to
     " improve the visibility.
     call s:hi('Terminal', s:fg,         s:darkblue,   0)
 endif
-" TODO: call s:hi('QuickFixLine',     0,            0,       0)
 
 " Plugin specific
 "

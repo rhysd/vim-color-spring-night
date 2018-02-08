@@ -9,7 +9,8 @@ shiny yellow foreground and *sakura*:cherry_blossom: text selection.
 - Enable to tweak contrast.
 - Optimized for many filetypes.
 - Support [vim-gitgutter][] and other some plugins.
-- Vim8+ Terminal-Normal mode support
+- Support Neovim Terminal colors.
+- Support Vim8+ Terminal-Normal mode.
 
 
 ## On gVim (MacVim)
