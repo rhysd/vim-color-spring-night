@@ -11,7 +11,7 @@
 let s:FG = ['#334152', 233]
 let s:BG = ['#435060', 235]
 let s:INFO = ['#646f7c', 238]
-let s:ERR = ['#ab6560', 167]
+let s:ERR = ['#fd7970', 210]
 let s:WARN = ['#fb8965', 209]
 
 " Normal mode
