@@ -95,6 +95,7 @@ Color layouts are optimized in following filetypes/plugins:
 - [clever-f.vim][]
 - [vimfiler.vim][]
 - [ale][]
+- [vim-highlightedyank][]
 - ... and more
 
 ## Contribution
@@ -154,3 +155,4 @@ THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 [clever-f.vim]: https://github.com/rhysd/clever-f.vim
 [vimfiler.vim]: https://github.com/Shougo/vimfiler.vim
 [ale]: https://github.com/w0rp/ale
+[vim-highlightedyank]: https://github.com/machakann/vim-highlightedyank
