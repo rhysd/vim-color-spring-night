@@ -162,57 +162,66 @@ call s:hi('ToolbarLine',  s:weakfg,     s:bgstrong,   0)
 call s:hi('ToolbarButton',s:gold,       s:bg,         'bold')
 " TODO: call s:hi('QuickFixLine',     0,            0,       0)
 
-" Terminal color configuration
-if has('nvim')
-    " Neovim terminal colors configuration
-    " See :help terminal-configuration
+function! s:setup_term_ansi_colors() abort
+    " Neovim or recent Vim terminal colors configuration
+    " See :help terminal-configuration or :help g:terminal_ansi_colors
     "
-    "    0: Black
-    "    1: Red
-    "    2: Green
-    "    3: Yellow
-    "    4: Blue
-    "    5: Magenta
-    "    6: Cyan
-    "    7: White
-    "    8: Bright Black
-    "    9: Bright Red
-    "   10: Bright Green
-    "   11: Bright Yellow
-    "   12: Bright Blue
-    "   13: Bright Magenta
-    "   14: Bright Cyan
-    "   15: Bright White
-    let s:i = s:gui_running || s:true_colors ? 0 : 1
-    let s:term_16_colors = [
-    \   s:bg[s:i],
-    \   s:red[s:i],
-    \   s:green[s:i],
-    \   s:gold[s:i],
-    \   s:blue[s:i],
-    \   s:purple[s:i],
-    \   s:skyblue[s:i],
-    \   s:fg[s:i],
-    \   s:bgemphasis[s:i],
-    \   s:mikan[s:i],
-    \   s:lime[s:i],
-    \   s:yellow[s:i],
-    \   s:paleblue[s:i],
-    \   s:palepink[s:i],
-    \   s:skyblue[s:i],
-    \   s:white[s:i],
+    "    0: Black (black)
+    "    1: Red (dark red)
+    "    2: Green (dark green)
+    "    3: Yellow (brown)
+    "    4: Blue (dark blue)
+    "    5: Magenta (dark magenta)
+    "    6: Cyan (dark cyan)
+    "    7: White (light grey)
+    "    8: Bright Black (dark grey)
+    "    9: Bright Red (red)
+    "   10: Bright Green (green)
+    "   11: Bright Yellow (yellow)
+    "   12: Bright Blue (blue)
+    "   13: Bright Magenta (magenta)
+    "   14: Bright Cyan (cyan)
+    "   15: Bright White (white)
+    let term_16_colors = [
+    \   s:bg,
+    \   s:red,
+    \   s:green,
+    \   s:gold,
+    \   s:blue,
+    \   s:purple,
+    \   s:skyblue,
+    \   s:fg,
+    \   s:bgemphasis,
+    \   s:mikan,
+    \   s:lime,
+    \   s:yellow,
+    \   s:paleblue,
+    \   s:palepink,
+    \   s:skyblue,
+    \   s:white,
     \ ]
-    for s:i in range(len(s:term_16_colors))
-        let g:terminal_color_{s:i} = s:term_16_colors[s:i]
-    endfor
-    unlet s:i
-    " TODO: Maybe TerminalCursor and TerminalCursorNC need to be optimized
+    if has('nvim')
+        let fg_or_bg = s:gui_running || s:true_colors ? 0 : 1
+        for i in range(len(term_16_colors))
+            let g:terminal_color_{i} = term_16_colors[i][fg_or_bg]
+        endfor
+        " TODO: Maybe TerminalCursor and TerminalCursorNC need to be optimized
+        return
+    endif
+
+    " if vim
+    let g:terminal_ansi_colors = map(term_16_colors, 'v:val[0]')
+endfunction
+
+" Terminal color configuration
+if has('nvim') || (s:gui_running || s:true_colors) && exists('*term_setansicolors')
+    call s:setup_term_ansi_colors()
 else
     " On Terminal-Normal mode, foreground and background colors of the
     " colorscheme is used. But some colors (especially blue) are not working
     " well with this colorscheme. So specify Terminal highlight group to
     " improve the visibility.
-    call s:hi('Terminal', s:fg,         s:darkblue,   0)
+    call s:hi('Terminal', s:fg, s:darkblue, 0)
 endif
 
 " Plugin specific
