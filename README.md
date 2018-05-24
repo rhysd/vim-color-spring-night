@@ -4,13 +4,12 @@ Calm Spring Color Scheme for Vim [![Build Status][]][Travis CI]
 `spring-night` is a low contrast calm color scheme for Vim. It's colored with deep blue background,
 shiny yellow foreground and *sakura*:cherry_blossom: text selection.
 
-- Both GUI 24bit colors and CUI 256 bit colors.
+- Both GUI/CUI 24 bit colors and CUI 256 colors.
 - Aware of running Vim on translucent window.
 - Enable to tweak contrast.
 - Optimized for many filetypes.
-- Support [vim-gitgutter][] and other some plugins.
-- Support Neovim terminal ANSI colors.
-- Support Vim terminal ANSI colors (Vim 8.0.1685 or later).
+- Support [vim-gitgutter][] and other several plugins.
+- Support Neovim/Vim (8.0.1685 or later) terminal ANSI colors.
 
 
 ## On gVim (MacVim)
@@ -69,7 +68,7 @@ specified before running `:colorscheme`.
   value depends on `termguicolors` option.
 
 
-## Optimized Filetypes
+## Optimized Filetypes and Plugins
 
 Color layouts are optimized in following filetypes/plugins:
 
@@ -98,6 +97,7 @@ Color layouts are optimized in following filetypes/plugins:
 - [vim-highlightedyank][]
 - ... and more
 
+
 ## Contribution
 
 If you find some odd highlight, I'll be happy if you report it to [issues](https://github.com/rhysd/vim-color-spring-night/issues/new) with how to reproduce.
@@ -106,11 +106,13 @@ And pull requests are of course welcome :smile:
 For colors palette, please see [the source code directly](https://github.com/rhysd/vim-color-spring-night/blob/master/colors/spring-night.vim).
 The variable definitions are color table of this colorscheme.
 
+
 ## Bonus: Slack Theme
 
 ```
 #132132,#3a4b5c,#fedf81,#132132,#8090a0,#fffeeb,#a9dd9d,#a9667a
 ```
+
 
 ## License
 

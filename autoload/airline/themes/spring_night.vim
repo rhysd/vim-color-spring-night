@@ -47,6 +47,7 @@ let s:IM = s:INFO
 " Inactive mode
 let s:IA = [ '#8090a0', s:N3[1], 103, s:N3[3], '' ]
 
+" TODO: Terminal mode
 " }}}
 
 " Placement {{{
