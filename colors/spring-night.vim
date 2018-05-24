@@ -24,6 +24,7 @@ let g:spring_night_kill_bold = get(g:, 'spring_night_kill_bold', 0)
 let g:spring_night_high_contrast = get(g:, 'spring_night_high_contrast',
             \ !s:gui_running && s:true_colors ?
             \   ['cui'] : [])
+let g:spring_night_highlight_terminal = get(g:, 'spring_night_highlight_terminal', 1)
 let s:high_contrast =
     \ (s:gui_running && index(g:spring_night_high_contrast, 'gui') >= 0) ||
     \ (!s:gui_running && index(g:spring_night_high_contrast, 'cui') >= 0)
@@ -214,14 +215,16 @@ function! s:setup_term_ansi_colors() abort
 endfunction
 
 " Terminal color configuration
-if has('nvim') || (s:gui_running || s:true_colors) && exists('*term_setansicolors')
-    call s:setup_term_ansi_colors()
-else
-    " On Terminal-Normal mode, foreground and background colors of the
-    " colorscheme is used. But some colors (especially blue) are not working
-    " well with this colorscheme. So specify Terminal highlight group to
-    " improve the visibility.
-    call s:hi('Terminal', s:fg, s:darkblue, 0)
+if g:spring_night_highlight_terminal
+    if has('nvim') || (s:gui_running || s:true_colors) && exists('*term_setansicolors')
+        call s:setup_term_ansi_colors()
+    else
+        " On Terminal-Normal mode, foreground and background colors of the
+        " colorscheme is used. But some colors (especially blue) are not working
+        " well with this colorscheme. So specify Terminal highlight group to
+        " improve the visibility.
+        call s:hi('Terminal', s:fg, s:darkblue, 0)
+    endif
 endif
 
 " Plugin specific
