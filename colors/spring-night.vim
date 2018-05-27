@@ -52,6 +52,7 @@ let s:gold       = ['#fedf81', 222]
 let s:darkgold   = ['#685800', 58]
 let s:red        = ['#fd8489', 210]
 let s:mildred    = ['#ab6560', 167]
+let s:crimson    = ['#ff6a6f', 203]
 let s:mikan      = ['#fb8965', 209]
 let s:darkblue   = ['#00091e', 235]
 let s:blue       = ['#7098e6', 69]
@@ -185,7 +186,7 @@ function! s:setup_term_ansi_colors() abort
     "   15: Bright White (white)
     let term_16_colors = [
     \   s:bg,
-    \   s:red,
+    \   s:crimson,
     \   s:green,
     \   s:gold,
     \   s:blue,
@@ -193,7 +194,7 @@ function! s:setup_term_ansi_colors() abort
     \   s:skyblue,
     \   s:fg,
     \   s:bgemphasis,
-    \   s:mikan,
+    \   s:red,
     \   s:lime,
     \   s:yellow,
     \   s:paleblue,
