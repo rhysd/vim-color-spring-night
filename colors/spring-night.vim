@@ -19,6 +19,7 @@ let s:gui_running = has('gui_running')
 let s:true_colors = has('termguicolors') && &termguicolors
 let s:undercurl = s:gui_running ? 'undercurl' : 'underline'
 
+let g:spring_night_italic_comments = get(g:, 'spring_night_italic_comments', 0)
 let g:spring_night_kill_italic = get(g:, 'spring_night_kill_italic', 0)
 let g:spring_night_kill_bold = get(g:, 'spring_night_kill_bold', 0)
 let g:spring_night_high_contrast = get(g:, 'spring_night_high_contrast',
@@ -98,7 +99,7 @@ endfunction
 call s:hi('Boolean',      s:red,        0,            0)
 call s:hi('Character',    s:green,      0,            0)
 call s:hi('ColorColumn',  0,            s:bgstrong,   0)
-call s:hi('Comment',      s:weakfg,     0,            0)
+call s:hi('Comment',      s:weakfg,     0,            g:spring_night_italic_comments ? 'italic' : 0)
 call s:hi('Conceal',      s:mikan,      s:bg,         0)
 call s:hi('Conditional',  s:skyblue,    0,            0)
 call s:hi('Constant',     s:red,        0,            0)
