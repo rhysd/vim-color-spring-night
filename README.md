@@ -84,6 +84,7 @@ Color layouts are optimized in following filetypes/plugins:
 - `markdown`
 - `ocaml`
 - `python`
+- `rst`
 - `ruby`
 - `rust`
 - `typescript`
