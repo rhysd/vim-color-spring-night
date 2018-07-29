@@ -66,12 +66,12 @@ specified before running `:colorscheme`.
 - **`g:spring_night_high_contrast`**: List of string. If it includes `'cui'`, it uses high contrast
   version on Vim in terminal. If it includes `'gui'`, it uses high contrast version on gVim. Default
   value depends on `termguicolors` option.
-- **`g:spring_night_highlight_terminal`**: If `1`, a terminal widnow is also highlighted with this color
+- **`g:spring_night_highlight_terminal`**: If `1`, a terminal windnow is also highlighted with this color
   scheme. Otherwise default ANSI colors are used. Default value is `1`.
 
 ## Optimized Filetypes and Plugins
 
-Color layouts are optimized in following filetypes/plugins:
+Color layouts are optimized for following filetypes/plugins:
 
 - `c`
 - `cpp`
