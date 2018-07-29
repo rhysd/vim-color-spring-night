@@ -89,6 +89,7 @@ Color layouts are optimized in following filetypes/plugins:
 - `rust`
 - `typescript`
 - `vim`
+- `wast`
 - `zsh`
 - [ctrlp][]
 - [vim-gitgutter][]
