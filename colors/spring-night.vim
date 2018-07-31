@@ -36,7 +36,7 @@ let s:bgemphasis = ['#3a4b5c', 235]
 let s:bgstrong   = ['#536273', 238]
 let s:fg         = ['#fffeeb', s:high_contrast ? 231 : 230]
 let s:hiddenfg   = ['#607080', 60]
-let s:weakfg     = ['#8090a0', 103]
+let s:weakfg     = ['#8d9eb2', 103]
 let s:weakerfg   = ['#788898', 102]
 let s:palepink   = ['#e7c6b7', 181]
 let s:yellow     = ['#fffaaa', 229]
@@ -44,6 +44,7 @@ let s:white      = ['#ffffff', 231]
 let s:purple     = ['#e7d5ff', 189]
 let s:gray       = ['#545f6e', 59]
 let s:light      = ['#646f7c', 60]
+let s:yaezakura  = ['#70495d', 95]
 let s:sakura     = ['#a9667a', 132]
 let s:orange     = ['#f0aa8a', 216]
 let s:green      = ['#a9dd9d', 150]
@@ -134,7 +135,7 @@ call s:hi('PmenuSbar',    s:gold,       s:bgstrong,   0)
 call s:hi('PmenuThumb',   s:gold,       s:weakfg,     0)
 call s:hi('PreProc',      s:orange,     0,            0)
 call s:hi('Question',     s:skyblue,    0,            0)
-call s:hi('Search',       s:NONE,       s:sakura,     'underline')
+call s:hi('Search',       s:NONE,       s:yaezakura,  'underline')
 call s:hi('SignColumn',   0,            s:bgemphasis, 0)
 call s:hi('Special',      s:yellow,     0,            'bold')
 call s:hi('SpecialKey',   s:hiddenfg,   0,            0)
@@ -158,7 +159,7 @@ call s:hi('Todo',         s:bg,         s:red,        'bold')
 call s:hi('Type',         s:gold,       0,            0)
 call s:hi('Underlined',   s:skyblue,    0,            'underline')
 call s:hi('VertSplit',    s:bgemphasis, s:bg,         0)
-call s:hi('Visual',       0,            s:sakura,     0)
+call s:hi('Visual',       0,            s:yaezakura,  0)
 call s:hi('WarningMsg',   s:mikan,      s:bgemphasis, 0)
 call s:hi('WildMenu',     0,            s:gold,       0)
 call s:hi('ToolbarLine',  s:weakfg,     s:bgstrong,   0)
