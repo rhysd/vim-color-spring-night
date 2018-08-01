@@ -4,7 +4,7 @@ Calm Spring Color Scheme for Vim [![Build Status][]][Travis CI]
 `spring-night` is a low contrast calm color scheme for Vim. It's colored with deep blue background,
 shiny yellow foreground and *sakura*:cherry_blossom: text selection.
 
-- Both GUI/CUI 24 bit colors and CUI 256 colors.
+- Both GUI/CUI 24bit colors and CUI 256 colors.
 - Aware of running Vim on translucent window.
 - Enable to tweak contrast.
 - Optimized for many filetypes.
@@ -55,6 +55,20 @@ This package provides a theme for [vim-airline][].
 let g:airline_theme = 'spring_night'
 ```
 
+If you want to use 24bit colors on Vim in a terminal window, you also need to set `termguicolors`
+option. Please note that it requires a ISO-8613-3 compatible terminal to enable 24bit colors.
+
+```vim
+" For Vim 7.4.1799 or later
+if has('termguicolors')
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
+endif
+
+" For Neovim 0.1.5 or later
+set termguicolors
+```
 
 ## Customize
 
