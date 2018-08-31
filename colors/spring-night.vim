@@ -60,6 +60,7 @@ let s:darkblue   = ['#00091e', 235]
 let s:blue       = ['#7098e6', 69]
 let s:paleblue   = ['#98b8e6', 111]
 let s:lime       = ['#c9fd88', 149]
+let s:inu        = ['#ddbc96', 180]
 let s:NONE       = ['NONE', 'NONE']
 
 let s:NUMBER_TYPE = type(0)
@@ -130,8 +131,8 @@ call s:hi('Normal',       s:fg,         s:bg,         0)
 call s:hi('Number',       s:red,        0,            0)
 call s:hi('Operater',     s:orange,     0,            0)
 call s:hi('Pmenu',        s:purple,     s:bgemphasis, 0)
-call s:hi('PmenuSel',     s:gold,       s:bgstrong,   0)
 call s:hi('PmenuSbar',    s:gold,       s:bgstrong,   0)
+call s:hi('PmenuSel',     s:gold,       s:bgstrong,   0)
 call s:hi('PmenuThumb',   s:gold,       s:weakfg,     0)
 call s:hi('PreProc',      s:orange,     0,            0)
 call s:hi('Question',     s:skyblue,    0,            0)
@@ -140,13 +141,13 @@ call s:hi('SignColumn',   0,            s:bgemphasis, 0)
 call s:hi('Special',      s:yellow,     0,            'bold')
 call s:hi('SpecialKey',   s:hiddenfg,   0,            0)
 call s:hi('SpellBad',     s:red,        0,            s:undercurl, s:red)
-call s:hi('SpellLocal',   s:red,        0,            s:undercurl, s:red)
 call s:hi('SpellCap',     s:purple,     0,            s:undercurl, s:purple)
+call s:hi('SpellLocal',   s:red,        0,            s:undercurl, s:red)
 call s:hi('SpellRare',    s:yellow,     0,            s:undercurl, s:yellow)
 call s:hi('Statement',    s:skyblue,    0,            0)
 call s:hi('StatusLine',   s:fg,         s:bgstrong,   'bold')
 call s:hi('StatusLineNC', s:weakfg,     s:bgemphasis, 'NONE')
-call s:hi('StatusLineTerm',   s:fg,     s:bgstrong,   'bold')
+call s:hi('StatusLineTerm', s:fg,       s:bgstrong,   'bold')
 call s:hi('StatusLineTermNC', s:weakfg, s:bgemphasis, 'NONE')
 call s:hi('StorageClass', s:gold,       0,            'italic')
 call s:hi('String',       s:green,      0,            0)
@@ -156,14 +157,14 @@ call s:hi('TabLineSel',   s:gold,       s:bg,         'bold')
 call s:hi('Tag',          s:orange,     0,            0)
 call s:hi('Title',        s:gold,       0,            'bold')
 call s:hi('Todo',         s:bg,         s:red,        'bold')
+call s:hi('ToolbarButton',s:gold,       s:bg,         'bold')
+call s:hi('ToolbarLine',  s:weakfg,     s:bgstrong,   0)
 call s:hi('Type',         s:gold,       0,            0)
 call s:hi('Underlined',   s:skyblue,    0,            'underline')
 call s:hi('VertSplit',    s:bgemphasis, s:bg,         0)
 call s:hi('Visual',       0,            s:yaezakura,  0)
 call s:hi('WarningMsg',   s:mikan,      s:bgemphasis, 0)
 call s:hi('WildMenu',     0,            s:gold,       0)
-call s:hi('ToolbarLine',  s:weakfg,     s:bgstrong,   0)
-call s:hi('ToolbarButton',s:gold,       s:bg,         'bold')
 " TODO: call s:hi('QuickFixLine',     0,            0,       0)
 
 function! s:setup_term_ansi_colors() abort
@@ -255,8 +256,7 @@ call s:hi('GitGutterChangeDelete',    s:gold,       s:bgemphasis, 0)
 call s:hi('GitGutterDelete',          s:red,        s:bgemphasis, 0)
 call s:hi('HighlightedyankRegion',    0,            s:bgemphasis, 0)
 
-
-" Filetype specific
+" File type specific
 "
 " Markdown is highlighted with HTML highlights in gVim but link text doesn't
 " have a color. So define it here.
