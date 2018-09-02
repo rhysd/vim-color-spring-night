@@ -1,0 +1,7 @@
+[package]
+name = "gen-color-spring-night"
+version = "0.0.0"
+authors = ["rhysd <lin90162@yahoo.co.jp>"]
+
+[dependencies]
+lazy_static = "1.1"
