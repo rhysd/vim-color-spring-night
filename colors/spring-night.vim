@@ -206,9 +206,9 @@ function! s:setup_term_ansi_colors() abort
     \   s:white,
     \ ]
     if has('nvim')
-        let fg_or_bg = s:gui_running || s:true_colors ? 0 : 1
+        let gui_or_term = s:gui_running || s:true_colors ? 0 : 1
         for i in range(len(term_16_colors))
-            let g:terminal_color_{i} = term_16_colors[i][fg_or_bg]
+            let g:terminal_color_{i} = term_16_colors[i][gui_or_term]
         endfor
         " TODO: Maybe TerminalCursor and TerminalCursorNC need to be optimized
         return
