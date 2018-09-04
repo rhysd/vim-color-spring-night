@@ -375,8 +375,8 @@ fn build_highlight_item<T: Display>(
     match colors.defs.get(name).unwrap() {
         Color(c, None) => format!("{}={}", item_name, c),
         Color(high, Some(low)) => format!(
-            "'{}=' . g:spring_night_high_contrast ? '{}' : '{}'",
-            item_name, high, low
+            "g:spring_night_high_contrast ? '{}={}' : '{}={}'",
+            item_name, high, item_name, low
         ),
     }
 }
@@ -392,7 +392,7 @@ fn write_highlight<T: Display, O: io::Write>(
 
     if let Some(ref name) = highlight.fg {
         let item = build_highlight_item(name, colors, "guifg", "ctermfg");
-        if item.starts_with('\'') {
+        if item.ends_with('\'') {
             use_execute = true;
         }
         args.push(item);
@@ -400,7 +400,7 @@ fn write_highlight<T: Display, O: io::Write>(
 
     if let Some(ref name) = highlight.bg {
         let item = build_highlight_item(name, colors, "guibg", "ctermbg");
-        if item.starts_with('\'') {
+        if item.ends_with('\'') {
             use_execute = true;
         }
         args.push(item);
