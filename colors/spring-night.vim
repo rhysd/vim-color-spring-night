@@ -256,7 +256,7 @@ if !exists('s:defs')
         " colorscheme is used. But some colors (especially blue) are not working
         " well with this colorscheme. So specify Terminal highlight group to
         " improve the visibility.
-        let s:defs += ['Terminal', s:fg, s:darkblue, 0]
+        let s:defs += [['Terminal', s:fg, s:darkblue, 0]]
     endif
 endif " if !exists('s:defs')
 
