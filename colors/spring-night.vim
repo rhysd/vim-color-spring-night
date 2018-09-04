@@ -4,14 +4,27 @@
 " License: MIT
 "   Copyright (c) 2016 rhysd
 
+" Optimization:
+" `:set background=dark` has some side effects which takes a time.
+" Avoid the side effects when the value is already 'dark'.
 if &background !=# 'dark'
     set background=dark
 endif
-" Remove all existing highlighting and set the defaults.
-hi clear
+
+" Optimization:
+" `:hi clear` takes a lot of time since it clears all highlights and set default
+" highlights. This guard avoids `:hi clear` on loading vimrc since in almost
+" all cases no additional highlight is set at start up. Almost all additional
+" highlights are set by Vim plugins.
+if !has('vim_starting')
+    " Remove all existing highlighting and set the defaults.
+    hi clear
+endif
+
 if exists('g:syntax_on')
     syntax reset
 endif
+
 let g:colors_name = 'spring-night'
 
 if !exists('s:defs')
