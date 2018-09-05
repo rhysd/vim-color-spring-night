@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate lazy_static;
-
 use std::collections::HashMap;
 use std::fmt::Display;
 use std::io;
@@ -113,10 +110,19 @@ macro_rules! fgbgsp {
     };
 }
 
-fn write_header<O: io::Write>(out: &mut O, name: &'static str) -> io::Result<()> {
-    write!(
-        out,
-        r#"" {name}: Calm-colored dark color scheme
+#[derive(Debug)]
+struct Writer<'a, W: io::Write + 'a> {
+    table: ColorTable,
+    highlights: &'a [HowToHighlight],
+    term_colors: &'a [&'static str],
+    out: &'a mut W,
+}
+
+impl<'a, W: io::Write> Writer<'a, W> {
+    fn write_header(&mut self, name: &'static str) -> io::Result<()> {
+        write!(
+            self.out,
+            r#"" {name}: Calm-colored dark color scheme
 "
 " Author: rhysd <lin90162@yahoo.co.jp>
 " License: MIT
@@ -165,171 +171,173 @@ else
 endif
 
 "#,
-        name = name
-    )
-}
-
-fn write_contrast_color_variables<O: io::Write>(out: &mut O, table: &ColorTable) -> io::Result<()> {
-    for (name, color) in table.iter() {
-        if let ColorCode::Contrast(high, low) = color.gui {
-            writeln!(
-                out,
-                "let s:{}_gui = g:spring_night_high_contrast ? '{}' : '{}'",
-                name, high, low
-            )?;
-        }
-        if let ColorCode::Contrast(high, low) = color.cterm {
-            writeln!(
-                out,
-                "let s:{}_cterm = g:spring_night_high_contrast ? '{}' : '{}'",
-                name, high, low
-            )?;
-        }
+            name = name
+        )
     }
-    writeln!(out, "")
-}
 
-fn build_highlight_item<T: Display>(
-    color_name: &'static str,
-    item_name: &'static str,
-    color: &ColorCode<T>,
-) -> String {
-    match color {
-        ColorCode::Normal(c) => format!("{}={}", item_name, c),
-        ColorCode::Contrast(..) => if item_name.starts_with("gui") {
-            format!("'{}='.s:{}_gui", item_name, color_name)
-        } else {
-            format!("'{}='.s:{}_cterm", item_name, color_name)
-        },
+    fn write_contrast_color_variables(&mut self) -> io::Result<()> {
+        for (name, color) in self.table.iter() {
+            if let ColorCode::Contrast(high, low) = color.gui {
+                writeln!(
+                    self.out,
+                    "let s:{}_gui = g:spring_night_high_contrast ? '{}' : '{}'",
+                    name, high, low
+                )?;
+            }
+            if let ColorCode::Contrast(high, low) = color.cterm {
+                writeln!(
+                    self.out,
+                    "let s:{}_cterm = g:spring_night_high_contrast ? '{}' : '{}'",
+                    name, high, low
+                )?;
+            }
+        }
+        writeln!(self.out, "")
     }
-}
 
-fn write_highlight<O: io::Write>(
-    out: &mut O,
-    highlight: &Highlight,
-    table: &ColorTable,
-    indent: u32,
-) -> io::Result<()> {
-    let mut args = vec![highlight.name.to_string(), "term=NONE".to_string()];
-
-    for &(color_name, gui, cterm) in &[
-        (&highlight.fg, "guifg", "ctermfg"),
-        (&highlight.bg, "guibg", "ctermbg"),
-    ] {
-        if let Some(ref name) = color_name {
-            if name != &"NONE" {
-                let color = table.get(name).unwrap();
-                args.push(build_highlight_item(name, gui, &color.gui));
-                args.push(build_highlight_item(name, cterm, &color.cterm));
+    fn build_highlight_item<T: Display>(
+        &self,
+        color_name: &'static str,
+        item_name: &'static str,
+        color: &ColorCode<T>,
+    ) -> String {
+        match color {
+            ColorCode::Normal(c) => format!("{}={}", item_name, c),
+            ColorCode::Contrast(..) => if item_name.starts_with("gui") {
+                format!("'{}='.s:{}_gui", item_name, color_name)
             } else {
-                args.push(build_highlight_item(name, gui, &NONE_COLOR));
-                args.push(build_highlight_item(name, cterm, &NONE_COLOR));
+                format!("'{}='.s:{}_cterm", item_name, color_name)
+            },
+        }
+    }
+
+    fn write_highlight(&mut self, highlight: &Highlight, indent: u32) -> io::Result<()> {
+        let mut args = vec![highlight.name.to_string(), "term=NONE".to_string()];
+
+        for &(color_name, gui, cterm) in &[
+            (&highlight.fg, "guifg", "ctermfg"),
+            (&highlight.bg, "guibg", "ctermbg"),
+        ] {
+            if let Some(ref name) = color_name {
+                if name != &"NONE" {
+                    let color = self.table.get(name).unwrap();
+                    args.push(self.build_highlight_item(name, gui, &color.gui));
+                    args.push(self.build_highlight_item(name, cterm, &color.cterm));
+                } else {
+                    args.push(self.build_highlight_item(name, gui, &NONE_COLOR));
+                    args.push(self.build_highlight_item(name, cterm, &NONE_COLOR));
+                }
             }
         }
-    }
 
-    if let Some(ref name) = highlight.sp {
-        // Note: ctermsp does not exist
-        args.push(build_highlight_item(
-            name,
-            "guisp",
-            &table.get(name).unwrap().gui, // Currently guisp must not be NONE
-        ));
-    }
-
-    let attr_item = match highlight.attr {
-        HighlightAttr::Nothing => "",
-        HighlightAttr::Bold => "!g:spring_night_kill_bold ? 'gui=bold cterm=bold' : ''",
-        HighlightAttr::Italic => "!g:spring_night_kill_italic ? 'gui=italic' : ''",
-        HighlightAttr::Underline => "gui=underline cterm=underline",
-        HighlightAttr::Reverse => "gui=reverse cterm=reverse",
-        HighlightAttr::None => "gui=NONE cterm=NONE",
-        HighlightAttr::CommentItalic => {
-            "g:spring_night_italic_comments && !g:spring_night_kill_italic ? 'gui=italic' : ''"
+        if let Some(ref name) = highlight.sp {
+            // Note: ctermsp does not exist
+            args.push(self.build_highlight_item(
+                name,
+                "guisp",
+                &self.table.get(name).unwrap().gui, // Currently guisp must not be NONE
+            ));
         }
-        HighlightAttr::Undercurl => "'gui='.s:undercurl 'cterm='.s:undercurl",
-    };
-    if attr_item != "" {
-        args.push(attr_item.to_string());
+
+        let attr_item = match highlight.attr {
+            HighlightAttr::Nothing => "",
+            HighlightAttr::Bold => "!g:spring_night_kill_bold ? 'gui=bold cterm=bold' : ''",
+            HighlightAttr::Italic => "!g:spring_night_kill_italic ? 'gui=italic' : ''",
+            HighlightAttr::Underline => "gui=underline cterm=underline",
+            HighlightAttr::Reverse => "gui=reverse cterm=reverse",
+            HighlightAttr::None => "gui=NONE cterm=NONE",
+            HighlightAttr::CommentItalic => {
+                "g:spring_night_italic_comments && !g:spring_night_kill_italic ? 'gui=italic' : ''"
+            }
+            HighlightAttr::Undercurl => "'gui='.s:undercurl 'cterm='.s:undercurl",
+        };
+        if attr_item != "" {
+            args.push(attr_item.to_string());
+        }
+
+        let indent = match indent {
+            0u32 => "",
+            1u32 => "    ",
+            _ => unreachable!(),
+        };
+
+        if args
+            .iter()
+            .any(|a| a.starts_with('\'') || a.ends_with('\''))
+        {
+            for arg in args.iter_mut() {
+                if !arg.starts_with('\'') && !arg.ends_with('\'') {
+                    *arg = format!("'{}'", arg);
+                }
+            }
+            writeln!(self.out, "{}exe 'hi' {}", indent, args.join(" "))
+        } else {
+            writeln!(self.out, "{}hi {}", indent, args.join(" "))
+        }
     }
 
-    let indent = match indent {
-        0u32 => "",
-        1u32 => "    ",
-        _ => unreachable!(),
-    };
-
-    if args
-        .iter()
-        .any(|a| a.starts_with('\'') || a.ends_with('\''))
-    {
-        for arg in args.iter_mut() {
-            if !arg.starts_with('\'') && !arg.ends_with('\'') {
-                *arg = format!("'{}'", arg);
+    fn write_highlights(&mut self) -> io::Result<()> {
+        for highlight in self.highlights {
+            match highlight {
+                Always(ref hl) => self.write_highlight(hl, 0u32)?,
+                Switch(ref gui, ref term) => {
+                    writeln!(self.out, "if s:gui_running")?;
+                    self.write_highlight(gui, 1u32)?;
+                    writeln!(self.out, "else")?;
+                    self.write_highlight(term, 1u32)?;
+                    writeln!(self.out, "endif")?;
+                }
             }
         }
-        writeln!(out, "{}exe 'hi' {}", indent, args.join(" "))
-    } else {
-        writeln!(out, "{}hi {}", indent, args.join(" "))
+        writeln!(self.out, "")
     }
-}
 
-fn write_highlights<O: io::Write>(out: &mut O, table: &ColorTable) -> io::Result<()> {
-    for highlight in HIGHLIGHTS {
-        match highlight {
-            Always(ref hl) => write_highlight(out, hl, table, 0u32)?,
-            Switch(ref gui, ref term) => {
-                writeln!(out, "if s:gui_running")?;
-                write_highlight(out, gui, table, 1u32)?;
-                writeln!(out, "else")?;
-                write_highlight(out, term, table, 1u32)?;
-                writeln!(out, "endif")?;
-            }
+    fn write_term_colors(&mut self) -> io::Result<()> {
+        writeln!(self.out, "if has('nvim')")?;
+        writeln!(self.out, "    if s:gui_running || s:true_colors")?;
+        for (index, name) in self.term_colors.iter().enumerate() {
+            writeln!(
+                self.out,
+                "        let g:terminal_color_{} = '{}'",
+                index,
+                self.table.get(name).unwrap().gui.normal()
+            )?;
         }
+        writeln!(self.out, "    else")?;
+        for (index, name) in self.term_colors.iter().enumerate() {
+            writeln!(
+                self.out,
+                "        let g:terminal_color_{} = {}",
+                index,
+                self.table.get(name).unwrap().cterm.normal()
+            )?;
+        }
+        writeln!(self.out, "    endif")?;
+        writeln!(self.out, "else")?;
+        writeln!(self.out, "    let g:terminal_ansi_colors = [")?;
+        for name in self.term_colors.iter() {
+            writeln!(
+                self.out,
+                "\\       '{}',",
+                self.table.get(name).unwrap().gui.normal()
+            )?;
+        }
+        writeln!(self.out, "\\   ]")?;
+        writeln!(self.out, "endif")
     }
-    writeln!(out, "")
+
+    fn write_color_scheme(&mut self) -> io::Result<()> {
+        self.write_header("spring-night")?;
+        self.write_contrast_color_variables()?;
+        self.write_highlights()?;
+        self.write_term_colors()
+    }
 }
 
-fn write_term_colors<O: io::Write>(out: &mut O, table: &ColorTable) -> io::Result<()> {
-    writeln!(out, "if has('nvim')")?;
-    writeln!(out, "    if s:gui_running || s:true_colors")?;
-    for (index, name) in TERM_COLORS.iter().enumerate() {
-        writeln!(
-            out,
-            "        let g:terminal_color_{} = '{}'",
-            index,
-            table.get(name).unwrap().gui.normal()
-        )?;
-    }
-    writeln!(out, "    else")?;
-    for (index, name) in TERM_COLORS.iter().enumerate() {
-        writeln!(
-            out,
-            "        let g:terminal_color_{} = {}",
-            index,
-            table.get(name).unwrap().cterm.normal()
-        )?;
-    }
-    writeln!(out, "    endif")?;
-    writeln!(out, "else")?;
-    writeln!(out, "    let g:terminal_ansi_colors = [")?;
-    for name in TERM_COLORS.iter() {
-        writeln!(out, "\\       '{}',", table.get(name).unwrap().gui.normal())?;
-    }
-    writeln!(out, "\\   ]")?;
-    writeln!(out, "endif")
-}
-
-fn write_color_scheme<O: io::Write>(out: &mut O, table: &ColorTable) -> io::Result<()> {
-    write_header(out, "spring-night")?;
-    write_contrast_color_variables(out, table)?;
-    write_highlights(out, table)?;
-    write_term_colors(out, table)
-}
-
-lazy_static! {
+fn main() -> io::Result<()> {
+    let mut table = HashMap::new();
     #[cfg_attr(rustfmt, rustfmt_skip)]
-    static ref COLOR_TABLE: ColorTable = {
+    {
         fn color(gui: ColorCode<&'static str>, cterm: ColorCode<u8>) -> Color {
             Color { gui, cterm }
         }
@@ -342,209 +350,214 @@ lazy_static! {
             ColorCode::Contrast(high, low)
         }
 
-        let mut m = HashMap::new();
-        m.insert("bg",         color(contrast("#132132", "#334152"), normal(233)));
-        m.insert("bgemphasis", color(normal("#3a4b5c"),              normal(235)));
-        m.insert("bgstrong",   color(normal("#536273"),              normal(238)));
-        m.insert("fg",         color(normal("#fffeeb"),              contrast(231, 230)));
-        m.insert("hiddenfg",   color(normal("#607080"),              normal(60)));
-        m.insert("weakfg",     color(normal("#8d9eb2"),              normal(103)));
-        m.insert("weakerfg",   color(normal("#788898"),              normal(102)));
-        m.insert("palepink",   color(normal("#e7c6b7"),              normal(181)));
-        m.insert("yellow",     color(normal("#f0eaaa"),              normal(229)));
-        m.insert("white",      color(normal("#ffffff"),              normal(231)));
-        m.insert("purple",     color(normal("#e7d5ff"),              normal(189)));
-        m.insert("gray",       color(normal("#545f6e"),              normal(59)));
-        m.insert("light",      color(normal("#646f7c"),              normal(60)));
-        m.insert("yaezakura",  color(normal("#70495d"),              normal(95)));
-        m.insert("sakura",     color(normal("#a9667a"),              normal(132)));
-        m.insert("orange",     color(normal("#f0aa8a"),              normal(216)));
-        m.insert("green",      color(normal("#a9dd9d"),              normal(150)));
-        m.insert("darkgreen",  color(normal("#5f8770"),              normal(65)));
-        m.insert("skyblue",    color(normal("#a8d2eb"),              normal(153)));
-        m.insert("gold",       color(normal("#fedf81"),              normal(222)));
-        m.insert("darkgold",   color(normal("#685800"),              normal(58)));
-        m.insert("red",        color(normal("#fd8489"),              normal(210)));
-        m.insert("mildred",    color(normal("#ab6560"),              normal(167)));
-        m.insert("crimson",    color(normal("#ff6a6f"),              normal(203)));
-        m.insert("mikan",      color(normal("#fb8965"),              normal(209)));
-        m.insert("darkblue",   color(normal("#00091e"),              normal(235)));
-        m.insert("blue",       color(normal("#7098e6"),              normal(69)));
-        m.insert("paleblue",   color(normal("#98b8e6"),              normal(111)));
-        m.insert("lime",       color(normal("#c9fd88"),              normal(149)));
-        m.insert("inu",        color(normal("#ddbc96"),              normal(180)));
-        m
+        table.insert("bg",         color(contrast("#132132", "#334152"), normal(233)));
+        table.insert("bgemphasis", color(normal("#3a4b5c"),              normal(235)));
+        table.insert("bgstrong",   color(normal("#536273"),              normal(238)));
+        table.insert("fg",         color(normal("#fffeeb"),              contrast(231, 230)));
+        table.insert("hiddenfg",   color(normal("#607080"),              normal(60)));
+        table.insert("weakfg",     color(normal("#8d9eb2"),              normal(103)));
+        table.insert("weakerfg",   color(normal("#788898"),              normal(102)));
+        table.insert("palepink",   color(normal("#e7c6b7"),              normal(181)));
+        table.insert("yellow",     color(normal("#f0eaaa"),              normal(229)));
+        table.insert("white",      color(normal("#ffffff"),              normal(231)));
+        table.insert("purple",     color(normal("#e7d5ff"),              normal(189)));
+        table.insert("gray",       color(normal("#545f6e"),              normal(59)));
+        table.insert("light",      color(normal("#646f7c"),              normal(60)));
+        table.insert("yaezakura",  color(normal("#70495d"),              normal(95)));
+        table.insert("sakura",     color(normal("#a9667a"),              normal(132)));
+        table.insert("orange",     color(normal("#f0aa8a"),              normal(216)));
+        table.insert("green",      color(normal("#a9dd9d"),              normal(150)));
+        table.insert("darkgreen",  color(normal("#5f8770"),              normal(65)));
+        table.insert("skyblue",    color(normal("#a8d2eb"),              normal(153)));
+        table.insert("gold",       color(normal("#fedf81"),              normal(222)));
+        table.insert("darkgold",   color(normal("#685800"),              normal(58)));
+        table.insert("red",        color(normal("#fd8489"),              normal(210)));
+        table.insert("mildred",    color(normal("#ab6560"),              normal(167)));
+        table.insert("crimson",    color(normal("#ff6a6f"),              normal(203)));
+        table.insert("mikan",      color(normal("#fb8965"),              normal(209)));
+        table.insert("darkblue",   color(normal("#00091e"),              normal(235)));
+        table.insert("blue",       color(normal("#7098e6"),              normal(69)));
+        table.insert("paleblue",   color(normal("#98b8e6"),              normal(111)));
+        table.insert("lime",       color(normal("#c9fd88"),              normal(149)));
+        table.insert("inu",        color(normal("#ddbc96"),              normal(180)));
+    }
+    let table = table;
+
+    #[cfg_attr(rustfmt, rustfmt_skip)]
+    let highlights = &[
+        // Normal colors
+        Always(fgbg!("Boolean",               red,        -,            Nothing)),
+        Always(fgbg!("Character",             green,      -,            Nothing)),
+        Always(fgbg!("ColorColumn",           -,          bgstrong,     Nothing)),
+        Always(fgbg!("Comment",               weakfg,     -,            CommentItalic)),
+        Always(fgbg!("Conceal",               mikan,      bg,           Nothing)),
+        Always(fgbg!("Conditional",           skyblue,    -,            Nothing)),
+        Always(fgbg!("Constant",              red,        -,            Nothing)),
+        Always(fgbg!("Cursor",                bg,         fg,           Nothing)),
+        Always(fgbg!("CursorColumn",          -,          bgemphasis,   Nothing)),
+        Always(fgbg!("CursorLine",            -,          bgemphasis,   None)),
+        Always(fgbg!("CursorLineNr",          purple,     bgstrong,     Nothing)),
+        Always(fgbg!("Define",                orange,     -,            Nothing)),
+        Always(fgbg!("Directory",             green,      -,            Nothing)),
+        Always(fgbg!("EndOfBuffer",           bgstrong,   -,            Nothing)),
+        Always(fgbg!("Error",                 red,        bgemphasis,   Bold)),
+        Always(fgbg!("ErrorMsg",              red,        bg,           Bold)),
+        Always(fgbg!("Float",                 red,        -,            Nothing)),
+        Always(fgbg!("FoldColumn",            purple,     bgemphasis,   Nothing)),
+        Always(fgbg!("Folded",                purple,     light,        Nothing)),
+        Always(fgbg!("Function",              orange,     -,            Nothing)),
+        Always(fgbg!("Identifier",            gold,       -,            Italic)),
+        Always(fgbg!("IncSearch",             NONE,       sakura,       Underline)),
+        Always(fgbg!("Keyword",               yellow,     -,            Bold)),
+        Always(fgbg!("Label",                 skyblue,    -,            Nothing)),
+        Always(fgbg!("LineNr",                weakerfg,   bgemphasis,   Nothing)),
+        Always(fgbg!("MatchParen",            bg,         sakura,       Underline)),
+        Always(fgbg!("ModeMsg",               gold,       -,            Nothing)),
+        Always(fgbg!("MoreMsg",               green,      -,            Nothing)),
+        Always(fgbg!("NonText",               light,      -,            Nothing)),
+        Always(fgbg!("Normal",                fg,         bg,           Nothing)),
+        Always(fgbg!("Number",                red,        -,            Nothing)),
+        Always(fgbg!("Operater",              orange,     -,            Nothing)),
+        Always(fgbg!("Pmenu",                 purple,     bgemphasis,   Nothing)),
+        Always(fgbg!("PmenuSbar",             gold,       bgstrong,     Nothing)),
+        Always(fgbg!("PmenuSel",              gold,       bgstrong,     Nothing)),
+        Always(fgbg!("PmenuThumb",            gold,       weakfg,       Nothing)),
+        Always(fgbg!("PreProc",               orange,     -,            Nothing)),
+        Always(fgbg!("Question",              skyblue,    -,            Nothing)),
+        Always(fgbg!("Search",                NONE,       yaezakura,    Underline)),
+        Always(fgbg!("SignColumn",            -,          bgemphasis,   Nothing)),
+        Always(fgbg!("Special",               yellow,     -,            Bold)),
+        Always(fgbg!("SpecialKey",            hiddenfg,   -,            Nothing)),
+        Always(fgbgsp!("SpellBad",            red,        -,    red,    Undercurl)),
+        Always(fgbgsp!("SpellCap",            purple,     -,    purple, Undercurl)),
+        Always(fgbgsp!("SpellLocal",          red,        -,    red,    Undercurl)),
+        Always(fgbgsp!("SpellRare",           yellow,     -,    yellow, Undercurl)),
+        Always(fgbg!("Statement",             skyblue,    -,            Nothing)),
+        Always(fgbg!("StatusLine",            fg,         bgstrong,     Bold)),
+        Always(fgbg!("StatusLineNC",          weakfg,     bgemphasis,   None)),
+        Always(fgbg!("StatusLineTerm",        fg,         bgstrong,     Bold)),
+        Always(fgbg!("StatusLineTermNC",      weakfg,     bgemphasis,   None)),
+        Always(fgbg!("StorageClass",          gold,       -,            Italic)),
+        Always(fgbg!("String",                green,      -,            Nothing)),
+        Always(fgbg!("TabLine",               weakfg,     bgstrong,     Nothing)),
+        Always(fgbg!("TabLineFill",           bgemphasis, -,            Nothing)),
+        Always(fgbg!("TabLineSel",            gold,       bg,           Bold)),
+        Always(fgbg!("Tag",                   orange,     -,            Nothing)),
+        Always(fgbg!("Title",                 gold,       -,            Bold)),
+        Always(fgbg!("Todo",                  bg,         red,          Bold)),
+        Always(fgbg!("ToolbarButton",         gold,       bg,           Bold)),
+        Always(fgbg!("ToolbarLine",           weakfg,     bgstrong,     Nothing)),
+        Always(fgbg!("Type",                  gold,       -,            Nothing)),
+        Always(fgbg!("Underlined",            skyblue,    -,            Underline)),
+        Always(fgbg!("VertSplit",             bgemphasis, bg,           Nothing)),
+        Always(fgbg!("Visual",                -,          yaezakura,    Nothing)),
+        Always(fgbg!("WarningMsg",            mikan,      bgemphasis,   Nothing)),
+        Always(fgbg!("WildMenu",              -,          gold,         Nothing)),
+
+        // File type specific
+        //
+        // Markdown is highlighted with HTML highlights in gVim but link text doesn't
+        // have a color. So define it here.
+        Always(fgbg!("cmakeArguments",        yellow,     -,            Nothing)),
+        Always(fgbg!("cmakeOperators",        red,        -,            Nothing)),
+        Always(fgbg!("DiffAdd",               -,          darkgreen,    Bold)),
+        Always(fgbg!("DiffChange",            -,          darkgold,     Bold)),
+        Always(fgbg!("DiffDelete",            fg,         mildred,      Bold)),
+        Always(fgbg!("DiffText",              -,          bg,           Nothing)),
+        Always(fgbg!("diffAdded",             green,      -,            Nothing)),
+        Always(fgbg!("diffFile",              yellow,     -,            Nothing)),
+        Always(fgbg!("diffIndexLine",         gold,       -,            Nothing)),
+        Always(fgbg!("diffNewFile",           yellow,     -,            Nothing)),
+        Always(fgbg!("diffRemoved",           red,        -,            Nothing)),
+        Always(fgbg!("gitCommitOverflow",     -,          red,          Nothing)),
+        Always(fgbg!("gitCommitSummary",      yellow,     -,            Nothing)),
+        Always(fgbg!("gitCommitSelectedFile", skyblue,    -,            Nothing)),
+        Always(fgbg!("gitconfigSection",      skyblue,    -,            Bold)),
+        Always(fgbg!("goBuiltins",            red,        -,            Nothing)),
+        Always(fgbg!("helpExample",           skyblue,    -,            Nothing)),
+        Always(fgbg!("htmlBold",              -,          bgemphasis,   Nothing)),
+        Always(fgbg!("htmlLinkText",          skyblue,    -,            Nothing)),
+        Always(fgbg!("htmlTagName",           orange,     -,            Nothing)),
+        Always(fgbg!("javaScriptBraces",      fg,         -,            Nothing)),
+        Always(fgbg!("makeCommands",          yellow,     -,            Nothing)),
+        Always(fgbg!("markdownCode",          yellow,     -,            Nothing)),
+        Always(fgbg!("markdownUrl",           weakfg,     -,            Nothing)),
+        Always(fgbg!("ocamlConstructor",      gold,       -,            Nothing)),
+        Always(fgbg!("ocamlKeyChar",          skyblue,    -,            Nothing)),
+        Always(fgbg!("ocamlKeyword",          gold   ,    -,            Nothing)),
+        Always(fgbg!("ocamlFunDef",           skyblue,    -,            Nothing)),
+        Always(fgbg!("plantumlColonLine",     skyblue,    -,            Nothing)),
+        Always(fgbg!("pythonBuiltin",         red,        -,            Nothing)),
+        Always(fgbg!("qfFileName",            gold,       -,            Nothing)),
+        Always(fgbg!("qfLineNr",              skyblue,    -,            Nothing)),
+        Always(fgbg!("rstEmphasis",           -,          bgemphasis,   Italic)),
+        Always(fgbg!("rstStrongEmphasis",     -,          bgstrong,     Bold)),
+        Always(fgbg!("rubyFunction",          yellow,     -,            Nothing)),
+        Always(fgbg!("rubyIdentifier",        yellow,     -,            Nothing)),
+        Always(fgbg!("rustEnumVariant",       gold,       -,            Nothing)),
+        Always(fgbg!("rustFuncCall",          fg,         -,            Nothing)),
+        Always(fgbg!("rustCommentLineDoc",    palepink,   -,            Nothing)),
+        Always(fgbg!("typescriptBraces",      fg,         -,            Nothing)),
+        Always(fgbg!("vimfilerColumn__SizeLine", weakfg,  -,            Nothing)),
+        Always(fgbg!("vimfilerClosedFile",    green,      -,            Nothing)),
+        Always(fgbg!("vimCommand",            skyblue,    -,            Nothing)),
+        Always(fgbg!("wastListDelimiter",     fg,         -,            Nothing)),
+        Always(fgbg!("wastInstGeneral",       yellow,     -,            Nothing)),
+        Always(fgbg!("wastInstWithType",      yellow,     -,            Nothing)),
+        Always(fgbg!("wastUnnamedVar"  ,      purple,     -,            Nothing)),
+        Always(fgbg!("zshDelimiter",          skyblue,    -,            Nothing)),
+        Always(fgbg!("zshPrecommand",         red,        -,            Nothing)),
+
+        // Plugin specific
+        //
+        // Some plugins introduce its own highlight definitions. Adjust them for
+        // working fine with this colorscheme.
+        Always(fgbg!("ALEWarningSign",        orange,     bgemphasis,   Bold)),
+        Always(fgbg!("ALEErrorSign",          bgemphasis, mildred,      Bold)),
+        Always(fgbg!("ALEInfoSign",           -,          light,        Nothing)),
+        Always(fgbg!("ALEError",              -,          mildred,      Nothing)),
+        Always(fgbg!("ALEWarning",            -,          darkgold,     Nothing)),
+        Always(fgbg!("CleverFChar",           bg,         red,          Nothing)),
+        Always(fgbg!("DirvishArg",            yellow,     -,            Bold)),
+        Always(fgbg!("EasyMotionTarget",      red,        -,            Bold)),
+        Always(fgbg!("EasyMotionShade",       weakfg,     bg,           Nothing)),
+        Always(fgbg!("GitGutterAdd",          green,      bgemphasis,   Nothing)),
+        Always(fgbg!("GitGutterChange",       yellow,     bgemphasis,   Nothing)),
+        Always(fgbg!("GitGutterChangeDelete", gold,       bgemphasis,   Nothing)),
+        Always(fgbg!("GitGutterDelete",       red,        bgemphasis,   Nothing)),
+        Always(fgbg!("HighlightedyankRegion", -,          bgemphasis,   Nothing)),
+        Switch(
+            fgbg!("EasyMotionIncCursor",      bg,         fg,           Nothing),
+            fgbg!("EasyMotionIncCursor",      -,          -,            Reverse),
+        ),
+    ];
+
+    let term_colors = &[
+        "bg",
+        "crimson",
+        "green",
+        "gold",
+        "blue",
+        "purple",
+        "skyblue",
+        "fg",
+        "bgemphasis",
+        "red",
+        "lime",
+        "yellow",
+        "paleblue",
+        "palepink",
+        "skyblue",
+        "white",
+    ];
+
+    let mut out = io::stdout();
+
+    let mut writer = Writer {
+        table,
+        highlights,
+        term_colors,
+        out: &mut out,
     };
-}
-
-#[cfg_attr(rustfmt, rustfmt_skip)]
-static HIGHLIGHTS: &'static [HowToHighlight] = &[
-    // Normal colors
-    Always(fgbg!("Boolean",               red,        -,            Nothing)),
-    Always(fgbg!("Character",             green,      -,            Nothing)),
-    Always(fgbg!("ColorColumn",           -,          bgstrong,     Nothing)),
-    Always(fgbg!("Comment",               weakfg,     -,            CommentItalic)),
-    Always(fgbg!("Conceal",               mikan,      bg,           Nothing)),
-    Always(fgbg!("Conditional",           skyblue,    -,            Nothing)),
-    Always(fgbg!("Constant",              red,        -,            Nothing)),
-    Always(fgbg!("Cursor",                bg,         fg,           Nothing)),
-    Always(fgbg!("CursorColumn",          -,          bgemphasis,   Nothing)),
-    Always(fgbg!("CursorLine",            -,          bgemphasis,   None)),
-    Always(fgbg!("CursorLineNr",          purple,     bgstrong,     Nothing)),
-    Always(fgbg!("Define",                orange,     -,            Nothing)),
-    Always(fgbg!("Directory",             green,      -,            Nothing)),
-    Always(fgbg!("EndOfBuffer",           bgstrong,   -,            Nothing)),
-    Always(fgbg!("Error",                 red,        bgemphasis,   Bold)),
-    Always(fgbg!("ErrorMsg",              red,        bg,           Bold)),
-    Always(fgbg!("Float",                 red,        -,            Nothing)),
-    Always(fgbg!("FoldColumn",            purple,     bgemphasis,   Nothing)),
-    Always(fgbg!("Folded",                purple,     light,        Nothing)),
-    Always(fgbg!("Function",              orange,     -,            Nothing)),
-    Always(fgbg!("Identifier",            gold,       -,            Italic)),
-    Always(fgbg!("IncSearch",             NONE,       sakura,       Underline)),
-    Always(fgbg!("Keyword",               yellow,     -,            Bold)),
-    Always(fgbg!("Label",                 skyblue,    -,            Nothing)),
-    Always(fgbg!("LineNr",                weakerfg,   bgemphasis,   Nothing)),
-    Always(fgbg!("MatchParen",            bg,         sakura,       Underline)),
-    Always(fgbg!("ModeMsg",               gold,       -,            Nothing)),
-    Always(fgbg!("MoreMsg",               green,      -,            Nothing)),
-    Always(fgbg!("NonText",               light,      -,            Nothing)),
-    Always(fgbg!("Normal",                fg,         bg,           Nothing)),
-    Always(fgbg!("Number",                red,        -,            Nothing)),
-    Always(fgbg!("Operater",              orange,     -,            Nothing)),
-    Always(fgbg!("Pmenu",                 purple,     bgemphasis,   Nothing)),
-    Always(fgbg!("PmenuSbar",             gold,       bgstrong,     Nothing)),
-    Always(fgbg!("PmenuSel",              gold,       bgstrong,     Nothing)),
-    Always(fgbg!("PmenuThumb",            gold,       weakfg,       Nothing)),
-    Always(fgbg!("PreProc",               orange,     -,            Nothing)),
-    Always(fgbg!("Question",              skyblue,    -,            Nothing)),
-    Always(fgbg!("Search",                NONE,       yaezakura,    Underline)),
-    Always(fgbg!("SignColumn",            -,          bgemphasis,   Nothing)),
-    Always(fgbg!("Special",               yellow,     -,            Bold)),
-    Always(fgbg!("SpecialKey",            hiddenfg,   -,            Nothing)),
-    Always(fgbgsp!("SpellBad",            red,        -,    red,    Undercurl)),
-    Always(fgbgsp!("SpellCap",            purple,     -,    purple, Undercurl)),
-    Always(fgbgsp!("SpellLocal",          red,        -,    red,    Undercurl)),
-    Always(fgbgsp!("SpellRare",           yellow,     -,    yellow, Undercurl)),
-    Always(fgbg!("Statement",             skyblue,    -,            Nothing)),
-    Always(fgbg!("StatusLine",            fg,         bgstrong,     Bold)),
-    Always(fgbg!("StatusLineNC",          weakfg,     bgemphasis,   None)),
-    Always(fgbg!("StatusLineTerm",        fg,         bgstrong,     Bold)),
-    Always(fgbg!("StatusLineTermNC",      weakfg,     bgemphasis,   None)),
-    Always(fgbg!("StorageClass",          gold,       -,            Italic)),
-    Always(fgbg!("String",                green,      -,            Nothing)),
-    Always(fgbg!("TabLine",               weakfg,     bgstrong,     Nothing)),
-    Always(fgbg!("TabLineFill",           bgemphasis, -,            Nothing)),
-    Always(fgbg!("TabLineSel",            gold,       bg,           Bold)),
-    Always(fgbg!("Tag",                   orange,     -,            Nothing)),
-    Always(fgbg!("Title",                 gold,       -,            Bold)),
-    Always(fgbg!("Todo",                  bg,         red,          Bold)),
-    Always(fgbg!("ToolbarButton",         gold,       bg,           Bold)),
-    Always(fgbg!("ToolbarLine",           weakfg,     bgstrong,     Nothing)),
-    Always(fgbg!("Type",                  gold,       -,            Nothing)),
-    Always(fgbg!("Underlined",            skyblue,    -,            Underline)),
-    Always(fgbg!("VertSplit",             bgemphasis, bg,           Nothing)),
-    Always(fgbg!("Visual",                -,          yaezakura,    Nothing)),
-    Always(fgbg!("WarningMsg",            mikan,      bgemphasis,   Nothing)),
-    Always(fgbg!("WildMenu",              -,          gold,         Nothing)),
-
-    // File type specific
-    //
-    // Markdown is highlighted with HTML highlights in gVim but link text doesn't
-    // have a color. So define it here.
-    Always(fgbg!("cmakeArguments",        yellow,     -,            Nothing)),
-    Always(fgbg!("cmakeOperators",        red,        -,            Nothing)),
-    Always(fgbg!("DiffAdd",               -,          darkgreen,    Bold)),
-    Always(fgbg!("DiffChange",            -,          darkgold,     Bold)),
-    Always(fgbg!("DiffDelete",            fg,         mildred,      Bold)),
-    Always(fgbg!("DiffText",              -,          bg,           Nothing)),
-    Always(fgbg!("diffAdded",             green,      -,            Nothing)),
-    Always(fgbg!("diffFile",              yellow,     -,            Nothing)),
-    Always(fgbg!("diffIndexLine",         gold,       -,            Nothing)),
-    Always(fgbg!("diffNewFile",           yellow,     -,            Nothing)),
-    Always(fgbg!("diffRemoved",           red,        -,            Nothing)),
-    Always(fgbg!("gitCommitOverflow",     -,          red,          Nothing)),
-    Always(fgbg!("gitCommitSummary",      yellow,     -,            Nothing)),
-    Always(fgbg!("gitCommitSelectedFile", skyblue,    -,            Nothing)),
-    Always(fgbg!("gitconfigSection",      skyblue,    -,            Bold)),
-    Always(fgbg!("goBuiltins",            red,        -,            Nothing)),
-    Always(fgbg!("helpExample",           skyblue,    -,            Nothing)),
-    Always(fgbg!("htmlBold",              -,          bgemphasis,   Nothing)),
-    Always(fgbg!("htmlLinkText",          skyblue,    -,            Nothing)),
-    Always(fgbg!("htmlTagName",           orange,     -,            Nothing)),
-    Always(fgbg!("javaScriptBraces",      fg,         -,            Nothing)),
-    Always(fgbg!("makeCommands",          yellow,     -,            Nothing)),
-    Always(fgbg!("markdownCode",          yellow,     -,            Nothing)),
-    Always(fgbg!("markdownUrl",           weakfg,     -,            Nothing)),
-    Always(fgbg!("ocamlConstructor",      gold,       -,            Nothing)),
-    Always(fgbg!("ocamlKeyChar",          skyblue,    -,            Nothing)),
-    Always(fgbg!("ocamlKeyword",          gold   ,    -,            Nothing)),
-    Always(fgbg!("ocamlFunDef",           skyblue,    -,            Nothing)),
-    Always(fgbg!("plantumlColonLine",     skyblue,    -,            Nothing)),
-    Always(fgbg!("pythonBuiltin",         red,        -,            Nothing)),
-    Always(fgbg!("qfFileName",            gold,       -,            Nothing)),
-    Always(fgbg!("qfLineNr",              skyblue,    -,            Nothing)),
-    Always(fgbg!("rstEmphasis",           -,          bgemphasis,   Italic)),
-    Always(fgbg!("rstStrongEmphasis",     -,          bgstrong,     Bold)),
-    Always(fgbg!("rubyFunction",          yellow,     -,            Nothing)),
-    Always(fgbg!("rubyIdentifier",        yellow,     -,            Nothing)),
-    Always(fgbg!("rustEnumVariant",       gold,       -,            Nothing)),
-    Always(fgbg!("rustFuncCall",          fg,         -,            Nothing)),
-    Always(fgbg!("rustCommentLineDoc",    palepink,   -,            Nothing)),
-    Always(fgbg!("typescriptBraces",      fg,         -,            Nothing)),
-    Always(fgbg!("vimfilerColumn__SizeLine", weakfg,  -,            Nothing)),
-    Always(fgbg!("vimfilerClosedFile",    green,      -,            Nothing)),
-    Always(fgbg!("vimCommand",            skyblue,    -,            Nothing)),
-    Always(fgbg!("wastListDelimiter",     fg,         -,            Nothing)),
-    Always(fgbg!("wastInstGeneral",       yellow,     -,            Nothing)),
-    Always(fgbg!("wastInstWithType",      yellow,     -,            Nothing)),
-    Always(fgbg!("wastUnnamedVar"  ,      purple,     -,            Nothing)),
-    Always(fgbg!("zshDelimiter",          skyblue,    -,            Nothing)),
-    Always(fgbg!("zshPrecommand",         red,        -,            Nothing)),
-
-    // Plugin specific
-    //
-    // Some plugins introduce its own highlight definitions. Adjust them for
-    // working fine with this colorscheme.
-    Always(fgbg!("ALEWarningSign",        orange,     bgemphasis,   Bold)),
-    Always(fgbg!("ALEErrorSign",          bgemphasis, mildred,      Bold)),
-    Always(fgbg!("ALEInfoSign",           -,          light,        Nothing)),
-    Always(fgbg!("ALEError",              -,          mildred,      Nothing)),
-    Always(fgbg!("ALEWarning",            -,          darkgold,     Nothing)),
-    Always(fgbg!("CleverFChar",           bg,         red,          Nothing)),
-    Always(fgbg!("DirvishArg",            yellow,     -,            Bold)),
-    Always(fgbg!("EasyMotionTarget",      red,        -,            Bold)),
-    Always(fgbg!("EasyMotionShade",       weakfg,     bg,           Nothing)),
-    Always(fgbg!("GitGutterAdd",          green,      bgemphasis,   Nothing)),
-    Always(fgbg!("GitGutterChange",       yellow,     bgemphasis,   Nothing)),
-    Always(fgbg!("GitGutterChangeDelete", gold,       bgemphasis,   Nothing)),
-    Always(fgbg!("GitGutterDelete",       red,        bgemphasis,   Nothing)),
-    Always(fgbg!("HighlightedyankRegion", -,          bgemphasis,   Nothing)),
-    Switch(
-        fgbg!("EasyMotionIncCursor",      bg,         fg,           Nothing),
-        fgbg!("EasyMotionIncCursor",      -,          -,            Reverse),
-    ),
-];
-
-static TERM_COLORS: &'static [&'static str] = &[
-    "bg",
-    "crimson",
-    "green",
-    "gold",
-    "blue",
-    "purple",
-    "skyblue",
-    "fg",
-    "bgemphasis",
-    "red",
-    "lime",
-    "yellow",
-    "paleblue",
-    "palepink",
-    "skyblue",
-    "white",
-];
-
-fn main() -> io::Result<()> {
-    write_color_scheme(&mut io::stdout(), &COLOR_TABLE)
+    writer.write_color_scheme()
 }
