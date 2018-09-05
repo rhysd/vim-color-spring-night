@@ -3,102 +3,36 @@ extern crate lazy_static;
 
 use std::collections::HashMap;
 use std::fmt::Display;
-use std::path::PathBuf;
-use std::{env, fs, io};
+use std::io;
 
 #[derive(Debug)]
-struct Color<T: Display>(T, Option<T>);
-
-fn color<T: Display>(c: T) -> Color<T> {
-    Color(c, None)
+enum ColorCode<T: Display> {
+    Normal(T),
+    Contrast(T, T),
 }
 
-fn contrast_color<T: Display>(high: T, low: T) -> Color<T> {
-    Color(high, Some(low))
-}
-
-struct Colors<T: Display> {
-    defs: HashMap<&'static str, Color<T>>,
-    gui: bool,
-}
-
-lazy_static! {
-    static ref GUI_COLORS: Colors<&'static str> = {
-        let mut m = HashMap::new();
-        m.insert("bg", contrast_color("#132132", "#334152"));
-        m.insert("bgemphasis", color("#3a4b5c"));
-        m.insert("bgstrong", color("#536273"));
-        m.insert("fg", color("#fffeeb"));
-        m.insert("hiddenfg", color("#607080"));
-        m.insert("weakfg", color("#8d9eb2"));
-        m.insert("weakerfg", color("#788898"));
-        m.insert("palepink", color("#e7c6b7"));
-        m.insert("yellow", color("#f0eaaa"));
-        m.insert("white", color("#ffffff"));
-        m.insert("purple", color("#e7d5ff"));
-        m.insert("gray", color("#545f6e"));
-        m.insert("light", color("#646f7c"));
-        m.insert("yaezakura", color("#70495d"));
-        m.insert("sakura", color("#a9667a"));
-        m.insert("orange", color("#f0aa8a"));
-        m.insert("green", color("#a9dd9d"));
-        m.insert("darkgreen", color("#5f8770"));
-        m.insert("skyblue", color("#a8d2eb"));
-        m.insert("gold", color("#fedf81"));
-        m.insert("darkgold", color("#685800"));
-        m.insert("red", color("#fd8489"));
-        m.insert("mildred", color("#ab6560"));
-        m.insert("crimson", color("#ff6a6f"));
-        m.insert("mikan", color("#fb8965"));
-        m.insert("darkblue", color("#00091e"));
-        m.insert("blue", color("#7098e6"));
-        m.insert("paleblue", color("#98b8e6"));
-        m.insert("lime", color("#c9fd88"));
-        m.insert("inu", color("#ddbc96"));
-        Colors { defs: m, gui: true }
-    };
-    static ref TERM_COLORS: Colors<u8> = {
-        let mut m = HashMap::new();
-        m.insert("bg", color(233));
-        m.insert("bgemphasis", color(235));
-        m.insert("bgstrong", color(238));
-        m.insert("fg", contrast_color(231, 230));
-        m.insert("hiddenfg", color(60));
-        m.insert("weakfg", color(103));
-        m.insert("weakerfg", color(102));
-        m.insert("palepink", color(181));
-        m.insert("yellow", color(229));
-        m.insert("white", color(231));
-        m.insert("purple", color(189));
-        m.insert("gray", color(59));
-        m.insert("light", color(60));
-        m.insert("yaezakura", color(95));
-        m.insert("sakura", color(132));
-        m.insert("orange", color(216));
-        m.insert("green", color(150));
-        m.insert("darkgreen", color(65));
-        m.insert("skyblue", color(153));
-        m.insert("gold", color(222));
-        m.insert("darkgold", color(58));
-        m.insert("red", color(210));
-        m.insert("mildred", color(167));
-        m.insert("crimson", color(203));
-        m.insert("mikan", color(209));
-        m.insert("darkblue", color(235));
-        m.insert("blue", color(69));
-        m.insert("paleblue", color(111));
-        m.insert("lime", color(149));
-        m.insert("inu", color(180));
-        Colors {
-            defs: m,
-            gui: false,
+impl<T: Display> ColorCode<T> {
+    fn normal(&self) -> &T {
+        match self {
+            ColorCode::Normal(c) => c,
+            ColorCode::Contrast(h, _) => h,
         }
-    };
+    }
 }
+
+const NONE_COLOR: ColorCode<&'static str> = ColorCode::Normal("NONE");
+
+#[derive(Debug)]
+struct Color {
+    gui: ColorCode<&'static str>,
+    cterm: ColorCode<u8>,
+}
+
+type ColorTable = HashMap<&'static str, Color>;
 
 type ColorName = Option<&'static str>;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum HighlightAttr {
     Nothing,
     Bold,
@@ -129,7 +63,7 @@ use HowToHighlight::Always;
 use HowToHighlight::Switch;
 
 macro_rules! fgbg {
-    ($name:expr,NONE,NONE, $attr:ident) => {
+    ($name:expr, - , - , $attr:ident) => {
         Highlight {
             name: $name,
             fg: None,
@@ -138,7 +72,7 @@ macro_rules! fgbg {
             attr: HighlightAttr::$attr,
         }
     };
-    ($name:expr,NONE, $bg:ident, $attr:ident) => {
+    ($name:expr, - , $bg:ident, $attr:ident) => {
         Highlight {
             name: $name,
             fg: None,
@@ -147,7 +81,7 @@ macro_rules! fgbg {
             attr: HighlightAttr::$attr,
         }
     };
-    ($name:expr, $fg:ident,NONE, $attr:ident) => {
+    ($name:expr, $fg:ident, - , $attr:ident) => {
         Highlight {
             name: $name,
             fg: Some(stringify!($fg)),
@@ -176,6 +110,251 @@ macro_rules! fgbgsp {
             sp: Some(stringify!($sp)),
             attr: HighlightAttr::$attr,
         }
+    };
+}
+
+fn write_header<O: io::Write>(out: &mut O, name: &'static str) -> io::Result<()> {
+    write!(
+        out,
+        r#"" {name}: Calm-colored dark color scheme
+"
+" Author: rhysd <lin90162@yahoo.co.jp>
+" License: MIT
+"   Copyright (c) 2016 rhysd
+"
+" THIS FILE WAS GENERATED BY SCRIPT. PLEASE DO NOT MODIFY DIRECTLY!
+
+if &background !=# 'dark'
+    set background=dark
+endif
+if !has('vim_starting')
+    hi clear
+endif
+if exists('g:syntax_on')
+    syntax reset
+endif
+let g:colors_name = '{name}'
+
+let s:gui_running = has('gui_running')
+let s:true_colors = has('termguicolors') && &termguicolors
+let s:undercurl = s:gui_running ? 'undercurl' : 'underline'
+
+let g:spring_night_italic_comments = get(g:, 'spring_night_italic_comments', 0)
+let g:spring_night_kill_italic = get(g:, 'spring_night_kill_italic', 0)
+let g:spring_night_kill_bold = get(g:, 'spring_night_kill_bold', 0)
+let g:spring_night_high_contrast = get(g:, 'spring_night_high_contrast', !s:gui_running && s:true_colors)
+let g:spring_night_highlight_terminal = get(g:, 'spring_night_highlight_terminal', 1)
+
+"#,
+        name = name
+    )
+}
+
+fn write_contrast_color_variables<O: io::Write>(out: &mut O, table: &ColorTable) -> io::Result<()> {
+    for (name, color) in table.iter() {
+        if let ColorCode::Contrast(high, low) = color.gui {
+            writeln!(
+                out,
+                "let s:{}_gui = g:spring_night_high_contrast ? '{}' : '{}'",
+                name, high, low
+            )?;
+        }
+        if let ColorCode::Contrast(high, low) = color.cterm {
+            writeln!(
+                out,
+                "let s:{}_cterm = g:spring_night_high_contrast ? '{}' : '{}'",
+                name, high, low
+            )?;
+        }
+    }
+    writeln!(out, "")
+}
+
+fn build_highlight_item<T: Display>(
+    color_name: &'static str,
+    item_name: &'static str,
+    color: &ColorCode<T>,
+) -> String {
+    match color {
+        ColorCode::Normal(c) => format!("{}={}", item_name, c),
+        ColorCode::Contrast(..) => if item_name.starts_with("gui") {
+            format!("'{}='.s:{}_gui", item_name, color_name)
+        } else {
+            format!("'{}='.s:{}_cterm", item_name, color_name)
+        },
+    }
+}
+
+fn write_highlight<O: io::Write>(
+    out: &mut O,
+    highlight: &Highlight,
+    table: &ColorTable,
+    indent: u32,
+) -> io::Result<()> {
+    let mut args = vec![highlight.name.to_string(), "term=NONE".to_string()];
+
+    for &(color_name, gui, cterm) in &[
+        (&highlight.fg, "guifg", "ctermfg"),
+        (&highlight.bg, "guibg", "ctermbg"),
+    ] {
+        if let Some(ref name) = color_name {
+            if name != &"NONE" {
+                let color = table.get(name).unwrap();
+                args.push(build_highlight_item(name, gui, &color.gui));
+                args.push(build_highlight_item(name, cterm, &color.cterm));
+            } else {
+                args.push(build_highlight_item(name, gui, &NONE_COLOR));
+                args.push(build_highlight_item(name, cterm, &NONE_COLOR));
+            }
+        }
+    }
+
+    if let Some(ref name) = highlight.sp {
+        // Note: ctermsp does not exist
+        args.push(build_highlight_item(
+            name,
+            "guisp",
+            &table.get(name).unwrap().gui, // Currently guisp must not be NONE
+        ));
+    }
+
+    let attr_item = match highlight.attr {
+        HighlightAttr::Nothing => "",
+        HighlightAttr::Bold => "!g:spring_night_kill_bold ? 'gui=bold cterm=bold' : ''",
+        HighlightAttr::Italic => "!g:spring_night_kill_italic ? 'gui=italic' : ''",
+        HighlightAttr::Underline => "gui=underline cterm=underline",
+        HighlightAttr::Reverse => "gui=reverse cterm=reverse",
+        HighlightAttr::None => "gui=NONE cterm=NONE",
+        HighlightAttr::CommentItalic => {
+            "g:spring_night_italic_comments && !g:spring_night_kill_italic ? 'gui=italic' : ''"
+        }
+        HighlightAttr::Undercurl => "'gui='.s:undercurl 'cterm='.s:undercurl",
+    };
+    if attr_item != "" {
+        args.push(attr_item.to_string());
+    }
+
+    let indent = match indent {
+        0u32 => "",
+        1u32 => "    ",
+        _ => unreachable!(),
+    };
+
+    if args
+        .iter()
+        .any(|a| a.starts_with('\'') || a.ends_with('\''))
+    {
+        for arg in args.iter_mut() {
+            if !arg.starts_with('\'') && !arg.ends_with('\'') {
+                *arg = format!("'{}'", arg);
+            }
+        }
+        writeln!(out, "{}exe 'hi' {}", indent, args.join(" "))
+    } else {
+        writeln!(out, "{}hi {}", indent, args.join(" "))
+    }
+}
+
+fn write_highlights<O: io::Write>(out: &mut O, table: &ColorTable) -> io::Result<()> {
+    for highlight in HIGHLIGHTS {
+        match highlight {
+            Always(ref hl) => write_highlight(out, hl, table, 0u32)?,
+            Switch(ref gui, ref term) => {
+                writeln!(out, "if s:gui_running")?;
+                write_highlight(out, gui, table, 1u32)?;
+                writeln!(out, "else")?;
+                write_highlight(out, term, table, 1u32)?;
+                writeln!(out, "endif")?;
+            }
+        }
+    }
+    writeln!(out, "")
+}
+
+fn write_term_colors<O: io::Write>(out: &mut O, table: &ColorTable) -> io::Result<()> {
+    writeln!(out, "if has('nvim')")?;
+    writeln!(out, "    if s:gui_running || s:true_colors")?;
+    for (index, name) in TERM_COLORS.iter().enumerate() {
+        writeln!(
+            out,
+            "        let g:terminal_color_{} = '{}'",
+            index,
+            table.get(name).unwrap().gui.normal()
+        )?;
+    }
+    writeln!(out, "    else")?;
+    for (index, name) in TERM_COLORS.iter().enumerate() {
+        writeln!(
+            out,
+            "        let g:terminal_color_{} = {}",
+            index,
+            table.get(name).unwrap().cterm.normal()
+        )?;
+    }
+    writeln!(out, "    endif")?;
+    writeln!(out, "else")?;
+    writeln!(out, "    let g:terminal_ansi_colors = [")?;
+    for name in TERM_COLORS.iter() {
+        writeln!(out, "\\       '{}',", table.get(name).unwrap().gui.normal())?;
+    }
+    writeln!(out, "\\   ]")?;
+    writeln!(out, "endif")
+}
+
+fn write_color_scheme<O: io::Write>(out: &mut O, table: &ColorTable) -> io::Result<()> {
+    write_header(out, "spring-night")?;
+    write_contrast_color_variables(out, table)?;
+    write_highlights(out, table)?;
+    write_term_colors(out, table)
+}
+
+lazy_static! {
+    #[cfg_attr(rustfmt, rustfmt_skip)]
+    static ref COLOR_TABLE: ColorTable = {
+        fn color(gui: ColorCode<&'static str>, cterm: ColorCode<u8>) -> Color {
+            Color { gui, cterm }
+        }
+
+        fn normal<T: Display>(c: T) -> ColorCode<T> {
+            ColorCode::Normal(c)
+        }
+
+        fn contrast<T: Display>(high: T, low: T) -> ColorCode<T> {
+            ColorCode::Contrast(high, low)
+        }
+
+        let mut m = HashMap::new();
+        m.insert("bg",         color(contrast("#132132", "#334152"), normal(233)));
+        m.insert("bgemphasis", color(normal("#3a4b5c"),              normal(235)));
+        m.insert("bgstrong",   color(normal("#536273"),              normal(238)));
+        m.insert("fg",         color(normal("#fffeeb"),              contrast(231, 230)));
+        m.insert("hiddenfg",   color(normal("#607080"),              normal(60)));
+        m.insert("weakfg",     color(normal("#8d9eb2"),              normal(103)));
+        m.insert("weakerfg",   color(normal("#788898"),              normal(102)));
+        m.insert("palepink",   color(normal("#e7c6b7"),              normal(181)));
+        m.insert("yellow",     color(normal("#f0eaaa"),              normal(229)));
+        m.insert("white",      color(normal("#ffffff"),              normal(231)));
+        m.insert("purple",     color(normal("#e7d5ff"),              normal(189)));
+        m.insert("gray",       color(normal("#545f6e"),              normal(59)));
+        m.insert("light",      color(normal("#646f7c"),              normal(60)));
+        m.insert("yaezakura",  color(normal("#70495d"),              normal(95)));
+        m.insert("sakura",     color(normal("#a9667a"),              normal(132)));
+        m.insert("orange",     color(normal("#f0aa8a"),              normal(216)));
+        m.insert("green",      color(normal("#a9dd9d"),              normal(150)));
+        m.insert("darkgreen",  color(normal("#5f8770"),              normal(65)));
+        m.insert("skyblue",    color(normal("#a8d2eb"),              normal(153)));
+        m.insert("gold",       color(normal("#fedf81"),              normal(222)));
+        m.insert("darkgold",   color(normal("#685800"),              normal(58)));
+        m.insert("red",        color(normal("#fd8489"),              normal(210)));
+        m.insert("mildred",    color(normal("#ab6560"),              normal(167)));
+        m.insert("crimson",    color(normal("#ff6a6f"),              normal(203)));
+        m.insert("mikan",      color(normal("#fb8965"),              normal(209)));
+        m.insert("darkblue",   color(normal("#00091e"),              normal(235)));
+        m.insert("blue",       color(normal("#7098e6"),              normal(69)));
+        m.insert("paleblue",   color(normal("#98b8e6"),              normal(111)));
+        m.insert("lime",       color(normal("#c9fd88"),              normal(149)));
+        m.insert("inu",        color(normal("#ddbc96"),              normal(180)));
+        m
     };
 }
 
@@ -328,240 +507,25 @@ static HIGHLIGHTS: &'static [HowToHighlight] = &[
     ),
 ];
 
-fn write_header<O: io::Write>(out: &mut O, name: &'static str) -> io::Result<()> {
-    write!(
-        out,
-        r#"" {name}: Calm-colored dark color scheme
-"
-" Author: rhysd <lin90162@yahoo.co.jp>
-" License: MIT
-"   Copyright (c) 2016 rhysd
-"
-" THIS FILE WAS GENERATED BY SCRIPT. PLEASE DO NOT MODIFY DIRECTLY!
-
-if &background !=# 'dark'
-    set background=dark
-endif
-if !has('vim_starting')
-    hi clear
-endif
-if exists('g:syntax_on')
-    syntax reset
-endif
-let g:colors_name = '{name}'
-
-let s:gui_running = has('gui_running')
-let s:true_colors = has('termguicolors') && &termguicolors
-let s:undercurl = s:gui_running ? 'undercurl' : 'underline'
-
-let g:spring_night_italic_comments = get(g:, 'spring_night_italic_comments', 0)
-let g:spring_night_kill_italic = get(g:, 'spring_night_kill_italic', 0)
-let g:spring_night_kill_bold = get(g:, 'spring_night_kill_bold', 0)
-let g:spring_night_high_contrast = get(g:, 'spring_night_high_contrast', !s:gui_running && s:true_colors)
-let g:spring_night_highlight_terminal = get(g:, 'spring_night_highlight_terminal', 1)
-
-"#,
-        name = name
-    )
-}
-
-fn build_highlight_item<T: Display>(
-    name: &'static str,
-    colors: &Colors<T>,
-    gui: &'static str,
-    cterm: &'static str,
-) -> String {
-    let item_name = if colors.gui { gui } else { cterm };
-    match colors.defs.get(name).unwrap() {
-        Color(c, None) => format!("{}={}", item_name, c),
-        Color(high, Some(low)) => format!(
-            "g:spring_night_high_contrast ? '{}={}' : '{}={}'",
-            item_name, high, item_name, low
-        ),
-    }
-}
-
-fn write_highlight<T: Display, O: io::Write>(
-    out: &mut O,
-    highlight: &Highlight,
-    colors: &Colors<T>,
-    indent: u32,
-) -> io::Result<()> {
-    let mut use_execute = false;
-    let mut args = vec![highlight.name.to_string(), "term=NONE".to_string()];
-
-    if let Some(ref name) = highlight.fg {
-        let item = build_highlight_item(name, colors, "guifg", "ctermfg");
-        if item.ends_with('\'') {
-            use_execute = true;
-        }
-        args.push(item);
-    }
-
-    if let Some(ref name) = highlight.bg {
-        let item = build_highlight_item(name, colors, "guibg", "ctermbg");
-        if item.ends_with('\'') {
-            use_execute = true;
-        }
-        args.push(item);
-    }
-
-    if let Some(ref name) = highlight.sp {
-        if colors.gui {
-            if let Color(c, None) = colors.defs.get(name).unwrap() {
-                args.push(format!("guisp={}", c));
-            } else {
-                unreachable!();
-            }
-        }
-        // Note: ctermsp does not exist
-    }
-
-    {
-        let item_name = if colors.gui { "gui" } else { "cterm" };
-        match highlight.attr {
-            HighlightAttr::Nothing => { /* Do nothing */ }
-            HighlightAttr::Bold => {
-                use_execute = true;
-                args.push(format!(
-                    "!g:spring_night_kill_bold ? '{}=bold' : ''",
-                    item_name
-                ));
-            }
-            HighlightAttr::Italic => if colors.gui {
-                use_execute = true;
-                args.push("!g:spring_night_kill_italic ? 'gui=italic' : ''".to_string());
-            },
-            HighlightAttr::Underline => {
-                args.push(format!("{}=underline", item_name));
-            }
-            HighlightAttr::Reverse => {
-                args.push(format!("{}=reverse", item_name));
-            }
-            HighlightAttr::None => {
-                args.push(format!("{}=NONE", item_name));
-            }
-            HighlightAttr::CommentItalic => {
-                use_execute = true;
-                args.push(format!("g:spring_night_italic_comments && !g:spring_night_kill_italic ? '{}=italic' : ''", item_name));
-            }
-            HighlightAttr::Undercurl => {
-                use_execute = true;
-                args.push(format!("'{}='.s:undercurl", item_name));
-            }
-        }
-    }
-
-    let indent = match indent {
-        0u32 => "",
-        1u32 => "    ",
-        _ => unreachable!(),
-    };
-
-    if use_execute {
-        for arg in args.iter_mut() {
-            if !arg.starts_with('\'') && !arg.ends_with('\'') {
-                *arg = format!("'{}'", arg);
-            }
-        }
-        writeln!(out, "{}exe 'hi' {}", indent, args.join(" "))
-    } else {
-        writeln!(out, "{}hi {}", indent, args.join(" "))
-    }
-}
-
-fn write_highlights<T: Display, O: io::Write>(out: &mut O, colors: &Colors<T>) -> io::Result<()> {
-    for highlight in HIGHLIGHTS {
-        match highlight {
-            Always(ref hl) => write_highlight(out, hl, colors, 0u32)?,
-            Switch(ref gui, ref term) => {
-                writeln!(out, "if s:gui_running")?;
-                write_highlight(out, gui, colors, 1u32)?;
-                writeln!(out, "else")?;
-                write_highlight(out, term, colors, 1u32)?;
-                writeln!(out, "endif")?;
-            }
-        }
-    }
-    writeln!(out, "")
-}
-
-fn write_term_colors<T: Display, O: io::Write>(out: &mut O, colors: &Colors<T>) -> io::Result<()> {
-    let term_color_names = [
-        "bg",
-        "crimson",
-        "green",
-        "gold",
-        "blue",
-        "purple",
-        "skyblue",
-        "fg",
-        "bgemphasis",
-        "red",
-        "lime",
-        "yellow",
-        "paleblue",
-        "palepink",
-        "skyblue",
-        "white",
-    ];
-    writeln!(out, "if has('nvim')")?;
-    for (index, name) in term_color_names.iter().enumerate() {
-        if colors.gui {
-            writeln!(
-                out,
-                "    let g:terminal_color_{} = '{}'",
-                index,
-                colors.defs.get(name).unwrap().0
-            )?;
-        } else {
-            writeln!(
-                out,
-                "    let g:terminal_color_{} = {}",
-                index,
-                colors.defs.get(name).unwrap().0
-            )?;
-        }
-    }
-    writeln!(out, "else")?;
-    writeln!(out, "    let g:terminal_ansi_colors = [")?;
-    for name in term_color_names.iter() {
-        writeln!(out, "\\       '{}',", colors.defs.get(name).unwrap().0)?;
-    }
-    writeln!(out, "\\   ]")?;
-    writeln!(out, "endif")
-}
-
-fn write_one<T: Display>(
-    mut dir: PathBuf,
-    name: &'static str,
-    colors: &Colors<T>,
-) -> io::Result<()> {
-    dir.push(format!("{}.vim", name));
-    let mut file = fs::File::create(dir.as_path())?;
-    write_header(&mut file, name)?;
-    write_highlights(&mut file, colors)?;
-    write_term_colors(&mut file, colors)
-}
-
-fn write_all(dir: String) -> io::Result<()> {
-    let dir = fs::canonicalize(&dir)?;
-    write_one(dir.clone(), "spring-night", &GUI_COLORS)?;
-    write_one(dir, "spring-night-256", &TERM_COLORS)
-}
+static TERM_COLORS: &'static [&'static str] = &[
+    "bg",
+    "crimson",
+    "green",
+    "gold",
+    "blue",
+    "purple",
+    "skyblue",
+    "fg",
+    "bgemphasis",
+    "red",
+    "lime",
+    "yellow",
+    "paleblue",
+    "palepink",
+    "skyblue",
+    "white",
+];
 
 fn main() -> io::Result<()> {
-    let dir = match env::args().skip(1).next() {
-        Some(ref arg) if arg.as_str() == "--help" => {
-            eprintln!("Usage: gen-color-sprint-night [directory]");
-            std::process::exit(0);
-        }
-        Some(arg) => arg,
-        None => env::current_dir()
-            .unwrap()
-            .into_os_string()
-            .into_string()
-            .unwrap(),
-    };
-    write_all(dir)
+    write_color_scheme(&mut io::stdout(), &COLOR_TABLE)
 }
