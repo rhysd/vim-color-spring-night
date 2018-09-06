@@ -164,7 +164,8 @@ let g:spring_night_highlight_terminal = get(g:, 'spring_night_highlight_terminal
 
 if exists('g:spring_night_high_contrast')
     if type(g:spring_night_high_contrast) != type(0)
-        echoerr 'g:spring_night_high_contrast must be number. Please read README.md of vim-color-spring-night repository'
+        echoerr 'g:spring_night_high_contrast was changed to number value. Please read README.md of vim-color-spring-night repository and set proper value'
+        let g:spring_night_high_contrast = !s:gui_running && s:true_colors
     endif
 else
     let g:spring_night_high_contrast = !s:gui_running && s:true_colors
