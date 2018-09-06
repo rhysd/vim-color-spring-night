@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod test;
+
 use std::collections::HashMap;
 use std::fmt::Display;
 use std::io;
@@ -114,7 +117,7 @@ macro_rules! fgbgsp {
 struct Writer<'a, W: io::Write + 'a> {
     table: ColorTable,
     highlights: &'a [HowToHighlight],
-    term_colors: &'a [&'static str],
+    term_colors: [&'static str; 16],
     out: &'a mut W,
 }
 
@@ -188,7 +191,7 @@ endif
             if let ColorCode::Contrast(high, low) = color.cterm {
                 writeln!(
                     self.out,
-                    "let s:{}_cterm = g:spring_night_high_contrast ? '{}' : '{}'",
+                    "let s:{}_cterm = g:spring_night_high_contrast ? {} : {}",
                     name, high, low
                 )?;
             }
@@ -533,7 +536,7 @@ fn main() -> io::Result<()> {
         ),
     ];
 
-    let term_colors = &[
+    let term_colors = [
         "bg",
         "crimson",
         "green",
@@ -552,13 +555,11 @@ fn main() -> io::Result<()> {
         "white",
     ];
 
-    let mut out = io::stdout();
-
     let mut writer = Writer {
         table,
         highlights,
         term_colors,
-        out: &mut out,
+        out: &mut io::stdout(),
     };
     writer.write_color_scheme()
 }
