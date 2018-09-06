@@ -124,19 +124,20 @@ fn test_write_contrast_color_variables() {
 fn test_write_highlight() {
     #[cfg_attr(rustfmt, rustfmt_skip)]
     let testcases = vec![
-        ((None, None, None, HighlightAttr::Nothing), 0, "hi HL term=NONE"),
-        ((Some("normal"), None, None, HighlightAttr::Nothing), 0, "hi HL term=NONE guifg=#123456 ctermfg=123"),
-        ((None, Some("normal"), None, HighlightAttr::Nothing), 0, "hi HL term=NONE guibg=#123456 ctermbg=123"),
-        ((Some("normal"), Some("normal"), None, HighlightAttr::Nothing), 0, "hi HL term=NONE guifg=#123456 ctermfg=123 guibg=#123456 ctermbg=123"),
-        ((None, None, None, HighlightAttr::Bold), 0, "exe 'hi' 'HL' 'term=NONE' !g:spring_night_kill_bold ? 'gui=bold cterm=bold' : ''"),
-        ((None, None, None, HighlightAttr::Italic), 0, "exe 'hi' 'HL' 'term=NONE' !g:spring_night_kill_italic ? 'gui=italic' : ''"),
-        ((None, None, None, HighlightAttr::Underline), 0, "hi HL term=NONE gui=underline cterm=underline"),
-        ((None, None, None, HighlightAttr::CommentItalic), 0, "exe 'hi' 'HL' 'term=NONE' g:spring_night_italic_comments && !g:spring_night_kill_italic ? 'gui=italic' : ''"),
-        ((None, None, None, HighlightAttr::Undercurl), 0, "exe 'hi' 'HL' 'term=NONE' 'gui='.s:undercurl 'cterm='.s:undercurl"),
-        ((Some("contrast"), None, None, HighlightAttr::Nothing), 0, "exe 'hi' 'HL' 'term=NONE' 'guifg='.s:contrast_gui 'ctermfg='.s:contrast_cterm"),
-        ((None, Some("contrast"), None, HighlightAttr::Nothing), 0, "exe 'hi' 'HL' 'term=NONE' 'guibg='.s:contrast_gui 'ctermbg='.s:contrast_cterm"),
+        ((None, None, None, HighlightAttr::Nothing),                           0, "hi HL term=NONE"),
+        ((Some("normal"), None, None, HighlightAttr::Nothing),                 0, "hi HL term=NONE guifg=#123456 ctermfg=123"),
+        ((None, Some("normal"), None, HighlightAttr::Nothing),                 0, "hi HL term=NONE guibg=#123456 ctermbg=123"),
+        ((Some("normal"), Some("normal"), None, HighlightAttr::Nothing),       0, "hi HL term=NONE guifg=#123456 ctermfg=123 guibg=#123456 ctermbg=123"),
+        ((None, None, None, HighlightAttr::Bold),                              0, "exe 'hi' 'HL' 'term=NONE' !g:spring_night_kill_bold ? 'gui=bold cterm=bold' : ''"),
+        ((None, None, None, HighlightAttr::Italic),                            0, "exe 'hi' 'HL' 'term=NONE' !g:spring_night_kill_italic ? 'gui=italic' : ''"),
+        ((None, None, None, HighlightAttr::Underline),                         0, "hi HL term=NONE gui=underline cterm=underline"),
+        ((None, None, None, HighlightAttr::CommentItalic),                     0, "exe 'hi' 'HL' 'term=NONE' g:spring_night_italic_comments && !g:spring_night_kill_italic ? 'gui=italic' : ''"),
+        ((None, None, None, HighlightAttr::Undercurl),                         0, "exe 'hi' 'HL' 'term=NONE' 'gui='.s:undercurl 'cterm='.s:undercurl"),
+        ((Some("contrast"), None, None, HighlightAttr::Nothing),               0, "exe 'hi' 'HL' 'term=NONE' 'guifg='.s:contrast_gui 'ctermfg='.s:contrast_cterm"),
+        ((None, Some("contrast"), None, HighlightAttr::Nothing),               0, "exe 'hi' 'HL' 'term=NONE' 'guibg='.s:contrast_gui 'ctermbg='.s:contrast_cterm"),
         ((Some("contrast"), Some("contrast"), None, HighlightAttr::Underline), 0, "exe 'hi' 'HL' 'term=NONE' 'guifg='.s:contrast_gui 'ctermfg='.s:contrast_cterm 'guibg='.s:contrast_gui 'ctermbg='.s:contrast_cterm 'gui=underline cterm=underline'"),
-        ((None, None, None, HighlightAttr::Nothing), 1, "    hi HL term=NONE"),
+        ((None, None, None, HighlightAttr::Nothing),                           1, "    hi HL term=NONE"),
+        ((None, None, None, HighlightAttr::Undercurl),                         1, "    exe 'hi' 'HL' 'term=NONE' 'gui='.s:undercurl 'cterm='.s:undercurl"),
     ];
 
     for ((fg, bg, sp, attr), indent, expected) in testcases {
