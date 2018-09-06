@@ -1,4 +1,5 @@
-language: generic
+language: rust
+rust: stable
 install:
     - curl -Ls https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz | tar xzf - -C .
 before_script:
@@ -6,6 +7,8 @@ before_script:
     - vim --version
     - nvim-linux64/bin/nvim --version
 script:
+    - cd gen && cargo test && cd -
+    - cd gen && cargo run > ../colors/spring-night.vim && cd -
     - vim -E -c 'set t_Co=256 rtp+=.' -c 'try | colorscheme spring-night | catch | cquit | endtry' -c 'quit'
     - nvim-linux64/bin/nvim -E -c 'set t_Co=256 rtp+=.' -c 'try | colorscheme spring-night | catch | cquit | endtry' -c 'quit'
     - ruby .ci/check_duplicate.rb
