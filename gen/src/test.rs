@@ -1,28 +1,6 @@
 use super::*;
 use std::collections::HashMap;
-use std::io;
 use std::str;
-
-struct StrBuf {
-    buf: String,
-}
-
-impl StrBuf {
-    fn new() -> Self {
-        StrBuf { buf: String::new() }
-    }
-}
-
-impl io::Write for StrBuf {
-    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-        self.buf.push_str(str::from_utf8(buf).unwrap());
-        Ok(buf.len())
-    }
-
-    fn flush(&mut self) -> io::Result<()> {
-        Ok(())
-    }
-}
 
 const DUMMY_TERM_COLORS: [&'static str; 16] = [
     "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",
@@ -36,7 +14,7 @@ fn test_color_code() {
 
 #[test]
 fn test_write_header() {
-    let out = &mut StrBuf::new();
+    let out = &mut Vec::new();
     {
         let mut w = Writer {
             table: HashMap::new(),
@@ -46,16 +24,14 @@ fn test_write_header() {
         };
         w.write_header("spring-night").unwrap();
     }
-    assert!(
-        out.buf
-            .starts_with(r#"" spring-night: Calm-colored dark color scheme"#)
-    );
-    assert!(out.buf.contains("let g:colors_name = 'spring-night'"));
+    let rendered = str::from_utf8(out).unwrap();
+    assert!(rendered.starts_with(r#"" spring-night: Calm-colored dark color scheme"#));
+    assert!(rendered.contains("let g:colors_name = 'spring-night'"));
 }
 
 #[test]
 fn test_write_contrast_color_variables() {
-    let out = &mut StrBuf::new();
+    let out = &mut Vec::new();
     {
         Writer {
             table: HashMap::new(),
@@ -65,9 +41,9 @@ fn test_write_contrast_color_variables() {
         }.write_contrast_color_variables()
             .unwrap();
     }
-    assert_eq!(out.buf, "\n".to_string());
+    assert_eq!(str::from_utf8(out).unwrap(), "\n");
 
-    let out = &mut StrBuf::new();
+    let out = &mut Vec::new();
     {
         let mut m = HashMap::new();
         m.insert(
@@ -106,7 +82,7 @@ fn test_write_contrast_color_variables() {
         }.write_contrast_color_variables()
             .unwrap();
     }
-    let mut lines = out.buf.lines().collect::<Vec<_>>();
+    let mut lines = str::from_utf8(out).unwrap().lines().collect::<Vec<_>>();
     lines.sort();
     assert_eq!(
         lines,
@@ -141,7 +117,7 @@ fn test_write_highlight() {
     ];
 
     for ((fg, bg, sp, attr), indent, expected) in testcases {
-        let out = &mut StrBuf::new();
+        let out = &mut Vec::new();
         let hl = Highlight {
             name: "HL",
             fg,
@@ -171,11 +147,11 @@ fn test_write_highlight() {
             out,
         }.write_highlight(&hl, indent as u32)
             .unwrap();
-        assert_eq!(out.buf, format!("{}\n", expected));
+        assert_eq!(str::from_utf8(out).unwrap(), format!("{}\n", expected));
     }
 
     // Edge case
-    let out = &mut StrBuf::new();
+    let out = &mut Vec::new();
     {
         Writer {
             table: HashMap::new(),
@@ -185,12 +161,12 @@ fn test_write_highlight() {
         }.write_highlights()
             .unwrap();
     }
-    assert_eq!(out.buf, "\n".to_string());
+    assert_eq!(str::from_utf8(out).unwrap(), "\n");
 }
 
 #[test]
 fn test_write_highlights() {
-    let out = &mut StrBuf::new();
+    let out = &mut Vec::new();
     fn hl() -> Highlight {
         Highlight {
             name: "HL",
@@ -207,9 +183,9 @@ fn test_write_highlights() {
         out,
     }.write_highlights()
         .unwrap();
-    assert_eq!(out.buf, "hi HL term=NONE\n\n");
+    assert_eq!(str::from_utf8(out).unwrap(), "hi HL term=NONE\n\n");
 
-    let out = &mut StrBuf::new();
+    let out = &mut Vec::new();
     Writer {
         table: HashMap::new(),
         highlights: &[Switch(hl(), hl())],
@@ -218,23 +194,21 @@ fn test_write_highlights() {
     }.write_highlights()
         .unwrap();
     assert_eq!(
-        out.buf.lines().collect::<Vec<_>>(),
-        [
+        str::from_utf8(out).unwrap().lines().collect::<Vec<_>>(),
+        vec![
             "if s:gui_running",
             "    hi HL term=NONE",
             "else",
             "    hi HL term=NONE",
             "endif",
             "",
-        ].iter()
-            .map(|s| s.to_string())
-            .collect::<Vec<_>>(),
+        ],
     );
 }
 
 #[test]
 fn test_write_term_colors() {
-    let out = &mut StrBuf::new();
+    let out = &mut Vec::new();
     let mut m = HashMap::new();
     m.insert(
         "normal",
@@ -260,11 +234,12 @@ fn test_write_term_colors() {
         out,
     }.write_term_colors()
         .unwrap();
-    assert!(out.buf.contains("let g:terminal_color_0 = '#123456'"));
-    assert!(out.buf.contains("let g:terminal_color_1 = '#000000'"));
-    assert!(out.buf.contains("let g:terminal_color_0 = 123"));
-    assert!(out.buf.contains("let g:terminal_color_1 = 1"));
-    assert!(out.buf.contains("let g:terminal_ansi_colors = ["));
-    assert!(out.buf.contains("\\       '#123456'"));
-    assert!(out.buf.contains("\\       '#000000'"));
+    let rendered = str::from_utf8(out).unwrap();
+    assert!(rendered.contains("let g:terminal_color_0 = '#123456'"));
+    assert!(rendered.contains("let g:terminal_color_1 = '#000000'"));
+    assert!(rendered.contains("let g:terminal_color_0 = 123"));
+    assert!(rendered.contains("let g:terminal_color_1 = 1"));
+    assert!(rendered.contains("let g:terminal_ansi_colors = ["));
+    assert!(rendered.contains("\\       '#123456'"));
+    assert!(rendered.contains("\\       '#000000'"));
 }
