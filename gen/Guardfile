@@ -1,0 +1,21 @@
+directories %w[src]
+
+def sep(f)
+  puts "\033[93m#{Time.now}: #{File.basename f}\033[0m"
+end
+
+def run(cmd)
+  puts cmd
+  puts(system(cmd) ? "\e[1;92mPASS\e[0m" : "\e[1;91mFAIL\e[0m")
+end
+
+guard :shell do
+  watch %r[^src/main\.rs$] do |m|
+    sep m[0]
+    run 'cargo run > ../colors/spring-night.vim'
+  end
+  watch %r[^src/test\.rs$] do |m|
+    sep m[0]
+    run 'cargo test'
+  end
+end

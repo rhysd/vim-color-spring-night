@@ -1,11 +1,17 @@
-language: python
-python: 3.6
+language: rust
+rust: stable
 install:
-    - pip install vim-vint
+    - curl -Ls https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz | tar xzf - -C .
 before_script:
     - uname -a
     - vim --version
+    - nvim-linux64/bin/nvim --version
 script:
-    - vint --warning $(git ls-files | grep -e '\.vim$' | grep -v vital) --color
+    - cd gen && cargo test && cd -
     - vim -E -c 'set t_Co=256 rtp+=.' -c 'try | colorscheme spring-night | catch | cquit | endtry' -c 'quit'
-    - ruby .ci/check_duplicate.rb
+    - nvim-linux64/bin/nvim -E -c 'set t_Co=256 rtp+=.' -c 'try | colorscheme spring-night | catch | cquit | endtry' -c 'quit'
+    - bash .ci/colorscheme-file-is-latest.bash
+addons:
+  apt:
+    packages:
+      - vim
