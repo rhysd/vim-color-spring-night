@@ -17,74 +17,65 @@ fn test_color_code() {
 
 #[test]
 fn test_write_header() {
-    let out = &mut Vec::new();
-    {
-        let mut w = Writer {
-            table: HashMap::new(),
-            highlights: &[],
-            term_colors: DUMMY_TERM_COLORS,
-            out,
-        };
-        w.write_header("spring-night").unwrap();
-    }
-    let rendered = str::from_utf8(out).unwrap();
+    let mut w = Writer {
+        table: HashMap::new(),
+        highlights: &[],
+        term_colors: DUMMY_TERM_COLORS,
+        out: Vec::new(),
+    };
+    w.write_header("spring-night").unwrap();
+    let rendered = str::from_utf8(&w.out).unwrap();
     assert!(rendered.starts_with(r#"" spring-night: Calm-colored dark color scheme"#));
     assert!(rendered.contains("let g:colors_name = 'spring-night'"));
 }
 
 #[test]
 fn test_write_contrast_color_variables() {
-    let out = &mut Vec::new();
-    {
-        Writer {
-            table: HashMap::new(),
-            highlights: &[],
-            term_colors: DUMMY_TERM_COLORS,
-            out,
-        }.write_contrast_color_variables()
-            .unwrap();
-    }
-    assert_eq!(str::from_utf8(out).unwrap(), "\n");
+    let mut w = Writer {
+        table: HashMap::new(),
+        highlights: &[],
+        term_colors: DUMMY_TERM_COLORS,
+        out: Vec::new(),
+    };
+    w.write_contrast_color_variables().unwrap();
+    assert_eq!(str::from_utf8(&w.out).unwrap(), "\n");
 
-    let out = &mut Vec::new();
-    {
-        let mut m = HashMap::new();
-        m.insert(
-            "hi",
-            Color {
-                gui: ColorCode::Normal("#123456"),
-                cterm: ColorCode::Contrast(12, 34),
-            },
-        );
-        m.insert(
-            "hello",
-            Color {
-                gui: ColorCode::Contrast("#123456", "#7890ab"),
-                cterm: ColorCode::Contrast(123, 234),
-            },
-        );
-        m.insert(
-            "hey",
-            Color {
-                gui: ColorCode::Normal("#123456"),
-                cterm: ColorCode::Normal(123),
-            },
-        );
-        m.insert(
-            "goodbye",
-            Color {
-                gui: ColorCode::Contrast("#000000", "#ffffff"),
-                cterm: ColorCode::Normal(123),
-            },
-        );
-        Writer {
-            table: m,
-            highlights: &[],
-            term_colors: DUMMY_TERM_COLORS,
-            out,
-        }.write_contrast_color_variables()
-            .unwrap();
-    }
+    let mut m = HashMap::new();
+    m.insert(
+        "hi",
+        Color {
+            gui: ColorCode::Normal("#123456"),
+            cterm: ColorCode::Contrast(12, 34),
+        },
+    );
+    m.insert(
+        "hello",
+        Color {
+            gui: ColorCode::Contrast("#123456", "#7890ab"),
+            cterm: ColorCode::Contrast(123, 234),
+        },
+    );
+    m.insert(
+        "hey",
+        Color {
+            gui: ColorCode::Normal("#123456"),
+            cterm: ColorCode::Normal(123),
+        },
+    );
+    m.insert(
+        "goodbye",
+        Color {
+            gui: ColorCode::Contrast("#000000", "#ffffff"),
+            cterm: ColorCode::Normal(123),
+        },
+    );
+    let mut w = Writer {
+        table: m,
+        highlights: &[],
+        term_colors: DUMMY_TERM_COLORS,
+        out: Vec::new(),
+    };
+    w.write_contrast_color_variables().unwrap();
     for (actual, expected) in [
         "let s:goodbye_gui = g:spring_night_high_contrast ? '#000000' : '#ffffff'",
         "let s:hello_gui = g:spring_night_high_contrast ? '#123456' : '#7890ab'",
@@ -92,7 +83,7 @@ fn test_write_contrast_color_variables() {
         "let s:hi_cterm = g:spring_night_high_contrast ? 12 : 34",
         "",
     ].iter()
-        .zip(str::from_utf8(out).unwrap().lines())
+        .zip(str::from_utf8(&w.out).unwrap().lines())
     {
         assert_eq!(*actual, expected);
     }
@@ -119,7 +110,6 @@ fn test_write_highlight() {
     ];
 
     for ((fg, bg, sp, attr), indent, expected) in testcases {
-        let out = &mut Vec::new();
         let hl = Highlight {
             name: "HL",
             fg,
@@ -142,33 +132,29 @@ fn test_write_highlight() {
                 cterm: ColorCode::Contrast(123, 234),
             },
         );
-        Writer {
+        let mut w = Writer {
             table: m,
             highlights: &[],
             term_colors: DUMMY_TERM_COLORS,
-            out,
-        }.write_highlight(&hl, indent as u32)
-            .unwrap();
-        assert_eq!(str::from_utf8(out).unwrap(), format!("{}\n", expected));
+            out: Vec::new(),
+        };
+        w.write_highlight(&hl, indent as u32).unwrap();
+        assert_eq!(str::from_utf8(&w.out).unwrap(), format!("{}\n", expected));
     }
 
     // Edge case
-    let out = &mut Vec::new();
-    {
-        Writer {
-            table: HashMap::new(),
-            highlights: &[],
-            term_colors: DUMMY_TERM_COLORS,
-            out,
-        }.write_highlights()
-            .unwrap();
-    }
-    assert_eq!(str::from_utf8(out).unwrap(), "\n");
+    let mut w = Writer {
+        table: HashMap::new(),
+        highlights: &[],
+        term_colors: DUMMY_TERM_COLORS,
+        out: Vec::new(),
+    };
+    w.write_highlights().unwrap();
+    assert_eq!(str::from_utf8(&w.out).unwrap(), "\n");
 }
 
 #[test]
 fn test_write_highlights() {
-    let out = &mut Vec::new();
     fn hl() -> Highlight {
         Highlight {
             name: "HL",
@@ -178,25 +164,24 @@ fn test_write_highlights() {
             attr: HighlightAttr::Nothing,
         }
     }
-    Writer {
+    let mut w = Writer {
         table: HashMap::new(),
         highlights: &[Always(hl())],
         term_colors: DUMMY_TERM_COLORS,
-        out,
-    }.write_highlights()
-        .unwrap();
-    assert_eq!(str::from_utf8(out).unwrap(), "hi HL term=NONE\n\n");
+        out: Vec::new(),
+    };
+    w.write_highlights().unwrap();
+    assert_eq!(str::from_utf8(&w.out).unwrap(), "hi HL term=NONE\n\n");
 
-    let out = &mut Vec::new();
-    Writer {
+    let mut w = Writer {
         table: HashMap::new(),
         highlights: &[Switch(hl(), hl())],
         term_colors: DUMMY_TERM_COLORS,
-        out,
-    }.write_highlights()
-        .unwrap();
+        out: Vec::new(),
+    };
+    w.write_highlights().unwrap();
     assert_eq!(
-        str::from_utf8(out).unwrap().lines().collect::<Vec<_>>(),
+        str::from_utf8(&w.out).unwrap().lines().collect::<Vec<_>>(),
         vec![
             "if s:gui_running",
             "    hi HL term=NONE",
@@ -210,7 +195,6 @@ fn test_write_highlights() {
 
 #[test]
 fn test_write_term_colors() {
-    let out = &mut Vec::new();
     let mut m = HashMap::new();
     m.insert(
         "normal",
@@ -226,17 +210,17 @@ fn test_write_term_colors() {
             cterm: ColorCode::Contrast(1, 2),
         },
     );
-    Writer {
+    let mut w = Writer {
         table: m,
         highlights: &[],
         term_colors: [
             "normal", "contrast", "normal", "contrast", "normal", "contrast", "normal", "contrast",
             "normal", "contrast", "normal", "contrast", "normal", "contrast", "normal", "contrast",
         ],
-        out,
-    }.write_term_colors()
-        .unwrap();
-    let rendered = str::from_utf8(out).unwrap();
+        out: Vec::new(),
+    };
+    w.write_term_colors().unwrap();
+    let rendered = str::from_utf8(&w.out).unwrap();
     assert!(rendered.contains("let g:terminal_color_0 = '#123456'"));
     assert!(rendered.contains("let g:terminal_color_1 = '#000000'"));
     assert!(rendered.contains("let g:terminal_color_0 = 123"));
@@ -247,8 +231,7 @@ fn test_write_term_colors() {
 #[test]
 fn test_spring_night_writer() {
     // Check duplicate highlights
-    let out = &mut Vec::new();
-    let w = spring_night_writer(out);
+    let w = spring_night_writer(Vec::new());
     let mut unique_check = HashSet::new();
     for hl in w.highlights {
         let name = match hl {

@@ -114,11 +114,11 @@ macro_rules! fgbgsp {
 }
 
 #[derive(Debug)]
-struct Writer<'a, W: io::Write + 'a> {
+struct Writer<'a, W: io::Write> {
     table: ColorTable,
     highlights: &'a [HowToHighlight],
     term_colors: [&'static str; 16],
-    out: &'a mut W,
+    out: W,
 }
 
 impl<'a, W: io::Write> Writer<'a, W> {
@@ -352,7 +352,7 @@ endif
     }
 }
 
-fn spring_night_writer<'a, W: io::Write + 'a>(out: &'a mut W) -> Writer<'a, W> {
+fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
     let mut table = HashMap::new();
     #[cfg_attr(rustfmt, rustfmt_skip)]
     {
@@ -584,5 +584,5 @@ fn spring_night_writer<'a, W: io::Write + 'a>(out: &'a mut W) -> Writer<'a, W> {
 }
 
 fn main() -> io::Result<()> {
-    spring_night_writer(&mut io::stdout()).write_color_scheme()
+    spring_night_writer(io::BufWriter::new(io::stdout())).write_color_scheme()
 }
