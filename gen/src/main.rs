@@ -147,7 +147,7 @@ endif
 " all cases no additional highlight is set at start up. Almost all additional
 " highlights are set by Vim plugins.
 if !has('vim_starting')
-    " Remove all existing highlighting and set the defaults.
+    " Remove all existing user-defined highlights and set the defaults.
     hi clear
 endif
 
