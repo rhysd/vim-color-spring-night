@@ -1,5 +1,8 @@
+extern crate regex;
+
+use self::regex::Regex;
 use super::*;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::str;
 
 const DUMMY_TERM_COLORS: [&'static str; 16] = [
@@ -242,4 +245,58 @@ fn test_write_term_colors() {
     assert!(rendered.contains("let g:terminal_ansi_colors = ["));
     assert!(rendered.contains("\\       '#123456'"));
     assert!(rendered.contains("\\       '#000000'"));
+}
+
+#[test]
+fn test_spring_night_writer() {
+    // Check duplicate highlights
+    let out = &mut Vec::new();
+    let w = spring_night_writer(out);
+    let mut unique_check = HashSet::new();
+    for hl in w.highlights {
+        let name = match hl {
+            Always(h) => h.name,
+            Switch(g, t) => {
+                assert_eq!(g.name, t.name);
+                g.name
+            }
+        };
+        assert!(unique_check.insert(name), "Duplicate highlight '{}'", name);
+    }
+
+    // Check terminal colors are correct
+    for tc in &w.term_colors {
+        assert!(
+            w.table.contains_key(tc),
+            "Terminal color '{}' is not present in color names",
+            tc
+        );
+    }
+
+    // Check color code is correct
+    let re = Regex::new(r"^#[[:xdigit:]]{6}$").unwrap();
+    for (name, c) in w.table {
+        match c.gui {
+            ColorCode::Normal(c) => assert!(
+                re.is_match(c),
+                "'{}' is invalid color code at '{}'",
+                c,
+                name
+            ),
+            ColorCode::Contrast(c1, c2) => {
+                assert!(
+                    re.is_match(c1),
+                    "'{}' is invalid color code at '{}'",
+                    c1,
+                    name
+                );
+                assert!(
+                    re.is_match(c2),
+                    "'{}' is invalid color code at '{}'",
+                    c2,
+                    name
+                );
+            }
+        }
+    }
 }

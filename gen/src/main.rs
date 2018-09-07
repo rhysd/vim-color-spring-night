@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::fmt::Display;
 use std::io;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum ColorCode<T: Display> {
     Normal(T),
     Contrast(T, T),
@@ -22,7 +22,7 @@ impl<T: Display> ColorCode<T> {
 
 const NONE_COLOR: ColorCode<&'static str> = ColorCode::Normal("NONE");
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 struct Color {
     gui: ColorCode<&'static str>,
     cterm: ColorCode<u8>,
@@ -338,7 +338,7 @@ endif
     }
 }
 
-fn main() -> io::Result<()> {
+fn spring_night_writer<'a, W: io::Write + 'a>(out: &'a mut W) -> Writer<'a, W> {
     let mut table = HashMap::new();
     #[cfg_attr(rustfmt, rustfmt_skip)]
     {
@@ -354,36 +354,42 @@ fn main() -> io::Result<()> {
             ColorCode::Contrast(high, low)
         }
 
-        table.insert("bg",         color(contrast("#132132", "#334152"), normal(233)));
-        table.insert("bgemphasis", color(normal("#3a4b5c"),              normal(235)));
-        table.insert("bgstrong",   color(normal("#536273"),              normal(238)));
-        table.insert("fg",         color(normal("#fffeeb"),              contrast(231, 230)));
-        table.insert("hiddenfg",   color(normal("#607080"),              normal(60)));
-        table.insert("weakfg",     color(normal("#8d9eb2"),              normal(103)));
-        table.insert("weakerfg",   color(normal("#788898"),              normal(102)));
-        table.insert("palepink",   color(normal("#e7c6b7"),              normal(181)));
-        table.insert("yellow",     color(normal("#f0eaaa"),              normal(229)));
-        table.insert("white",      color(normal("#ffffff"),              normal(231)));
-        table.insert("purple",     color(normal("#e7d5ff"),              normal(189)));
-        table.insert("gray",       color(normal("#545f6e"),              normal(59)));
-        table.insert("light",      color(normal("#646f7c"),              normal(60)));
-        table.insert("yaezakura",  color(normal("#70495d"),              normal(95)));
-        table.insert("sakura",     color(normal("#a9667a"),              normal(132)));
-        table.insert("orange",     color(normal("#f0aa8a"),              normal(216)));
-        table.insert("green",      color(normal("#a9dd9d"),              normal(150)));
-        table.insert("darkgreen",  color(normal("#5f8770"),              normal(65)));
-        table.insert("skyblue",    color(normal("#a8d2eb"),              normal(153)));
-        table.insert("gold",       color(normal("#fedf81"),              normal(222)));
-        table.insert("darkgold",   color(normal("#685800"),              normal(58)));
-        table.insert("red",        color(normal("#fd8489"),              normal(210)));
-        table.insert("mildred",    color(normal("#ab6560"),              normal(167)));
-        table.insert("crimson",    color(normal("#ff6a6f"),              normal(203)));
-        table.insert("mikan",      color(normal("#fb8965"),              normal(209)));
-        table.insert("darkblue",   color(normal("#00091e"),              normal(235)));
-        table.insert("blue",       color(normal("#7098e6"),              normal(69)));
-        table.insert("paleblue",   color(normal("#98b8e6"),              normal(111)));
-        table.insert("lime",       color(normal("#c9fd88"),              normal(149)));
-        table.insert("inu",        color(normal("#ddbc96"),              normal(180)));
+        macro_rules! color_name {
+            ($name:ident, $gui:expr, $cterm:expr) => {
+                assert_eq!(table.insert(stringify!($name), color($gui, $cterm)), None)
+            }
+        }
+
+        color_name!(bg,         contrast("#132132", "#334152"), normal(233));
+        color_name!(bgemphasis, normal("#3a4b5c"),              normal(235));
+        color_name!(bgstrong,   normal("#536273"),              normal(238));
+        color_name!(fg,         normal("#fffeeb"),              contrast(231, 230));
+        color_name!(hiddenfg,   normal("#607080"),              normal(60));
+        color_name!(weakfg,     normal("#8d9eb2"),              normal(103));
+        color_name!(weakerfg,   normal("#788898"),              normal(102));
+        color_name!(palepink,   normal("#e7c6b7"),              normal(181));
+        color_name!(yellow,     normal("#f0eaaa"),              normal(229));
+        color_name!(white,      normal("#ffffff"),              normal(231));
+        color_name!(purple,     normal("#e7d5ff"),              normal(189));
+        color_name!(gray,       normal("#545f6e"),              normal(59));
+        color_name!(light,      normal("#646f7c"),              normal(60));
+        color_name!(yaezakura,  normal("#70495d"),              normal(95));
+        color_name!(sakura,     normal("#a9667a"),              normal(132));
+        color_name!(orange,     normal("#f0aa8a"),              normal(216));
+        color_name!(green,      normal("#a9dd9d"),              normal(150));
+        color_name!(darkgreen,  normal("#5f8770"),              normal(65));
+        color_name!(skyblue,    normal("#a8d2eb"),              normal(153));
+        color_name!(gold,       normal("#fedf81"),              normal(222));
+        color_name!(darkgold,   normal("#685800"),              normal(58));
+        color_name!(red,        normal("#fd8489"),              normal(210));
+        color_name!(mildred,    normal("#ab6560"),              normal(167));
+        color_name!(crimson,    normal("#ff6a6f"),              normal(203));
+        color_name!(mikan,      normal("#fb8965"),              normal(209));
+        color_name!(darkblue,   normal("#00091e"),              normal(235));
+        color_name!(blue,       normal("#7098e6"),              normal(69));
+        color_name!(paleblue,   normal("#98b8e6"),              normal(111));
+        color_name!(lime,       normal("#c9fd88"),              normal(149));
+        color_name!(inu,        normal("#ddbc96"),              normal(180));
     }
     let table = table;
 
@@ -555,11 +561,14 @@ fn main() -> io::Result<()> {
         "white",
     ];
 
-    let mut writer = Writer {
+    return Writer {
         table,
         highlights,
         term_colors,
-        out: &mut io::stdout(),
+        out,
     };
-    writer.write_color_scheme()
+}
+
+fn main() -> io::Result<()> {
+    spring_night_writer(&mut io::stdout()).write_color_scheme()
 }

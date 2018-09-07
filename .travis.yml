@@ -11,7 +11,6 @@ script:
     - cd gen && cargo run > ../colors/spring-night.vim && cd -
     - vim -E -c 'set t_Co=256 rtp+=.' -c 'try | colorscheme spring-night | catch | cquit | endtry' -c 'quit'
     - nvim-linux64/bin/nvim -E -c 'set t_Co=256 rtp+=.' -c 'try | colorscheme spring-night | catch | cquit | endtry' -c 'quit'
-    - ruby .ci/check_duplicate.rb
 addons:
   apt:
     packages:
