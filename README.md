@@ -1,5 +1,5 @@
 Calm Spring Color Scheme for Vim [![Build Status][]][Travis CI]
-================================
+===============================================================
 
 `spring-night` is a low contrast calm color scheme for Vim. It's colored with deep blue background,
 shiny yellow foreground and *sakura*:cherry_blossom: text selection.
@@ -118,11 +118,15 @@ Color layouts are optimized for following filetypes/plugins:
 
 ## Contribution
 
-If you find some odd highlight, I'll be happy if you report it to [issues](https://github.com/rhysd/vim-color-spring-night/issues/new) with how to reproduce.
+If you find some odd highlight, I'll be happy if you report it to
+[issues](https://github.com/rhysd/vim-color-spring-night/issues/new) with how to reproduce.
 And pull requests are of course welcome :smile:
 
-For colors palette, please see [the source code directly](https://github.com/rhysd/vim-color-spring-night/blob/master/colors/spring-night.vim).
-The variable definitions are color table of this colorscheme.
+Colorscheme file is generated via [a generator script](gen/src/main.rs). Please do not modify
+`spring_night.vim` directly. Modify the script instead. Please [a generator script README](gen/README.md)
+for more details.
+For colors palette, please see `table` variable in `spring_night_writer()` function in
+[a generator script](gen/src/main.rs).
 
 
 ## Bonus: Slack Theme
