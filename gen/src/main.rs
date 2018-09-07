@@ -304,27 +304,31 @@ endif
     }
 
     fn write_term_colors(&mut self) -> io::Result<()> {
-        writeln!(self.out, "if has('nvim')")?;
-        writeln!(self.out, "    if s:gui_running || s:true_colors")?;
+        writeln!(self.out, "if g:spring_night_highlight_terminal")?;
+        writeln!(self.out, "    if has('nvim')")?;
+        writeln!(self.out, "        if s:gui_running || s:true_colors")?;
         for (index, name) in self.term_colors.iter().enumerate() {
             writeln!(
                 self.out,
-                "        let g:terminal_color_{} = '{}'",
+                "            let g:terminal_color_{} = '{}'",
                 index,
                 self.table.get(name).unwrap().gui.normal()
             )?;
         }
-        writeln!(self.out, "    else")?;
+        writeln!(self.out, "        else")?;
         for (index, name) in self.term_colors.iter().enumerate() {
             writeln!(
                 self.out,
-                "        let g:terminal_color_{} = {}",
+                "            let g:terminal_color_{} = {}",
                 index,
                 self.table.get(name).unwrap().cterm.normal()
             )?;
         }
-        writeln!(self.out, "    endif")?;
-        writeln!(self.out, "else")?;
+        writeln!(self.out, "        endif")?;
+        writeln!(
+            self.out,
+            "    elseif (s:gui_running || s:true_colors) && exists('*term_setansicolors')"
+        )?;
         let elems_for_vim = self
             .term_colors
             .iter()
@@ -333,9 +337,10 @@ endif
             .join(", ");
         writeln!(
             self.out,
-            "    let g:terminal_ansi_colors = [{}]",
+            "        let g:terminal_ansi_colors = [{}]",
             elems_for_vim
         )?;
+        writeln!(self.out, "    endif")?;
         writeln!(self.out, "endif")
     }
 

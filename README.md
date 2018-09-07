@@ -70,6 +70,7 @@ endif
 set termguicolors
 ```
 
+
 ## Customize
 
 You can customize some behaviors of this colorscheme. Please note that these variable must be
@@ -77,11 +78,11 @@ specified before running `:colorscheme`.
 
 - **`g:spring_night_kill_italic`**: If `1`, this colorscheme does not use italic attribute. Default value is `0`.
 - **`g:spring_night_kill_bold`**: If `1`, this colorscheme does not use bold attribute. Default value is `0`.
-- **`g:spring_night_high_contrast`**: List of string. If it includes `'cui'`, it uses high contrast
-  version on Vim in terminal. If it includes `'gui'`, it uses high contrast version on gVim. Default
-  value depends on `termguicolors` option.
+- **`g:spring_night_high_contrast`**: If `1`, it uses a bit high contrast colors. Default value depends on
+  `termguicolors` option and whether on GUI or CUI Vim is runniong.
 - **`g:spring_night_highlight_terminal`**: If `1`, a terminal windnow is also highlighted with this color
   scheme. Otherwise default ANSI colors are used. Default value is `1`.
+
 
 ## Optimized Filetypes and Plugins
 
