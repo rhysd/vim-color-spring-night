@@ -318,15 +318,17 @@ endif
         }
         writeln!(self.out, "    endif")?;
         writeln!(self.out, "else")?;
-        writeln!(self.out, "    let g:terminal_ansi_colors = [")?;
-        for name in self.term_colors.iter() {
-            writeln!(
-                self.out,
-                "\\       '{}',",
-                self.table.get(name).unwrap().gui.normal()
-            )?;
-        }
-        writeln!(self.out, "\\   ]")?;
+        let elems_for_vim = self
+            .term_colors
+            .iter()
+            .map(|name| format!("'{}'", self.table.get(name).unwrap().gui.normal()))
+            .collect::<Vec<_>>()
+            .join(", ");
+        writeln!(
+            self.out,
+            "    let g:terminal_ansi_colors = [{}]",
+            elems_for_vim
+        )?;
         writeln!(self.out, "endif")
     }
 

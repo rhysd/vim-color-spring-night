@@ -242,9 +242,7 @@ fn test_write_term_colors() {
     assert!(rendered.contains("let g:terminal_color_1 = '#000000'"));
     assert!(rendered.contains("let g:terminal_color_0 = 123"));
     assert!(rendered.contains("let g:terminal_color_1 = 1"));
-    assert!(rendered.contains("let g:terminal_ansi_colors = ["));
-    assert!(rendered.contains("\\       '#123456'"));
-    assert!(rendered.contains("\\       '#000000'"));
+    assert!(rendered.contains("let g:terminal_ansi_colors = ['#123456', '#000000', '#123456', '#000000', '#123456', '#000000', '#123456', '#000000', '#123456', '#000000', '#123456', '#000000', '#123456', '#000000', '#123456', '#000000']"));
 }
 
 #[test]
