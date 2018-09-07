@@ -85,18 +85,17 @@ fn test_write_contrast_color_variables() {
         }.write_contrast_color_variables()
             .unwrap();
     }
-    let mut lines = str::from_utf8(out).unwrap().lines().collect::<Vec<_>>();
-    lines.sort();
-    assert_eq!(
-        lines,
-        vec![
-            "",
-            "let s:goodbye_gui = g:spring_night_high_contrast ? '#000000' : '#ffffff'",
-            "let s:hello_cterm = g:spring_night_high_contrast ? 123 : 234",
-            "let s:hello_gui = g:spring_night_high_contrast ? '#123456' : '#7890ab'",
-            "let s:hi_cterm = g:spring_night_high_contrast ? 12 : 34",
-        ]
-    );
+    for (actual, expected) in [
+        "let s:goodbye_gui = g:spring_night_high_contrast ? '#000000' : '#ffffff'",
+        "let s:hello_gui = g:spring_night_high_contrast ? '#123456' : '#7890ab'",
+        "let s:hello_cterm = g:spring_night_high_contrast ? 123 : 234",
+        "let s:hi_cterm = g:spring_night_high_contrast ? 12 : 34",
+        "",
+    ].iter()
+        .zip(str::from_utf8(out).unwrap().lines())
+    {
+        assert_eq!(*actual, expected);
+    }
 }
 
 #[test]

@@ -184,7 +184,12 @@ endif
     }
 
     fn write_contrast_color_variables(&mut self) -> io::Result<()> {
-        for (name, color) in self.table.iter() {
+        // Sort by key name to avoid random order
+        for (name, color) in {
+            let mut v = self.table.iter().collect::<Vec<_>>();
+            v.sort_by_key(|(&k, _)| k);
+            v
+        } {
             if let ColorCode::Contrast(high, low) = color.gui {
                 writeln!(
                     self.out,
