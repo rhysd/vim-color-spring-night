@@ -34,11 +34,12 @@ let g:spring_night_italic_comments = get(g:, 'spring_night_italic_comments', 0)
 let g:spring_night_kill_italic = get(g:, 'spring_night_kill_italic', 0)
 let g:spring_night_kill_bold = get(g:, 'spring_night_kill_bold', 0)
 let g:spring_night_highlight_terminal = get(g:, 'spring_night_highlight_terminal', 1)
+let g:spring_night_cterm_italic = get(g:, 'spring_night_cterm_italic', 0)
 
 let s:gui_running = has('gui_running')
 let s:true_colors = has('termguicolors') && &termguicolors
 let s:undercurl_attr = s:gui_running ? 'gui=undercurl cterm=undercurl' : 'gui=underline cterm=underline'
-let s:italic_attr = g:spring_night_kill_italic ? '' : 'gui=italic'
+let s:italic_attr = g:spring_night_kill_italic ? '' : g:spring_night_cterm_italic ? 'gui=italic cterm=italic' : 'gui=italic'
 let s:bold_attr = g:spring_night_kill_bold ? '' : 'gui=bold cterm=bold'
 
 if exists('g:spring_night_high_contrast')
