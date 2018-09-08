@@ -59,57 +59,50 @@ enum HowToHighlight {
     Switch(Highlight, Highlight),
 }
 
-use HowToHighlight::Always;
-use HowToHighlight::Switch;
+use HowToHighlight::{Always, Switch};
 
-macro_rules! fgbg {
-    ($name:expr, - , - , $attr:ident) => {
+macro_rules! highlight {
+    ($name:ident, $fg:expr, $bg:expr, $sp:expr, $attr:ident) => {
         Highlight {
-            name: $name,
-            fg: None,
-            bg: None,
-            sp: None,
-            attr: HighlightAttr::$attr,
-        }
-    };
-    ($name:expr, - , $bg:ident, $attr:ident) => {
-        Highlight {
-            name: $name,
-            fg: None,
-            bg: Some(stringify!($bg)),
-            sp: None,
-            attr: HighlightAttr::$attr,
-        }
-    };
-    ($name:expr, $fg:ident, - , $attr:ident) => {
-        Highlight {
-            name: $name,
-            fg: Some(stringify!($fg)),
-            bg: None,
-            sp: None,
-            attr: HighlightAttr::$attr,
-        }
-    };
-    ($name:expr, $fg:ident, $bg:ident, $attr:ident) => {
-        Highlight {
-            name: $name,
-            fg: Some(stringify!($fg)),
-            bg: Some(stringify!($bg)),
-            sp: None,
+            name: stringify!($name),
+            fg: $fg,
+            bg: $bg,
+            sp: $sp,
             attr: HighlightAttr::$attr,
         }
     };
 }
 
+macro_rules! fgbg {
+    ($name:ident, - , - , $attr:ident) => {
+        highlight!($name, None, None, None, $attr)
+    };
+    ($name:ident, $fg:ident, - , $attr:ident) => {
+        highlight!($name, Some(stringify!($fg)), None, None, $attr)
+    };
+    ($name:ident, - , $bg:ident, $attr:ident) => {
+        highlight!($name, None, Some(stringify!($bg)), None, $attr)
+    };
+    ($name:ident, $fg:ident, $bg:ident, $attr:ident) => {
+        highlight!(
+            $name,
+            Some(stringify!($fg)),
+            Some(stringify!($bg)),
+            None,
+            $attr
+        )
+    };
+}
+
 macro_rules! fgbgsp {
-    ($name:expr, $fg:ident, - , $sp:ident, $attr:ident) => {
-        Highlight {
-            name: $name,
-            fg: Some(stringify!($fg)),
-            bg: None,
-            sp: Some(stringify!($sp)),
-            attr: HighlightAttr::$attr,
-        }
+    ($name:ident, $fg:ident, - , $sp:ident, $attr:ident) => {
+        highlight!(
+            $name,
+            Some(stringify!($sp)),
+            None,
+            Some(stringify!($sp)),
+            $attr
+        )
     };
 }
 
@@ -357,10 +350,6 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
     let mut table = HashMap::new();
     #[cfg_attr(rustfmt, rustfmt_skip)]
     {
-        fn color(gui: ColorCode<&'static str>, cterm: ColorCode<u8>) -> Color {
-            Color { gui, cterm }
-        }
-
         fn normal<T: Display>(c: T) -> ColorCode<T> {
             ColorCode::Normal(c)
         }
@@ -371,7 +360,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
 
         macro_rules! color_name {
             ($name:ident, $gui:expr, $cterm:expr) => {
-                assert_eq!(table.insert(stringify!($name), color($gui, $cterm)), None)
+                assert_eq!(table.insert(stringify!($name), Color{gui: $gui, cterm: $cterm}), None)
             }
         }
 
@@ -411,149 +400,149 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
     #[cfg_attr(rustfmt, rustfmt_skip)]
     let highlights = &[
         // Normal colors
-        Always(fgbg!("Boolean",               red,        -,            Nothing)),
-        Always(fgbg!("Character",             green,      -,            Nothing)),
-        Always(fgbg!("ColorColumn",           -,          bgstrong,     Nothing)),
-        Always(fgbg!("Comment",               weakfg,     -,            CommentItalic)),
-        Always(fgbg!("Conceal",               mikan,      bg,           Nothing)),
-        Always(fgbg!("Conditional",           skyblue,    -,            Nothing)),
-        Always(fgbg!("Constant",              red,        -,            Nothing)),
-        Always(fgbg!("Cursor",                bg,         fg,           Nothing)),
-        Always(fgbg!("CursorColumn",          -,          bgemphasis,   Nothing)),
-        Always(fgbg!("CursorLine",            -,          bgemphasis,   None)),
-        Always(fgbg!("CursorLineNr",          purple,     bgstrong,     Nothing)),
-        Always(fgbg!("Define",                orange,     -,            Nothing)),
-        Always(fgbg!("Directory",             green,      -,            Nothing)),
-        Always(fgbg!("EndOfBuffer",           bgstrong,   -,            Nothing)),
-        Always(fgbg!("Error",                 red,        bgemphasis,   Bold)),
-        Always(fgbg!("ErrorMsg",              red,        bg,           Bold)),
-        Always(fgbg!("Float",                 red,        -,            Nothing)),
-        Always(fgbg!("FoldColumn",            purple,     bgemphasis,   Nothing)),
-        Always(fgbg!("Folded",                purple,     light,        Nothing)),
-        Always(fgbg!("Function",              orange,     -,            Nothing)),
-        Always(fgbg!("Identifier",            gold,       -,            Italic)),
-        Always(fgbg!("IncSearch",             NONE,       sakura,       Underline)),
-        Always(fgbg!("Keyword",               yellow,     -,            Bold)),
-        Always(fgbg!("Label",                 skyblue,    -,            Nothing)),
-        Always(fgbg!("LineNr",                weakerfg,   bgemphasis,   Nothing)),
-        Always(fgbg!("MatchParen",            bg,         sakura,       Underline)),
-        Always(fgbg!("ModeMsg",               gold,       -,            Nothing)),
-        Always(fgbg!("MoreMsg",               green,      -,            Nothing)),
-        Always(fgbg!("NonText",               light,      -,            Nothing)),
-        Always(fgbg!("Normal",                fg,         bg,           Nothing)),
-        Always(fgbg!("Number",                red,        -,            Nothing)),
-        Always(fgbg!("Operater",              orange,     -,            Nothing)),
-        Always(fgbg!("Pmenu",                 purple,     bgemphasis,   Nothing)),
-        Always(fgbg!("PmenuSbar",             gold,       bgstrong,     Nothing)),
-        Always(fgbg!("PmenuSel",              gold,       bgstrong,     Nothing)),
-        Always(fgbg!("PmenuThumb",            gold,       weakfg,       Nothing)),
-        Always(fgbg!("PreProc",               orange,     -,            Nothing)),
-        Always(fgbg!("Question",              skyblue,    -,            Nothing)),
-        Always(fgbg!("Search",                NONE,       yaezakura,    Underline)),
-        Always(fgbg!("SignColumn",            -,          bgemphasis,   Nothing)),
-        Always(fgbg!("Special",               yellow,     -,            Bold)),
-        Always(fgbg!("SpecialKey",            hiddenfg,   -,            Nothing)),
-        Always(fgbgsp!("SpellBad",            red,        -,    red,    Undercurl)),
-        Always(fgbgsp!("SpellCap",            purple,     -,    purple, Undercurl)),
-        Always(fgbgsp!("SpellLocal",          red,        -,    red,    Undercurl)),
-        Always(fgbgsp!("SpellRare",           yellow,     -,    yellow, Undercurl)),
-        Always(fgbg!("Statement",             skyblue,    -,            Nothing)),
-        Always(fgbg!("StatusLine",            fg,         bgstrong,     Bold)),
-        Always(fgbg!("StatusLineNC",          weakfg,     bgemphasis,   None)),
-        Always(fgbg!("StatusLineTerm",        fg,         bgstrong,     Bold)),
-        Always(fgbg!("StatusLineTermNC",      weakfg,     bgemphasis,   None)),
-        Always(fgbg!("StorageClass",          gold,       -,            Italic)),
-        Always(fgbg!("String",                green,      -,            Nothing)),
-        Always(fgbg!("TabLine",               weakfg,     bgstrong,     Nothing)),
-        Always(fgbg!("TabLineFill",           bgemphasis, -,            Nothing)),
-        Always(fgbg!("TabLineSel",            gold,       bg,           Bold)),
-        Always(fgbg!("Tag",                   orange,     -,            Nothing)),
-        Always(fgbg!("Title",                 gold,       -,            Bold)),
-        Always(fgbg!("Todo",                  bg,         red,          Bold)),
-        Always(fgbg!("ToolbarButton",         gold,       bg,           Bold)),
-        Always(fgbg!("ToolbarLine",           weakfg,     bgstrong,     Nothing)),
-        Always(fgbg!("Type",                  gold,       -,            Nothing)),
-        Always(fgbg!("Underlined",            skyblue,    -,            Underline)),
-        Always(fgbg!("VertSplit",             bgemphasis, bg,           Nothing)),
-        Always(fgbg!("Visual",                -,          yaezakura,    Nothing)),
-        Always(fgbg!("WarningMsg",            mikan,      bgemphasis,   Nothing)),
-        Always(fgbg!("WildMenu",              -,          gold,         Nothing)),
+        Always(fgbg!(Boolean,               red,        -,            Nothing)),
+        Always(fgbg!(Character,             green,      -,            Nothing)),
+        Always(fgbg!(ColorColumn,           -,          bgstrong,     Nothing)),
+        Always(fgbg!(Comment,               weakfg,     -,            CommentItalic)),
+        Always(fgbg!(Conceal,               mikan,      bg,           Nothing)),
+        Always(fgbg!(Conditional,           skyblue,    -,            Nothing)),
+        Always(fgbg!(Constant,              red,        -,            Nothing)),
+        Always(fgbg!(Cursor,                bg,         fg,           Nothing)),
+        Always(fgbg!(CursorColumn,          -,          bgemphasis,   Nothing)),
+        Always(fgbg!(CursorLine,            -,          bgemphasis,   None)),
+        Always(fgbg!(CursorLineNr,          purple,     bgstrong,     Nothing)),
+        Always(fgbg!(Define,                orange,     -,            Nothing)),
+        Always(fgbg!(Directory,             green,      -,            Nothing)),
+        Always(fgbg!(EndOfBuffer,           bgstrong,   -,            Nothing)),
+        Always(fgbg!(Error,                 red,        bgemphasis,   Bold)),
+        Always(fgbg!(ErrorMsg,              red,        bg,           Bold)),
+        Always(fgbg!(Float,                 red,        -,            Nothing)),
+        Always(fgbg!(FoldColumn,            purple,     bgemphasis,   Nothing)),
+        Always(fgbg!(Folded,                purple,     light,        Nothing)),
+        Always(fgbg!(Function,              orange,     -,            Nothing)),
+        Always(fgbg!(Identifier,            gold,       -,            Italic)),
+        Always(fgbg!(IncSearch,             NONE,       sakura,       Underline)),
+        Always(fgbg!(Keyword,               yellow,     -,            Bold)),
+        Always(fgbg!(Label,                 skyblue,    -,            Nothing)),
+        Always(fgbg!(LineNr,                weakerfg,   bgemphasis,   Nothing)),
+        Always(fgbg!(MatchParen,            bg,         sakura,       Underline)),
+        Always(fgbg!(ModeMsg,               gold,       -,            Nothing)),
+        Always(fgbg!(MoreMsg,               green,      -,            Nothing)),
+        Always(fgbg!(NonText,               light,      -,            Nothing)),
+        Always(fgbg!(Normal,                fg,         bg,           Nothing)),
+        Always(fgbg!(Number,                red,        -,            Nothing)),
+        Always(fgbg!(Operater,              orange,     -,            Nothing)),
+        Always(fgbg!(Pmenu,                 purple,     bgemphasis,   Nothing)),
+        Always(fgbg!(PmenuSbar,             gold,       bgstrong,     Nothing)),
+        Always(fgbg!(PmenuSel,              gold,       bgstrong,     Nothing)),
+        Always(fgbg!(PmenuThumb,            gold,       weakfg,       Nothing)),
+        Always(fgbg!(PreProc,               orange,     -,            Nothing)),
+        Always(fgbg!(Question,              skyblue,    -,            Nothing)),
+        Always(fgbg!(Search,                NONE,       yaezakura,    Underline)),
+        Always(fgbg!(SignColumn,            -,          bgemphasis,   Nothing)),
+        Always(fgbg!(Special,               yellow,     -,            Bold)),
+        Always(fgbg!(SpecialKey,            hiddenfg,   -,            Nothing)),
+        Always(fgbgsp!(SpellBad,            red,        -,    red,    Undercurl)),
+        Always(fgbgsp!(SpellCap,            purple,     -,    purple, Undercurl)),
+        Always(fgbgsp!(SpellLocal,          red,        -,    red,    Undercurl)),
+        Always(fgbgsp!(SpellRare,           yellow,     -,    yellow, Undercurl)),
+        Always(fgbg!(Statement,             skyblue,    -,            Nothing)),
+        Always(fgbg!(StatusLine,            fg,         bgstrong,     Bold)),
+        Always(fgbg!(StatusLineNC,          weakfg,     bgemphasis,   None)),
+        Always(fgbg!(StatusLineTerm,        fg,         bgstrong,     Bold)),
+        Always(fgbg!(StatusLineTermNC,      weakfg,     bgemphasis,   None)),
+        Always(fgbg!(StorageClass,          gold,       -,            Italic)),
+        Always(fgbg!(String,                green,      -,            Nothing)),
+        Always(fgbg!(TabLine,               weakfg,     bgstrong,     Nothing)),
+        Always(fgbg!(TabLineFill,           bgemphasis, -,            Nothing)),
+        Always(fgbg!(TabLineSel,            gold,       bg,           Bold)),
+        Always(fgbg!(Tag,                   orange,     -,            Nothing)),
+        Always(fgbg!(Title,                 gold,       -,            Bold)),
+        Always(fgbg!(Todo,                  bg,         red,          Bold)),
+        Always(fgbg!(ToolbarButton,         gold,       bg,           Bold)),
+        Always(fgbg!(ToolbarLine,           weakfg,     bgstrong,     Nothing)),
+        Always(fgbg!(Type,                  gold,       -,            Nothing)),
+        Always(fgbg!(Underlined,            skyblue,    -,            Underline)),
+        Always(fgbg!(VertSplit,             bgemphasis, bg,           Nothing)),
+        Always(fgbg!(Visual,                -,          yaezakura,    Nothing)),
+        Always(fgbg!(WarningMsg,            mikan,      bgemphasis,   Nothing)),
+        Always(fgbg!(WildMenu,              -,          gold,         Nothing)),
 
         // File type specific
         //
         // Markdown is highlighted with HTML highlights in gVim but link text doesn't
         // have a color. So define it here.
-        Always(fgbg!("cmakeArguments",        yellow,     -,            Nothing)),
-        Always(fgbg!("cmakeOperators",        red,        -,            Nothing)),
-        Always(fgbg!("DiffAdd",               -,          darkgreen,    Bold)),
-        Always(fgbg!("DiffChange",            -,          darkgold,     Bold)),
-        Always(fgbg!("DiffDelete",            fg,         mildred,      Bold)),
-        Always(fgbg!("DiffText",              -,          bg,           Nothing)),
-        Always(fgbg!("diffAdded",             green,      -,            Nothing)),
-        Always(fgbg!("diffFile",              yellow,     -,            Nothing)),
-        Always(fgbg!("diffIndexLine",         gold,       -,            Nothing)),
-        Always(fgbg!("diffNewFile",           yellow,     -,            Nothing)),
-        Always(fgbg!("diffRemoved",           red,        -,            Nothing)),
-        Always(fgbg!("gitCommitOverflow",     -,          red,          Nothing)),
-        Always(fgbg!("gitCommitSummary",      yellow,     -,            Nothing)),
-        Always(fgbg!("gitCommitSelectedFile", skyblue,    -,            Nothing)),
-        Always(fgbg!("gitconfigSection",      skyblue,    -,            Bold)),
-        Always(fgbg!("goBuiltins",            red,        -,            Nothing)),
-        Always(fgbg!("helpExample",           skyblue,    -,            Nothing)),
-        Always(fgbg!("htmlBold",              -,          bgemphasis,   Nothing)),
-        Always(fgbg!("htmlLinkText",          skyblue,    -,            Nothing)),
-        Always(fgbg!("htmlTagName",           orange,     -,            Nothing)),
-        Always(fgbg!("javaScriptBraces",      fg,         -,            Nothing)),
-        Always(fgbg!("makeCommands",          yellow,     -,            Nothing)),
-        Always(fgbg!("markdownCode",          yellow,     -,            Nothing)),
-        Always(fgbg!("markdownUrl",           weakfg,     -,            Nothing)),
-        Always(fgbg!("ocamlConstructor",      gold,       -,            Nothing)),
-        Always(fgbg!("ocamlKeyChar",          skyblue,    -,            Nothing)),
-        Always(fgbg!("ocamlKeyword",          gold   ,    -,            Nothing)),
-        Always(fgbg!("ocamlFunDef",           skyblue,    -,            Nothing)),
-        Always(fgbg!("plantumlColonLine",     skyblue,    -,            Nothing)),
-        Always(fgbg!("pythonBuiltin",         red,        -,            Nothing)),
-        Always(fgbg!("qfFileName",            gold,       -,            Nothing)),
-        Always(fgbg!("qfLineNr",              skyblue,    -,            Nothing)),
-        Always(fgbg!("rstEmphasis",           -,          bgemphasis,   Italic)),
-        Always(fgbg!("rstStrongEmphasis",     -,          bgstrong,     Bold)),
-        Always(fgbg!("rubyFunction",          yellow,     -,            Nothing)),
-        Always(fgbg!("rubyIdentifier",        yellow,     -,            Nothing)),
-        Always(fgbg!("rustEnumVariant",       gold,       -,            Nothing)),
-        Always(fgbg!("rustFuncCall",          fg,         -,            Nothing)),
-        Always(fgbg!("rustCommentLineDoc",    palepink,   -,            Nothing)),
-        Always(fgbg!("typescriptBraces",      fg,         -,            Nothing)),
-        Always(fgbg!("vimfilerColumn__SizeLine", weakfg,  -,            Nothing)),
-        Always(fgbg!("vimfilerClosedFile",    green,      -,            Nothing)),
-        Always(fgbg!("vimCommand",            skyblue,    -,            Nothing)),
-        Always(fgbg!("wastListDelimiter",     fg,         -,            Nothing)),
-        Always(fgbg!("wastInstGeneral",       yellow,     -,            Nothing)),
-        Always(fgbg!("wastInstWithType",      yellow,     -,            Nothing)),
-        Always(fgbg!("wastUnnamedVar"  ,      purple,     -,            Nothing)),
-        Always(fgbg!("zshDelimiter",          skyblue,    -,            Nothing)),
-        Always(fgbg!("zshPrecommand",         red,        -,            Nothing)),
+        Always(fgbg!(cmakeArguments,        yellow,     -,            Nothing)),
+        Always(fgbg!(cmakeOperators,        red,        -,            Nothing)),
+        Always(fgbg!(DiffAdd,               -,          darkgreen,    Bold)),
+        Always(fgbg!(DiffChange,            -,          darkgold,     Bold)),
+        Always(fgbg!(DiffDelete,            fg,         mildred,      Bold)),
+        Always(fgbg!(DiffText,              -,          bg,           Nothing)),
+        Always(fgbg!(diffAdded,             green,      -,            Nothing)),
+        Always(fgbg!(diffFile,              yellow,     -,            Nothing)),
+        Always(fgbg!(diffIndexLine,         gold,       -,            Nothing)),
+        Always(fgbg!(diffNewFile,           yellow,     -,            Nothing)),
+        Always(fgbg!(diffRemoved,           red,        -,            Nothing)),
+        Always(fgbg!(gitCommitOverflow,     -,          red,          Nothing)),
+        Always(fgbg!(gitCommitSummary,      yellow,     -,            Nothing)),
+        Always(fgbg!(gitCommitSelectedFile, skyblue,    -,            Nothing)),
+        Always(fgbg!(gitconfigSection,      skyblue,    -,            Bold)),
+        Always(fgbg!(goBuiltins,            red,        -,            Nothing)),
+        Always(fgbg!(helpExample,           skyblue,    -,            Nothing)),
+        Always(fgbg!(htmlBold,              -,          bgemphasis,   Nothing)),
+        Always(fgbg!(htmlLinkText,          skyblue,    -,            Nothing)),
+        Always(fgbg!(htmlTagName,           orange,     -,            Nothing)),
+        Always(fgbg!(javaScriptBraces,      fg,         -,            Nothing)),
+        Always(fgbg!(makeCommands,          yellow,     -,            Nothing)),
+        Always(fgbg!(markdownCode,          yellow,     -,            Nothing)),
+        Always(fgbg!(markdownUrl,           weakfg,     -,            Nothing)),
+        Always(fgbg!(ocamlConstructor,      gold,       -,            Nothing)),
+        Always(fgbg!(ocamlKeyChar,          skyblue,    -,            Nothing)),
+        Always(fgbg!(ocamlKeyword,          gold   ,    -,            Nothing)),
+        Always(fgbg!(ocamlFunDef,           skyblue,    -,            Nothing)),
+        Always(fgbg!(plantumlColonLine,     skyblue,    -,            Nothing)),
+        Always(fgbg!(pythonBuiltin,         red,        -,            Nothing)),
+        Always(fgbg!(qfFileName,            gold,       -,            Nothing)),
+        Always(fgbg!(qfLineNr,              skyblue,    -,            Nothing)),
+        Always(fgbg!(rstEmphasis,           -,          bgemphasis,   Italic)),
+        Always(fgbg!(rstStrongEmphasis,     -,          bgstrong,     Bold)),
+        Always(fgbg!(rubyFunction,          yellow,     -,            Nothing)),
+        Always(fgbg!(rubyIdentifier,        yellow,     -,            Nothing)),
+        Always(fgbg!(rustEnumVariant,       gold,       -,            Nothing)),
+        Always(fgbg!(rustFuncCall,          fg,         -,            Nothing)),
+        Always(fgbg!(rustCommentLineDoc,    palepink,   -,            Nothing)),
+        Always(fgbg!(typescriptBraces,      fg,         -,            Nothing)),
+        Always(fgbg!(vimfilerColumn__SizeLine, weakfg,  -,            Nothing)),
+        Always(fgbg!(vimfilerClosedFile,    green,      -,            Nothing)),
+        Always(fgbg!(vimCommand,            skyblue,    -,            Nothing)),
+        Always(fgbg!(wastListDelimiter,     fg,         -,            Nothing)),
+        Always(fgbg!(wastInstGeneral,       yellow,     -,            Nothing)),
+        Always(fgbg!(wastInstWithType,      yellow,     -,            Nothing)),
+        Always(fgbg!(wastUnnamedVar  ,      purple,     -,            Nothing)),
+        Always(fgbg!(zshDelimiter,          skyblue,    -,            Nothing)),
+        Always(fgbg!(zshPrecommand,         red,        -,            Nothing)),
 
         // Plugin specific
         //
         // Some plugins introduce its own highlight definitions. Adjust them for
         // working fine with this colorscheme.
-        Always(fgbg!("ALEWarningSign",        orange,     bgemphasis,   Bold)),
-        Always(fgbg!("ALEErrorSign",          bgemphasis, mildred,      Bold)),
-        Always(fgbg!("ALEInfoSign",           -,          light,        Nothing)),
-        Always(fgbg!("ALEError",              -,          mildred,      Nothing)),
-        Always(fgbg!("ALEWarning",            -,          darkgold,     Nothing)),
-        Always(fgbg!("CleverFChar",           bg,         red,          Nothing)),
-        Always(fgbg!("DirvishArg",            yellow,     -,            Bold)),
-        Always(fgbg!("EasyMotionTarget",      red,        -,            Bold)),
-        Always(fgbg!("EasyMotionShade",       weakfg,     bg,           Nothing)),
-        Always(fgbg!("GitGutterAdd",          green,      bgemphasis,   Nothing)),
-        Always(fgbg!("GitGutterChange",       yellow,     bgemphasis,   Nothing)),
-        Always(fgbg!("GitGutterChangeDelete", gold,       bgemphasis,   Nothing)),
-        Always(fgbg!("GitGutterDelete",       red,        bgemphasis,   Nothing)),
-        Always(fgbg!("HighlightedyankRegion", -,          bgemphasis,   Nothing)),
+        Always(fgbg!(ALEWarningSign,        orange,     bgemphasis,   Bold)),
+        Always(fgbg!(ALEErrorSign,          bgemphasis, mildred,      Bold)),
+        Always(fgbg!(ALEInfoSign,           -,          light,        Nothing)),
+        Always(fgbg!(ALEError,              -,          mildred,      Nothing)),
+        Always(fgbg!(ALEWarning,            -,          darkgold,     Nothing)),
+        Always(fgbg!(CleverFChar,           bg,         red,          Nothing)),
+        Always(fgbg!(DirvishArg,            yellow,     -,            Bold)),
+        Always(fgbg!(EasyMotionTarget,      red,        -,            Bold)),
+        Always(fgbg!(EasyMotionShade,       weakfg,     bg,           Nothing)),
+        Always(fgbg!(GitGutterAdd,          green,      bgemphasis,   Nothing)),
+        Always(fgbg!(GitGutterChange,       yellow,     bgemphasis,   Nothing)),
+        Always(fgbg!(GitGutterChangeDelete, gold,       bgemphasis,   Nothing)),
+        Always(fgbg!(GitGutterDelete,       red,        bgemphasis,   Nothing)),
+        Always(fgbg!(HighlightedyankRegion, -,          bgemphasis,   Nothing)),
         Switch(
-            fgbg!("EasyMotionIncCursor",      bg,         fg,           Nothing),
-            fgbg!("EasyMotionIncCursor",      -,          -,            Reverse),
+            fgbg!(EasyMotionIncCursor,      bg,         fg,           Nothing),
+            fgbg!(EasyMotionIncCursor,      -,          -,            Reverse),
         ),
     ];
 
