@@ -105,6 +105,8 @@ fn test_write_highlight() {
         ((Some("contrast"), None, None, HighlightAttr::Nothing),               0, "exe 'hi' 'HL' 'term=NONE' 'guifg='.s:contrast_gui 'ctermfg='.s:contrast_cterm"),
         ((None, Some("contrast"), None, HighlightAttr::Nothing),               0, "exe 'hi' 'HL' 'term=NONE' 'guibg='.s:contrast_gui 'ctermbg='.s:contrast_cterm"),
         ((Some("contrast"), Some("contrast"), None, HighlightAttr::Underline), 0, "exe 'hi' 'HL' 'term=NONE' 'guifg='.s:contrast_gui 'ctermfg='.s:contrast_cterm 'guibg='.s:contrast_gui 'ctermbg='.s:contrast_cterm 'gui=underline cterm=underline'"),
+        ((None, None, Some("normal"), HighlightAttr::Nothing),                 0, "hi HL term=NONE guisp=#123456"),
+        ((None, None, Some("normal"), HighlightAttr::Undercurl),               0, "exe 'hi' 'HL' 'term=NONE' 'guisp=#123456' s:undercurl_attr"),
         ((None, None, None, HighlightAttr::Nothing),                           1, "    hi HL term=NONE"),
         ((None, None, None, HighlightAttr::Undercurl),                         1, "    exe 'hi' 'HL' 'term=NONE' s:undercurl_attr"),
     ];
