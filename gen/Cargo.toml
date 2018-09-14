@@ -4,6 +4,7 @@ version = "0.0.0"
 authors = ["rhysd <lin90162@yahoo.co.jp>"]
 
 [dependencies]
+getopts = "0.2"
 
 [dev-dependencies]
 regex = "1"

@@ -7,13 +7,22 @@ and confirm that `cargo` command is available for package management for Rust.
 To generate a colorscheme file:
 
 ```
-$ cargo run > ../colors/spring-night.vim
+$ cargo run -- --repo ..
 ```
 
-To run tests
+Without `--repo` option, it dumps output to stdout. Please see `--help` for more detail.
+
+To run tests:
 
 ```
 $ cargo test
+```
+
+To build an executable:
+
+```
+$ cargo build
+$ ./target/release/gen-color-spring-night --repo ..
 ```
 
 To modify colors or highlights, you can update tables and lists in `spring_night_writer()` function.

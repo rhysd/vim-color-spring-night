@@ -1,9 +1,16 @@
+extern crate getopts;
+
 #[cfg(test)]
 mod test;
 
+use getopts::Options;
 use std::collections::HashMap;
+use std::env;
 use std::fmt::Display;
+use std::fs::File;
 use std::io;
+use std::path::{Path, PathBuf};
+use std::process::exit;
 
 #[derive(Debug, PartialEq)]
 enum ColorCode<T: Display> {
@@ -346,6 +353,18 @@ endif
     }
 }
 
+impl<'a> Writer<'a, io::BufWriter<io::Stdout>> {
+    fn write_all(&mut self) -> io::Result<()> {
+        self.write_color_scheme()
+    }
+}
+
+impl<'a> Writer<'a, io::BufWriter<File>> {
+    fn write_all(&mut self) -> io::Result<()> {
+        self.write_color_scheme()
+    }
+}
+
 fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
     let mut table = HashMap::new();
     #[cfg_attr(rustfmt, rustfmt_skip)]
@@ -573,6 +592,47 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
     };
 }
 
-fn main() -> io::Result<()> {
-    spring_night_writer(io::BufWriter::new(io::stdout())).write_color_scheme()
+// TODO: Use failure for handling errors with `fn main -> Result<(), ?>`
+
+fn main() {
+    let (program, args) = {
+        let mut argv = env::args();
+        (argv.next().unwrap(), argv.collect::<Vec<_>>())
+    };
+
+    let mut opts = Options::new();
+    opts.optopt(
+        "r",
+        "repo",
+        "root directory of vim-color-spring-night repository",
+        "PATH",
+    );
+    opts.optflag("h", "help", "print this help");
+
+    let matches = opts
+        .parse(args)
+        .expect("Invalid command line arguments. Please use --help option for more detail");
+
+    if matches.opt_present("h") {
+        let ref brief = format!("Usage: {} [options]", program);
+        eprintln!("{}", opts.usage(brief));
+        exit(0);
+    }
+
+    let result = match matches.opt_str("r") {
+        Some(path) => {
+            let path = PathBuf::from(path).join("colors").join("spring-night.vim");
+            let out = io::BufWriter::new(File::create(path).unwrap());
+            spring_night_writer(out).write_all()
+        }
+        None => {
+            let out = io::BufWriter::new(io::stdout());
+            spring_night_writer(out).write_all()
+        }
+    };
+
+    if let Err(e) = result {
+        eprintln!("{}", e);
+        exit(1);
+    }
 }

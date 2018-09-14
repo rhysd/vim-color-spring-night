@@ -2,7 +2,7 @@
 
 set -e
 
-(cd gen && cargo run > ../colors/spring-night.vim)
+(cd gen && cargo run -- --repo ..)
 diff="$(git diff colors/spring-night.vim)"
 
 if [[ "$diff" != "" ]]; then
