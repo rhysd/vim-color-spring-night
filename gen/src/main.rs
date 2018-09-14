@@ -9,7 +9,7 @@ use std::env;
 use std::fmt::Display;
 use std::fs::File;
 use std::io;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::exit;
 
 #[derive(Debug, PartialEq)]
@@ -602,8 +602,8 @@ fn main() {
 
     let mut opts = Options::new();
     opts.optopt(
-        "r",
-        "repo",
+        "d",
+        "dir",
         "root directory of vim-color-spring-night repository",
         "PATH",
     );
@@ -619,7 +619,7 @@ fn main() {
         exit(0);
     }
 
-    let result = match matches.opt_str("r") {
+    let result = match matches.opt_str("d") {
         Some(path) => {
             let path = PathBuf::from(path).join("colors").join("spring-night.vim");
             let out = io::BufWriter::new(File::create(path).unwrap());
