@@ -82,8 +82,8 @@ specified before running `:colorscheme`.
   `termguicolors` option and whether on GUI or CUI Vim is running.
 - **`g:spring_night_highlight_terminal`**: If `1`, a terminal window is also highlighted with this color
   scheme. Otherwise default ANSI colors are used. Default value is `1`.
-- `g:spring_night_cterm_italic`: If `1`, italic font is enabled even in a terminal. This variable is useful
-  when your terminal supports italic fonts. Default value is `0`.
+- `g:spring_night_cterm_italic`: If `1`, italic font is enabled even in a terminal. This variable is
+  useful when your terminal supports italic fonts. Default value is `0`.
 
 
 ## Optimized Filetypes and Plugins
@@ -124,11 +124,10 @@ If you find some odd highlight, I'll be happy if you report it to
 [issues](https://github.com/rhysd/vim-color-spring-night/issues/new) with how to reproduce.
 And pull requests are of course welcome :smile:
 
-Colorscheme file is generated via [a generator script](gen/src/main.rs). Please do not modify
-`spring_night.vim` directly. Modify the script instead. Please [a generator script README](gen/README.md)
+Colorscheme file is generated via [a script](gen/src/main.rs). Please do not modify
+`spring_night.vim` directly. Modify the script instead. Please read [a README for the script](gen/README.md)
 for more details.
-For colors palette, please see `table` variable in `spring_night_writer()` function in
-[a generator script](gen/src/main.rs).
+To know colors palette, please see `table` variable in `spring_night_writer()` function in the script.
 
 
 ## Bonus: Slack Theme
