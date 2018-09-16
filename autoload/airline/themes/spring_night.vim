@@ -9,7 +9,7 @@
 " Color Table {{{
 " Common colors
 let s:FG = ['#334152', 233] " bg
-let s:BG = ['#3a4b5c', 235] " bgemphasis
+let s:BG = ['#435060', 236] " bglight
 let s:INFO = ['#607080', 238] " hiddenfg
 let s:ERR = ['#fd8489', 210] " red
 let s:WARN = ['#fb8965', 209] " mikan
@@ -46,7 +46,7 @@ let s:PA = [ '#fb8965', 209 ] " mikan
 let s:IM = s:INFO
 
 " Inactive mode
-let s:IA = [ '#8d9eb2', s:N3[1], 103, s:N3[3], '' ] " weakfg
+let s:IA = [ '#8d9eb2', s:N3[1], 103, s:N3[3] ] " weakfg
 
 " TODO: Terminal mode
 " }}}
