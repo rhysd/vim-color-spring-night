@@ -9,6 +9,16 @@ const DUMMY_TERM_COLORS: [&'static str; 16] = [
     "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",
 ];
 
+fn dummy_airline_theme() -> AirlineThemeColors<'static> {
+    AirlineThemeColors {
+        mode: Default::default(),
+        paste: "",
+        info_mod: "",
+        error: ("", ""),
+        warning: ("", ""),
+    }
+}
+
 #[test]
 fn test_color_code() {
     assert_eq!(*ColorCode::Normal(10).normal(), 10);
@@ -21,6 +31,7 @@ fn test_write_header() {
         table: HashMap::new(),
         highlights: &[],
         term_colors: DUMMY_TERM_COLORS,
+        airline_theme: dummy_airline_theme(),
         out: Vec::new(),
     };
     w.write_header("spring-night").unwrap();
@@ -35,6 +46,7 @@ fn test_write_contrast_color_variables() {
         table: HashMap::new(),
         highlights: &[],
         term_colors: DUMMY_TERM_COLORS,
+        airline_theme: dummy_airline_theme(),
         out: Vec::new(),
     };
     w.write_contrast_color_variables().unwrap();
@@ -73,6 +85,7 @@ fn test_write_contrast_color_variables() {
         table: m,
         highlights: &[],
         term_colors: DUMMY_TERM_COLORS,
+        airline_theme: dummy_airline_theme(),
         out: Vec::new(),
     };
     w.write_contrast_color_variables().unwrap();
@@ -138,6 +151,7 @@ fn test_write_highlight() {
             table: m,
             highlights: &[],
             term_colors: DUMMY_TERM_COLORS,
+            airline_theme: dummy_airline_theme(),
             out: Vec::new(),
         };
         w.write_highlight(&hl, indent as u32).unwrap();
@@ -149,6 +163,7 @@ fn test_write_highlight() {
         table: HashMap::new(),
         highlights: &[],
         term_colors: DUMMY_TERM_COLORS,
+        airline_theme: dummy_airline_theme(),
         out: Vec::new(),
     };
     w.write_highlights().unwrap();
@@ -170,6 +185,7 @@ fn test_write_highlights() {
         table: HashMap::new(),
         highlights: &[Always(hl())],
         term_colors: DUMMY_TERM_COLORS,
+        airline_theme: dummy_airline_theme(),
         out: Vec::new(),
     };
     w.write_highlights().unwrap();
@@ -179,6 +195,7 @@ fn test_write_highlights() {
         table: HashMap::new(),
         highlights: &[Switch(hl(), hl())],
         term_colors: DUMMY_TERM_COLORS,
+        airline_theme: dummy_airline_theme(),
         out: Vec::new(),
     };
     w.write_highlights().unwrap();
@@ -219,6 +236,7 @@ fn test_write_term_colors() {
             "normal", "contrast", "normal", "contrast", "normal", "contrast", "normal", "contrast",
             "normal", "contrast", "normal", "contrast", "normal", "contrast", "normal", "contrast",
         ],
+        airline_theme: dummy_airline_theme(),
         out: Vec::new(),
     };
     w.write_term_colors().unwrap();
