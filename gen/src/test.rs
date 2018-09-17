@@ -34,7 +34,7 @@ fn test_write_header() {
         airline_theme: dummy_airline_theme(),
         out: Vec::new(),
     };
-    w.write_header("spring-night").unwrap();
+    w.write_header().unwrap();
     let rendered = str::from_utf8(&w.out).unwrap();
     assert!(rendered.starts_with(r#"" spring-night: Calm-colored dark color scheme"#));
     assert!(rendered.contains("let g:colors_name = 'spring-night'"));

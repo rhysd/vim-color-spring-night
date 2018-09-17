@@ -1,3 +1,4 @@
+extern crate failure;
 extern crate getopts;
 
 #[cfg(test)]
@@ -10,7 +11,6 @@ use std::fmt::Display;
 use std::fs::File;
 use std::io;
 use std::path::PathBuf;
-use std::process::exit;
 
 #[derive(Debug, PartialEq)]
 enum ColorCode<T: Display> {
@@ -141,10 +141,10 @@ struct Writer<'a, W: io::Write> {
 }
 
 impl<'a, W: io::Write> Writer<'a, W> {
-    fn write_header(&mut self, name: &'static str) -> io::Result<()> {
+    fn write_header(&mut self) -> io::Result<()> {
         write!(
             self.out,
-            r#"" {name}: Calm-colored dark color scheme
+            r#"" spring-night: Calm-colored dark color scheme
 "
 " Author: rhysd <lin90162@yahoo.co.jp>
 " License: MIT
@@ -174,7 +174,7 @@ if exists('g:syntax_on')
     syntax reset
 endif
 
-let g:colors_name = '{name}'
+let g:colors_name = 'spring-night'
 
 let g:spring_night_italic_comments = get(g:, 'spring_night_italic_comments', 0)
 let g:spring_night_kill_italic = get(g:, 'spring_night_kill_italic', 0)
@@ -198,7 +198,6 @@ else
 endif
 
 "#,
-            name = name,
             source = file!(),
         )
     }
@@ -365,7 +364,7 @@ endif
     }
 
     fn write_color_scheme(&mut self) -> io::Result<()> {
-        self.write_header("spring-night")?;
+        self.write_header()?;
         self.write_contrast_color_variables()?;
         self.write_highlights()?;
         self.write_term_colors()
@@ -812,22 +811,23 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
     };
 }
 
-// TODO: Use failure for handling errors with `fn main -> Result<(), ?>`
-
-fn main() {
+fn main() -> Result<(), failure::Error> {
     let (program, args) = {
         let mut argv = env::args();
         (argv.next().unwrap(), argv.collect::<Vec<_>>())
     };
 
-    let mut opts = Options::new();
-    opts.optopt(
-        "d",
-        "dir",
-        "root directory of vim-color-spring-night repository",
-        "PATH",
-    );
-    opts.optflag("h", "help", "print this help");
+    let opts = {
+        let mut o = Options::new();
+        o.optopt(
+            "d",
+            "dir",
+            "root directory of vim-color-spring-night repository",
+            "PATH",
+        );
+        o.optflag("h", "help", "print this help");
+        o
+    };
 
     let matches = opts
         .parse(args)
@@ -836,37 +836,32 @@ fn main() {
     if matches.opt_present("h") {
         let ref brief = format!("Usage: {} [options]", program);
         eprintln!("{}", opts.usage(brief));
-        exit(0);
+        return Ok(());
     }
 
-    let result = match matches.opt_str("d") {
+    match matches.opt_str("d") {
         Some(dir) => {
             let path = PathBuf::from(&dir).join("colors").join("spring-night.vim");
-            let out = io::BufWriter::new(File::create(path).unwrap());
+            let out = io::BufWriter::new(File::create(path)?);
             let mut writer = spring_night_writer(out);
-            writer.write_color_scheme().and_then(|_| {
-                let path = PathBuf::from(dir)
-                    .join("autoload")
-                    .join("airline")
-                    .join("themes")
-                    .join("spring_night.vim");
-                writer.out = io::BufWriter::new(File::create(path).unwrap());
-                writer.write_airline_theme()
-            })
+            writer.write_color_scheme()?;
+            let path = PathBuf::from(dir)
+                .join("autoload")
+                .join("airline")
+                .join("themes")
+                .join("spring_night.vim");
+            writer.out = io::BufWriter::new(File::create(path)?);
+            writer.write_airline_theme()?;
         }
         None => {
+            use std::io::Write;
             let out = io::BufWriter::new(io::stdout());
             let mut writer = spring_night_writer(out);
-            writer.write_color_scheme().and_then(|_| {
-                use std::io::Write;
-                writeln!(writer.out, "")?;
-                writer.write_airline_theme()
-            })
+            writer.write_color_scheme()?;
+            writeln!(writer.out, "")?;
+            writer.write_airline_theme()?;
         }
-    };
-
-    if let Err(e) = result {
-        eprintln!("{}", e);
-        exit(1);
     }
+
+    Ok(())
 }
