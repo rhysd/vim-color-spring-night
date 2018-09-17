@@ -2,16 +2,14 @@ language: rust
 rust: stable
 install:
     - curl -Ls https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz | tar xzf - -C .
+    - git clone --depth 1 https://github.com/vim-airline/vim-airline.git
 before_script:
     - uname -a
     - vim --version
     - nvim-linux64/bin/nvim --version
+    - cd vim-airline && git rev-parse HEAD && cd -
 script:
     - cd gen && cargo test && cd -
-    - vim -E -c 'set t_Co=256 rtp+=.' -c 'try | colorscheme spring-night | catch | cquit | endtry' -c 'quit'
-    - nvim-linux64/bin/nvim -E -c 'set t_Co=256 rtp+=.' -c 'try | colorscheme spring-night | catch | cquit | endtry' -c 'quit'
+    - vim -E -c 'set t_Co=256 rtp+=.,./vim-airline | runtime plugin/airline.vim' -c 'try | colorscheme spring-night | AirlineTheme spring_night | catch | cquit | endtry' -c 'quit'
+    - nvim-linux64/bin/nvim -E -c 'set t_Co=256 rtp+=.,./vim-airline | runtime plugin/airline.vim' -c 'try | colorscheme spring-night | AirlineTheme spring_night | catch | cquit | endtry' -c 'quit'
     - bash .ci/colorscheme-file-is-latest.bash
-addons:
-  apt:
-    packages:
-      - vim
