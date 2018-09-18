@@ -224,7 +224,7 @@ endif
                 )?;
             }
         }
-        writeln!(self.out, "")
+        writeln!(self.out)
     }
 
     fn build_highlight_item<T: Display>(
@@ -252,7 +252,7 @@ endif
         ] {
             if let Some(ref name) = color_name {
                 if name != &"NONE" {
-                    let color = self.table.get(name).unwrap();
+                    let color = &self.table[name];
                     args.push(self.build_highlight_item(name, gui, &color.gui));
                     args.push(self.build_highlight_item(name, cterm, &color.cterm));
                 } else {
@@ -267,7 +267,7 @@ endif
             args.push(self.build_highlight_item(
                 name,
                 "guisp",
-                &self.table.get(name).unwrap().gui, // Currently guisp must not be NONE
+                &self.table[name].gui, // Currently guisp must not be NONE
             ));
         }
 
@@ -295,7 +295,7 @@ endif
             .iter()
             .any(|a| a.starts_with('\'') || a.ends_with('\'') || a.starts_with("s:"))
         {
-            for arg in args.iter_mut() {
+            for arg in &mut args {
                 if !arg.starts_with('\'') && !arg.ends_with('\'') && !arg.starts_with("s:") {
                     *arg = format!("'{}'", arg);
                 }
@@ -319,7 +319,7 @@ endif
                 }
             }
         }
-        writeln!(self.out, "")
+        writeln!(self.out)
     }
 
     fn write_term_colors(&mut self) -> io::Result<()> {
@@ -331,7 +331,7 @@ endif
                 self.out,
                 "            let g:terminal_color_{} = '{}'",
                 index,
-                self.table.get(name).unwrap().gui.normal()
+                self.table[name].gui.normal()
             )?;
         }
         writeln!(self.out, "        else")?;
@@ -340,7 +340,7 @@ endif
                 self.out,
                 "            let g:terminal_color_{} = {}",
                 index,
-                self.table.get(name).unwrap().cterm.normal()
+                self.table[name].cterm.normal()
             )?;
         }
         writeln!(self.out, "        endif")?;
@@ -351,7 +351,7 @@ endif
         let elems_for_vim = self
             .term_colors
             .iter()
-            .map(|name| format!("'{}'", self.table.get(name).unwrap().gui.normal()))
+            .map(|name| format!("'{}'", self.table[name].gui.normal()))
             .collect::<Vec<_>>()
             .join(", ");
         writeln!(
@@ -802,13 +802,13 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         warning: ("bg", "mikan"),
     };
 
-    return Writer {
+    Writer {
         table,
         highlights,
         term_colors,
         airline_theme,
         out,
-    };
+    }
 }
 
 fn main() -> Result<(), failure::Error> {
@@ -834,7 +834,7 @@ fn main() -> Result<(), failure::Error> {
         .expect("Invalid command line arguments. Please use --help option for more detail");
 
     if matches.opt_present("h") {
-        let ref brief = format!("Usage: {} [options]", program);
+        let brief = &format!("Usage: {} [options]", program);
         eprintln!("{}", opts.usage(brief));
         return Ok(());
     }
