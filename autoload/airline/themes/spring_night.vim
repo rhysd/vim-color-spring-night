@@ -12,8 +12,9 @@
 let g:airline#themes#spring_night#palette = {}
 
 let g:airline#themes#spring_night#palette.accents = {
-      \ 'red': ['#fd8489', '', 210, '', ''],
-      \ }
+\   'red': ['#fd8489', '', 210, '', ''],
+\ }
+
 let g:airline#themes#spring_night#palette.normal = {
 \   'airline_a': ['#132132', '#fedf81', 233, 222, ''],
 \   'airline_b': ['#fedf81', '#607080', 222, 60, ''],

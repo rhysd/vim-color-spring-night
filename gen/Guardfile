@@ -15,7 +15,7 @@ guard :shell do
   watch %r[^src/main\.rs$] do |m|
     sep m[0]
     if run 'cargo build'
-      run './target/debug/gen-color-spring-night > ../colors/spring-night.vim'
+      run './target/debug/gen-color-spring-night --dir ..'
     end
   end
   watch %r[^src/test\.rs$] do |m|
