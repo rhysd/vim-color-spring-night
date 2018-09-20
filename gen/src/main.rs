@@ -389,8 +389,9 @@ endif
 let g:airline#themes#spring_night#palette = {{}}
 
 let g:airline#themes#spring_night#palette.accents = {{
-      \ 'red': ['{guifg}', '', {ctermfg}, '', ''],
-      \ }}
+\   'red': ['{guifg}', '', {ctermfg}, '', ''],
+\ }}
+
 "#,
             source = file!(),
             guifg = red.gui.normal(),

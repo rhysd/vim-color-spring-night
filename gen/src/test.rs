@@ -301,3 +301,130 @@ fn test_spring_night_writer() {
         }
     }
 }
+
+#[test]
+fn test_write_airline_theme() {
+    let mut table = HashMap::new();
+    table.insert(
+        "color1",
+        Color {
+            gui: ColorCode::Normal("#123456"),
+            cterm: ColorCode::Normal(123),
+        },
+    );
+    table.insert(
+        "color2",
+        Color {
+            gui: ColorCode::Contrast("#000000", "#ffffff"),
+            cterm: ColorCode::Contrast(1, 2),
+        },
+    );
+    // Userd for accents
+    table.insert(
+        "red",
+        Color {
+            gui: ColorCode::Normal("#ff0000"),
+            cterm: ColorCode::Normal(123),
+        },
+    );
+
+    let airline_theme = AirlineThemeColors {
+        mode: {
+            let mut m = HashMap::new();
+            m.insert(
+                "normal",
+                ThemeModeColor {
+                    label: ("color1", "color2"),
+                    info: ("color2", "color1"),
+                    main: ("color2", "color2"),
+                    modified: Some("color1"),
+                    modified_main: Some("color1"),
+                },
+            );
+            m.insert(
+                "insert",
+                ThemeModeColor {
+                    label: ("color2", "color1"),
+                    info: ("color1", "color2"),
+                    main: ("color1", "color1"),
+                    modified: Some("color1"),
+                    modified_main: None,
+                },
+            );
+            m.insert(
+                "visual",
+                ThemeModeColor {
+                    label: ("color1", "color1"),
+                    info: ("color2", "color2"),
+                    main: ("color1", "color1"),
+                    modified: None,
+                    modified_main: None,
+                },
+            );
+            m.insert(
+                "replace",
+                ThemeModeColor {
+                    label: ("color1", "color1"),
+                    info: ("color2", "color2"),
+                    main: ("color1", "color1"),
+                    modified: Some("color1"),
+                    modified_main: None,
+                },
+            );
+            m.insert(
+                "inactive",
+                ThemeModeColor {
+                    label: ("color1", "color1"),
+                    info: ("color2", "color2"),
+                    main: ("color1", "color1"),
+                    modified: Some("color2"),
+                    modified_main: Some("color2"),
+                },
+            );
+            m
+        },
+        paste: "color1",
+        info_mod: "color2",
+        error: ("color1", "color2"),
+        warning: ("color2", "color1"),
+    };
+
+    let mut w = Writer {
+        table,
+        highlights: &[],
+        term_colors: DUMMY_TERM_COLORS,
+        airline_theme,
+        out: Vec::new(),
+    };
+
+    w.write_airline_theme().unwrap();
+    let rendered = str::from_utf8(&w.out).unwrap();
+
+    let re_var = Regex::new(r"^let g:airline#themes#spring_night#palette\.(\w+) =").unwrap();
+    let re_palette =
+        Regex::new(r"^\\\s+'(red|airline_(a|b|c|x|y|z|error|warning))': \[('(#[[:xdigit:]]{6})?',\s*){2}((\d{1,3}|''),\s*){2}''\]").unwrap();
+    for line in rendered.lines() {
+        if line.starts_with("let g:") {
+            match re_var.captures(line) {
+                Some(found) => {
+                    let mode = &found[1];
+                    assert!(
+                        w.airline_theme.mode.keys().any(|m| *m == mode
+                            || format!("{}_modified", m) == mode
+                            || format!("{}_paste", m) == mode
+                            || "accents" == mode),
+                        "Unknown mode: {}",
+                        mode
+                    );
+                }
+                None => assert!(
+                    line == "let g:airline#themes#spring_night#palette = {}",
+                    "Invalid variable definition: {}",
+                    line
+                ),
+            }
+        } else if line.starts_with("\\   ") {
+            assert!(re_palette.is_match(line), "Invalid color palette: {}", line);
+        }
+    }
+}
