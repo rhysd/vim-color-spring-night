@@ -36,6 +36,8 @@ shiny yellow foreground and *sakura*:cherry_blossom: text selection.
 
 If you want to see more code, please visit [demo page site][].
 
+Or you can also see [the preview on vimcolors.com](https://vimcolors.com/626/spring-night/dark).
+
 
 ## Installation
 
