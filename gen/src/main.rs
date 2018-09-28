@@ -371,7 +371,7 @@ endif
     }
 
     fn write_airline_theme_header(&mut self) -> io::Result<()> {
-        let red = self.table.get("red").unwrap();
+        let red = &self.table["red"];
         // Header
         write!(
             self.out,
@@ -400,8 +400,8 @@ let g:airline#themes#spring_night#palette.accents = {{
     }
 
     fn build_airline_one_palette_color(&self, fgbg: (&'a str, &'a str)) -> String {
-        let fg = self.table.get(fgbg.0).unwrap();
-        let bg = self.table.get(fgbg.1).unwrap();
+        let fg = &self.table[fgbg.0];
+        let bg = &self.table[fgbg.1];
         format!(
             "['{}', '{}', {}, {}, '']",
             fg.gui.normal(),
@@ -414,10 +414,10 @@ let g:airline#themes#spring_night#palette.accents = {{
     fn write_airline_palette<'b>(
         &mut self,
         name: &'b str,
-        error: &String,
-        warning: &String,
+        error: &str,
+        warning: &str,
     ) -> io::Result<()> {
-        let map = self.airline_theme.mode.get(name).unwrap();
+        let map = &self.airline_theme.mode[name];
 
         writeln!(
             self.out,
@@ -462,7 +462,7 @@ let g:airline#themes#spring_night#palette.accents = {{
             writeln!(self.out, "\\ }}")?;
         }
 
-        writeln!(self.out, "")
+        writeln!(self.out)
     }
 
     fn write_airline_theme(&mut self) -> io::Result<()> {
@@ -475,8 +475,8 @@ let g:airline#themes#spring_night#palette.accents = {{
             self.write_airline_palette(name, &error, &warning)?;
         }
 
-        let normal_map = self.airline_theme.mode.get("normal").unwrap();
-        let insert_map = self.airline_theme.mode.get("insert").unwrap();
+        let normal_map = &self.airline_theme.mode["normal"];
+        let insert_map = &self.airline_theme.mode["insert"];
 
         // Insert Paste
         writeln!(
@@ -503,7 +503,7 @@ let g:airline#themes#spring_night#palette.accents = {{
             self.out,
             "let g:airline#themes#spring_night#palette.inactive_modified = {{"
         )?;
-        let modified_color = self.table.get(normal_map.modified.unwrap()).unwrap();
+        let modified_color = &self.table[normal_map.modified.unwrap()];
         let guifg = modified_color.gui.normal();
         let ctermfg = modified_color.cterm.normal();
         writeln!(
@@ -859,7 +859,7 @@ fn main() -> Result<(), failure::Error> {
             let out = io::BufWriter::new(io::stdout());
             let mut writer = spring_night_writer(out);
             writer.write_color_scheme()?;
-            writeln!(writer.out, "")?;
+            writeln!(writer.out)?;
             writer.write_airline_theme()?;
         }
     }
