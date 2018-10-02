@@ -52,6 +52,7 @@ else
 endif
 
 let s:bg_gui = g:spring_night_high_contrast ? '#132132' : '#334152'
+let s:darkgold_gui = g:spring_night_high_contrast ? '#484000' : '#685800'
 let s:fg_cterm = g:spring_night_high_contrast ? 231 : 230
 
 hi Boolean term=NONE guifg=#fd8489 ctermfg=210
@@ -124,7 +125,7 @@ hi WildMenu term=NONE guibg=#fedf81 ctermbg=222
 hi cmakeArguments term=NONE guifg=#f0eaaa ctermfg=229
 hi cmakeOperators term=NONE guifg=#fd8489 ctermfg=210
 exe 'hi' 'DiffAdd' 'term=NONE' 'guibg=#5f8770' 'ctermbg=65' s:bold_attr
-exe 'hi' 'DiffChange' 'term=NONE' 'guibg=#685800' 'ctermbg=58' s:bold_attr
+exe 'hi' 'DiffChange' 'term=NONE' 'guibg='.s:darkgold_gui 'ctermbg=58' s:bold_attr
 exe 'hi' 'DiffDelete' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg=#ab6560' 'ctermbg=167' s:bold_attr
 exe 'hi' 'DiffText' 'term=NONE' 'guibg='.s:bg_gui 'ctermbg=233'
 hi diffAdded term=NONE guifg=#a9dd9d ctermfg=150
@@ -174,7 +175,7 @@ exe 'hi' 'ALEWarningSign' 'term=NONE' 'guifg=#f0aa8a' 'ctermfg=216' 'guibg=#3a4b
 exe 'hi' 'ALEErrorSign' 'term=NONE' 'guifg=#3a4b5c' 'ctermfg=235' 'guibg=#ab6560' 'ctermbg=167' s:bold_attr
 hi ALEInfoSign term=NONE guibg=#646f7c ctermbg=60
 hi ALEError term=NONE guibg=#ab6560 ctermbg=167
-hi ALEWarning term=NONE guibg=#685800 ctermbg=58
+exe 'hi' 'ALEWarning' 'term=NONE' 'guibg='.s:darkgold_gui 'ctermbg=58'
 exe 'hi' 'CleverFChar' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fd8489' 'ctermbg=210'
 exe 'hi' 'DirvishArg' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
 exe 'hi' 'EasyMotionTarget' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' s:bold_attr
