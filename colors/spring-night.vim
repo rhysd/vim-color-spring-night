@@ -161,6 +161,8 @@ hi rubyIdentifier term=NONE guifg=#f0eaaa ctermfg=229
 hi rustEnumVariant term=NONE guifg=#fedf81 ctermfg=222
 exe 'hi' 'rustFuncCall' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
 hi rustCommentLineDoc term=NONE guifg=#e7c6b7 ctermfg=181
+hi tomlTable term=NONE guifg=#a8d2eb ctermfg=153
+hi tomlKey term=NONE guifg=#fedf81 ctermfg=222
 exe 'hi' 'typescriptBraces' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
 hi vimfilerColumn__SizeLine term=NONE guifg=#8d9eb2 ctermfg=103
 hi vimfilerClosedFile term=NONE guifg=#a9dd9d ctermfg=150

@@ -108,6 +108,7 @@ Color layouts are optimized for following filetypes/plugins:
 - `rst`
 - `ruby`
 - `rust`
+- `toml`
 - `typescript`
 - `vim`
 - `wast`

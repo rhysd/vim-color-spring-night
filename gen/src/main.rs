@@ -690,6 +690,8 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(rustEnumVariant,       gold,       -,            Nothing)),
         Always(fgbg!(rustFuncCall,          fg,         -,            Nothing)),
         Always(fgbg!(rustCommentLineDoc,    palepink,   -,            Nothing)),
+        Always(fgbg!(tomlTable,             skyblue,    -,            Nothing)),
+        Always(fgbg!(tomlKey,               gold,       -,            Nothing)),
         Always(fgbg!(typescriptBraces,      fg,         -,            Nothing)),
         Always(fgbg!(vimfilerColumn__SizeLine, weakfg,  -,            Nothing)),
         Always(fgbg!(vimfilerClosedFile,    green,      -,            Nothing)),
