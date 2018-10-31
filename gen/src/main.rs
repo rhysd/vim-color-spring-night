@@ -66,7 +66,7 @@ enum HowToHighlight {
     Switch(Highlight, Highlight),
 }
 
-use HowToHighlight::{Always, Switch};
+use crate::HowToHighlight::{Always, Switch};
 
 macro_rules! highlight {
     ($name:ident, $fg:expr, $bg:expr, $sp:expr, $attr:ident) => {

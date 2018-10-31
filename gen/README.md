@@ -2,7 +2,8 @@
 Running the script outputs a generated script to stdout.
 
 You need to install Rust toolchain following [the official steps](https://www.rust-lang.org/en-US/install.html)
-and confirm that `cargo` command is available for package management for Rust.
+and confirm that `cargo` command is available for package management for Rust. Rust 1.30 or later
+is required.
 
 To generate a colorscheme file:
 
