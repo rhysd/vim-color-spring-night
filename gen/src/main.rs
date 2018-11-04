@@ -703,6 +703,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(wastUnnamedVar  ,      purple,     -,            Nothing)),
         Always(fgbg!(zshDelimiter,          skyblue,    -,            Nothing)),
         Always(fgbg!(zshPrecommand,         red,        -,            Nothing)),
+        Always(fgbg!(ghaworkflowAttrName,   yellow,     -,            Nothing)),
 
         // Plugin specific
         //

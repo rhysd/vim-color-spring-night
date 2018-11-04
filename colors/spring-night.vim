@@ -174,6 +174,7 @@ hi wastInstWithType term=NONE guifg=#f0eaaa ctermfg=229
 hi wastUnnamedVar term=NONE guifg=#e7d5ff ctermfg=189
 hi zshDelimiter term=NONE guifg=#a8d2eb ctermfg=153
 hi zshPrecommand term=NONE guifg=#fd8489 ctermfg=210
+hi ghaworkflowAttrName term=NONE guifg=#f0eaaa ctermfg=229
 exe 'hi' 'ALEWarningSign' 'term=NONE' 'guifg=#f0aa8a' 'ctermfg=216' 'guibg=#3a4b5c' 'ctermbg=235' s:bold_attr
 exe 'hi' 'ALEErrorSign' 'term=NONE' 'guifg=#3a4b5c' 'ctermfg=235' 'guibg=#ab6560' 'ctermbg=167' s:bold_attr
 hi ALEInfoSign term=NONE guibg=#646f7c ctermbg=60
