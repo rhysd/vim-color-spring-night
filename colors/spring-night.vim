@@ -93,7 +93,7 @@ hi PmenuSel term=NONE guifg=#fedf81 ctermfg=222 guibg=#536273 ctermbg=238
 hi PmenuThumb term=NONE guifg=#fedf81 ctermfg=222 guibg=#8d9eb2 ctermbg=103
 hi PreProc term=NONE guifg=#f0aa8a ctermfg=216
 hi Question term=NONE guifg=#a8d2eb ctermfg=153
-hi Search term=NONE guifg=NONE ctermfg=NONE guibg=#70495d ctermbg=95 gui=underline cterm=underline
+hi Search term=NONE guifg=NONE ctermfg=NONE guibg=#605779 ctermbg=60 gui=underline cterm=underline
 hi SignColumn term=NONE guibg=#3a4b5c ctermbg=235
 exe 'hi' 'Special' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
 hi SpecialKey term=NONE guifg=#607080 ctermfg=60
@@ -203,7 +203,7 @@ if g:spring_night_highlight_terminal
             let g:terminal_color_2 = '#a9dd9d'
             let g:terminal_color_3 = '#fedf81'
             let g:terminal_color_4 = '#7098e6'
-            let g:terminal_color_5 = '#e7d5ff'
+            let g:terminal_color_5 = '#605779'
             let g:terminal_color_6 = '#a8d2eb'
             let g:terminal_color_7 = '#fffeeb'
             let g:terminal_color_8 = '#3a4b5c'
@@ -211,7 +211,7 @@ if g:spring_night_highlight_terminal
             let g:terminal_color_10 = '#c9fd88'
             let g:terminal_color_11 = '#f0eaaa'
             let g:terminal_color_12 = '#98b8e6'
-            let g:terminal_color_13 = '#e7c6b7'
+            let g:terminal_color_13 = '#e7d5ff'
             let g:terminal_color_14 = '#a8d2eb'
             let g:terminal_color_15 = '#ffffff'
         else
@@ -220,7 +220,7 @@ if g:spring_night_highlight_terminal
             let g:terminal_color_2 = 150
             let g:terminal_color_3 = 222
             let g:terminal_color_4 = 69
-            let g:terminal_color_5 = 189
+            let g:terminal_color_5 = 60
             let g:terminal_color_6 = 153
             let g:terminal_color_7 = 231
             let g:terminal_color_8 = 235
@@ -228,11 +228,11 @@ if g:spring_night_highlight_terminal
             let g:terminal_color_10 = 149
             let g:terminal_color_11 = 229
             let g:terminal_color_12 = 111
-            let g:terminal_color_13 = 181
+            let g:terminal_color_13 = 189
             let g:terminal_color_14 = 153
             let g:terminal_color_15 = 231
         endif
     elseif (s:gui_running || s:true_colors) && exists('*term_setansicolors')
-        let g:terminal_ansi_colors = ['#132132', '#ff6a6f', '#a9dd9d', '#fedf81', '#7098e6', '#e7d5ff', '#a8d2eb', '#fffeeb', '#3a4b5c', '#fd8489', '#c9fd88', '#f0eaaa', '#98b8e6', '#e7c6b7', '#a8d2eb', '#ffffff']
+        let g:terminal_ansi_colors = ['#132132', '#ff6a6f', '#a9dd9d', '#fedf81', '#7098e6', '#605779', '#a8d2eb', '#fffeeb', '#3a4b5c', '#fd8489', '#c9fd88', '#f0eaaa', '#98b8e6', '#e7d5ff', '#a8d2eb', '#ffffff']
     endif
 endif

@@ -549,6 +549,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         color_name!(yellow,     normal("#f0eaaa"),              normal(229));
         color_name!(white,      normal("#ffffff"),              normal(231));
         color_name!(purple,     normal("#e7d5ff"),              normal(189));
+        color_name!(darkpurple, normal("#605779"),              normal(60));
         color_name!(gray,       normal("#545f6e"),              normal(59));
         color_name!(light,      normal("#646f7c"),              normal(60));
         color_name!(yaezakura,  normal("#70495d"),              normal(95));
@@ -617,7 +618,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(PmenuThumb,            gold,       weakfg,       Nothing)),
         Always(fgbg!(PreProc,               orange,     -,            Nothing)),
         Always(fgbg!(Question,              skyblue,    -,            Nothing)),
-        Always(fgbg!(Search,                NONE,       yaezakura,    Underline)),
+        Always(fgbg!(Search,                NONE,       darkpurple,   Underline)),
         Always(fgbg!(SignColumn,            -,          bgemphasis,   Nothing)),
         Always(fgbg!(Special,               yellow,     -,            Bold)),
         Always(fgbg!(SpecialKey,            hiddenfg,   -,            Nothing)),
@@ -735,7 +736,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         "green",
         "gold",
         "blue",
-        "purple",
+        "darkpurple",
         "skyblue",
         "fg",
         "bgemphasis",
@@ -743,7 +744,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         "lime",
         "yellow",
         "paleblue",
-        "palepink",
+        "purple",
         "skyblue",
         "white",
     ];
