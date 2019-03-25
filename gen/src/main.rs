@@ -235,11 +235,13 @@ endif
     ) -> String {
         match color {
             ColorCode::Normal(c) => format!("{}={}", item_name, c),
-            ColorCode::Contrast(..) => if item_name.starts_with("gui") {
-                format!("'{}='.s:{}_gui", item_name, color_name)
-            } else {
-                format!("'{}='.s:{}_cterm", item_name, color_name)
-            },
+            ColorCode::Contrast(..) => {
+                if item_name.starts_with("gui") {
+                    format!("'{}='.s:{}_gui", item_name, color_name)
+                } else {
+                    format!("'{}='.s:{}_cterm", item_name, color_name)
+                }
+            }
         }
     }
 
@@ -669,6 +671,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(gitconfigSection,      skyblue,    -,            Bold)),
         Always(fgbg!(goBuiltins,            red,        -,            Nothing)),
         Always(fgbg!(helpExample,           skyblue,    -,            Nothing)),
+        Always(fgbg!(helpCommand,           purple,     -,            Nothing)),
         Always(fgbg!(htmlBold,              -,          bgemphasis,   Nothing)),
         Always(fgbg!(htmlLinkText,          skyblue,    -,            Nothing)),
         Always(fgbg!(htmlTagName,           orange,     -,            Nothing)),
