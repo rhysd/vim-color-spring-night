@@ -96,8 +96,8 @@ fn test_write_contrast_color_variables() {
         "let s:hi_cterm = g:spring_night_high_contrast ? 12 : 34",
         "",
     ]
-        .iter()
-        .zip(str::from_utf8(&w.out).unwrap().lines())
+    .iter()
+    .zip(str::from_utf8(&w.out).unwrap().lines())
     {
         assert_eq!(*actual, expected);
     }
