@@ -742,7 +742,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         "darkpurple",
         "skyblue",
         "fg",
-        "bgemphasis",
+        "weakfg",
         "red",
         "lime",
         "yellow",
