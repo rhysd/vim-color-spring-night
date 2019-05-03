@@ -3,8 +3,8 @@ rust: stable
 install:
     - curl -Ls https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz | tar xzf - -C .
     - git clone --depth 1 https://github.com/vim-airline/vim-airline.git
-    - rustup component add clippy-preview
-    - rustup component add rustfmt-preview
+    - rustup component add clippy
+    - rustup component add rustfmt
 before_script:
     - uname -a
     - vim --version
