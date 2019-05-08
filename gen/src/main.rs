@@ -1,6 +1,3 @@
-extern crate failure;
-extern crate getopts;
-
 #[cfg(test)]
 mod test;
 

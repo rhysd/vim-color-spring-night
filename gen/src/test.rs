@@ -1,6 +1,4 @@
-extern crate regex;
-
-use self::regex::Regex;
+use regex::Regex;
 use super::*;
 use std::collections::{HashMap, HashSet};
 use std::str;
