@@ -596,6 +596,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(Error,                 red,        bgemphasis,   Bold)),
         Always(fgbg!(ErrorMsg,              red,        bg,           Bold)),
         Always(fgbg!(Float,                 red,        -,            Nothing)),
+        Always(fgbg!(FloatNormal,           fg,         bgemphasis,   Nothing)),
         Always(fgbg!(FoldColumn,            purple,     bgemphasis,   Nothing)),
         Always(fgbg!(Folded,                purple,     light,        Nothing)),
         Always(fgbg!(Function,              orange,     -,            Nothing)),
