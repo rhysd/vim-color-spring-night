@@ -537,6 +537,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         }
 
         color_name!(bg,         contrast("#132132", "#334152"), normal(233));
+        color_name!(bgweaker,   contrast("#2a3b4c", "#3a4b5c"), normal(235));
         color_name!(bgemphasis, normal("#3a4b5c"),              normal(235));
         color_name!(bglight,    normal("#435060"),              normal(236));
         color_name!(bgstrong,   normal("#536273"),              normal(238));
@@ -596,7 +597,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(Error,                 red,        bgemphasis,   Bold)),
         Always(fgbg!(ErrorMsg,              red,        bg,           Bold)),
         Always(fgbg!(Float,                 red,        -,            Nothing)),
-        Always(fgbg!(NormalFloat,           fg,         bgemphasis,   Nothing)),
+        Always(fgbg!(NormalFloat,           fg,         bgweaker,     Nothing)),
         Always(fgbg!(FoldColumn,            purple,     bgemphasis,   Nothing)),
         Always(fgbg!(Folded,                purple,     light,        Nothing)),
         Always(fgbg!(Function,              orange,     -,            Nothing)),
