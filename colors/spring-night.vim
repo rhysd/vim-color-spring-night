@@ -52,7 +52,7 @@ else
 endif
 
 let s:bg_gui = g:spring_night_high_contrast ? '#132132' : '#334152'
-let s:bgweaker_gui = g:spring_night_high_contrast ? '#2a3b4c' : '#3a4b5c'
+let s:bgweaker_gui = g:spring_night_high_contrast ? '#213243' : '#3a4b5c'
 let s:darkgold_gui = g:spring_night_high_contrast ? '#484000' : '#685800'
 let s:fg_cterm = g:spring_night_high_contrast ? 231 : 230
 

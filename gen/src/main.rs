@@ -537,7 +537,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         }
 
         color_name!(bg,         contrast("#132132", "#334152"), normal(233));
-        color_name!(bgweaker,   contrast("#2a3b4c", "#3a4b5c"), normal(235));
+        color_name!(bgweaker,   contrast("#213243", "#3a4b5c"), normal(235));
         color_name!(bgemphasis, normal("#3a4b5c"),              normal(235));
         color_name!(bglight,    normal("#435060"),              normal(236));
         color_name!(bgstrong,   normal("#536273"),              normal(238));
