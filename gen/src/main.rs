@@ -102,8 +102,17 @@ macro_rules! fgbgsp {
     ($name:ident, $fg:ident, - , $sp:ident, $attr:ident) => {
         highlight!(
             $name,
-            Some(stringify!($sp)),
+            Some(stringify!($fg)),
             None,
+            Some(stringify!($sp)),
+            $attr
+        )
+    };
+    ($name:ident, $fg:ident, $bg:ident, $sp:ident, $attr:ident) => {
+        highlight!(
+            $name,
+            Some(stringify!($fg)),
+            Some(stringify!($bg)),
             Some(stringify!($sp)),
             $attr
         )
@@ -623,10 +632,22 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(SignColumn,            -,          bgemphasis,   Nothing)),
         Always(fgbg!(Special,               yellow,     -,            Bold)),
         Always(fgbg!(SpecialKey,            hiddenfg,   -,            Nothing)),
-        Always(fgbgsp!(SpellBad,            red,        -,    red,    Undercurl)),
-        Always(fgbgsp!(SpellCap,            purple,     -,    purple, Undercurl)),
-        Always(fgbgsp!(SpellLocal,          red,        -,    red,    Undercurl)),
-        Always(fgbgsp!(SpellRare,           yellow,     -,    yellow, Undercurl)),
+        Switch(
+            fgbgsp!(SpellBad,               red,        -,    red,    Undercurl),
+            fgbgsp!(SpellBad,               red,        NONE, red,    Undercurl),
+        ),
+        Switch(
+            fgbgsp!(SpellCap,               purple,     -,    purple, Undercurl),
+            fgbgsp!(SpellCap,               purple,     NONE, purple, Undercurl),
+        ),
+        Switch(
+            fgbgsp!(SpellLocal,             red,        -,    red,    Undercurl),
+            fgbgsp!(SpellLocal,             red,        NONE, red,    Undercurl),
+        ),
+        Switch(
+            fgbgsp!(SpellRare,              yellow,     -,    yellow, Undercurl),
+            fgbgsp!(SpellRare,              yellow,     NONE, yellow, Undercurl),
+        ),
         Always(fgbg!(Statement,             skyblue,    -,            Nothing)),
         Always(fgbg!(StatusLine,            fg,         bgstrong,     Bold)),
         Always(fgbg!(StatusLineNC,          weakfg,     bgemphasis,   None)),

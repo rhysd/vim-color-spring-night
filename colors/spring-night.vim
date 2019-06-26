@@ -99,10 +99,26 @@ hi Search term=NONE guifg=NONE ctermfg=NONE guibg=#605779 ctermbg=60 gui=underli
 hi SignColumn term=NONE guibg=#3a4b5c ctermbg=235
 exe 'hi' 'Special' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
 hi SpecialKey term=NONE guifg=#607080 ctermfg=60
-exe 'hi' 'SpellBad' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guisp=#fd8489' s:undercurl_attr
-exe 'hi' 'SpellCap' 'term=NONE' 'guifg=#e7d5ff' 'ctermfg=189' 'guisp=#e7d5ff' s:undercurl_attr
-exe 'hi' 'SpellLocal' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guisp=#fd8489' s:undercurl_attr
-exe 'hi' 'SpellRare' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' 'guisp=#f0eaaa' s:undercurl_attr
+if s:gui_running
+    exe 'hi' 'SpellBad' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guisp=#fd8489' s:undercurl_attr
+else
+    exe 'hi' 'SpellBad' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guibg=NONE' 'ctermbg=NONE' 'guisp=#fd8489' s:undercurl_attr
+endif
+if s:gui_running
+    exe 'hi' 'SpellCap' 'term=NONE' 'guifg=#e7d5ff' 'ctermfg=189' 'guisp=#e7d5ff' s:undercurl_attr
+else
+    exe 'hi' 'SpellCap' 'term=NONE' 'guifg=#e7d5ff' 'ctermfg=189' 'guibg=NONE' 'ctermbg=NONE' 'guisp=#e7d5ff' s:undercurl_attr
+endif
+if s:gui_running
+    exe 'hi' 'SpellLocal' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guisp=#fd8489' s:undercurl_attr
+else
+    exe 'hi' 'SpellLocal' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guibg=NONE' 'ctermbg=NONE' 'guisp=#fd8489' s:undercurl_attr
+endif
+if s:gui_running
+    exe 'hi' 'SpellRare' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' 'guisp=#f0eaaa' s:undercurl_attr
+else
+    exe 'hi' 'SpellRare' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' 'guibg=NONE' 'ctermbg=NONE' 'guisp=#f0eaaa' s:undercurl_attr
+endif
 hi Statement term=NONE guifg=#a8d2eb ctermfg=153
 exe 'hi' 'StatusLine' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg=#536273' 'ctermbg=238' s:bold_attr
 hi StatusLineNC term=NONE guifg=#8d9eb2 ctermfg=103 guibg=#3a4b5c ctermbg=235 gui=NONE cterm=NONE
