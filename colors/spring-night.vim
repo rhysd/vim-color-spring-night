@@ -213,6 +213,7 @@ if s:gui_running
 else
     hi EasyMotionIncCursor term=NONE gui=reverse cterm=reverse
 endif
+hi plugDeleted term=NONE guifg=#8d9eb2 ctermfg=103
 
 if g:spring_night_highlight_terminal
     if has('nvim')

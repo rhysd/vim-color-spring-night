@@ -751,6 +751,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
             fgbg!(EasyMotionIncCursor,      bg,         fg,           Nothing),
             fgbg!(EasyMotionIncCursor,      -,          -,            Reverse),
         ),
+        Always(fgbg!(plugDeleted,           weakfg,     -,            Nothing)),
     ];
 
     let term_colors = [
