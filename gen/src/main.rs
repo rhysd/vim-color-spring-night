@@ -728,6 +728,8 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(zshDelimiter,          skyblue,    -,            Nothing)),
         Always(fgbg!(zshPrecommand,         red,        -,            Nothing)),
         Always(fgbg!(ghaworkflowAttrName,   yellow,     -,            Nothing)),
+        Always(fgbg!(debugPC,               bg,         skyblue,      Nothing)),
+        Always(fgbg!(debugBreakPoint,       bg,         gold,         Nothing)),
 
         // Plugin specific
         //
@@ -752,6 +754,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
             fgbg!(EasyMotionIncCursor,      -,          -,            Reverse),
         ),
         Always(fgbg!(plugDeleted,           weakfg,     -,            Nothing)),
+        Always(fgbg!(ConflictMarker,        -,          mildred,      Nothing)),
     ];
 
     let term_colors = [

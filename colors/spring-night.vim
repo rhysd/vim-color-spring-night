@@ -194,6 +194,8 @@ hi wastUnnamedVar term=NONE guifg=#e7d5ff ctermfg=189
 hi zshDelimiter term=NONE guifg=#a8d2eb ctermfg=153
 hi zshPrecommand term=NONE guifg=#fd8489 ctermfg=210
 hi ghaworkflowAttrName term=NONE guifg=#f0eaaa ctermfg=229
+exe 'hi' 'debugPC' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#a8d2eb' 'ctermbg=153'
+exe 'hi' 'debugBreakPoint' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fedf81' 'ctermbg=222'
 exe 'hi' 'ALEWarningSign' 'term=NONE' 'guifg=#f0aa8a' 'ctermfg=216' 'guibg=#3a4b5c' 'ctermbg=235' s:bold_attr
 exe 'hi' 'ALEErrorSign' 'term=NONE' 'guifg=#3a4b5c' 'ctermfg=235' 'guibg=#ab6560' 'ctermbg=167' s:bold_attr
 hi ALEInfoSign term=NONE guibg=#646f7c ctermbg=60
@@ -214,6 +216,7 @@ else
     hi EasyMotionIncCursor term=NONE gui=reverse cterm=reverse
 endif
 hi plugDeleted term=NONE guifg=#8d9eb2 ctermfg=103
+hi ConflictMarker term=NONE guibg=#ab6560 ctermbg=167
 
 if g:spring_night_highlight_terminal
     if has('nvim')
