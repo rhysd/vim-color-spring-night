@@ -354,6 +354,14 @@ endif
         writeln!(self.out, "        endif")?;
         writeln!(
             self.out,
+            "        let g:terminal_color_background = g:terminal_color_0"
+        )?;
+        writeln!(
+            self.out,
+            "        let g:terminal_color_foreground = g:terminal_color_7"
+        )?;
+        writeln!(
+            self.out,
             "    elseif (s:gui_running || s:true_colors) && exists('*term_setansicolors')"
         )?;
         let elems_for_vim = self

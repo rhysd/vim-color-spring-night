@@ -255,6 +255,8 @@ if g:spring_night_highlight_terminal
             let g:terminal_color_14 = 153
             let g:terminal_color_15 = 231
         endif
+        let g:terminal_color_background = g:terminal_color_0
+        let g:terminal_color_foreground = g:terminal_color_7
     elseif (s:gui_running || s:true_colors) && exists('*term_setansicolors')
         let g:terminal_ansi_colors = ['#132132', '#ff6a6f', '#a9dd9d', '#fedf81', '#7098e6', '#605779', '#a8d2eb', '#fffeeb', '#8d9eb2', '#fd8489', '#c9fd88', '#f0eaaa', '#98b8e6', '#e7d5ff', '#a8d2eb', '#ffffff']
     endif
