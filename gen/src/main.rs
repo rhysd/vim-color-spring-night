@@ -693,7 +693,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(diffIndexLine,         gold,       -,            Nothing)),
         Always(fgbg!(diffNewFile,           yellow,     -,            Nothing)),
         Always(fgbg!(diffRemoved,           red,        -,            Nothing)),
-        Always(fgbg!(gitCommitOverflow,     -,          red,          Nothing)),
+        Always(fgbg!(gitCommitOverflow,     -,          mildred,      Nothing)),
         Always(fgbg!(gitCommitSummary,      yellow,     -,            Nothing)),
         Always(fgbg!(gitCommitSelectedFile, skyblue,    -,            Nothing)),
         Always(fgbg!(gitconfigSection,      skyblue,    -,            Bold)),
