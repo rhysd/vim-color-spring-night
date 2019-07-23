@@ -168,10 +168,10 @@ endif
 
 " Optimization:
 " `:hi clear` takes a lot of time since it clears all highlights and set default
-" highlights. This guard avoids `:hi clear` on loading vimrc since in almost
-" all cases no additional highlight is set at start up. Almost all additional
-" highlights are set by Vim plugins.
-if !has('vim_starting')
+" highlights. This guard avoids `:hi clear` if spring-night is the first colorscheme.
+" applied in vimrc. In almost all cases no additional highlights are set at start
+" up since they are set by Vim plugins.
+if exists('g:colors_name')
     " Remove all existing user-defined highlights and set the defaults.
     hi clear
 endif
