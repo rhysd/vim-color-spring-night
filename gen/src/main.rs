@@ -748,6 +748,17 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(ALEInfoSign,           -,          light,        Nothing)),
         Always(fgbg!(ALEError,              -,          mildred,      Nothing)),
         Always(fgbg!(ALEWarning,            -,          darkgold,     Nothing)),
+        Always(fgbg!(Flake8_Error,          red,        bgemphasis,   Nothing)),
+        Always(fgbg!(Flake8_Warning,        yellow,     bgemphasis,   Nothing)),
+        Always(fgbg!(Flake8_PyFlake,        skyblue,    bgemphasis,   Nothing)),
+        Always(fgbg!(Flake8_Complexity,     skyblue,    bgemphasis,   Nothing)),
+        Always(fgbg!(Flake8_Naming,         skyblue,    bgemphasis,   Nothing)),
+        Always(fgbg!(SignifySignAdd,        green,      bgemphasis,   Nothing)),
+        Always(fgbg!(SignifySignChange,     yellow,     bgemphasis,   Nothing)),
+        Always(
+            fgbg!(SignifySignChangeDelete,  gold,       bgemphasis,   Nothing)
+        ),
+        Always(fgbg!(SignifySignDelete,     red,        bgemphasis,   Nothing)),
         Always(fgbg!(CleverFChar,           bg,         red,          Nothing)),
         Always(fgbg!(DirvishArg,            yellow,     -,            Bold)),
         Always(fgbg!(EasyMotionTarget,      red,        -,            Bold)),
