@@ -201,6 +201,15 @@ exe 'hi' 'ALEErrorSign' 'term=NONE' 'guifg=#3a4b5c' 'ctermfg=235' 'guibg=#ab6560
 hi ALEInfoSign term=NONE guibg=#646f7c ctermbg=60
 hi ALEError term=NONE guibg=#ab6560 ctermbg=167
 exe 'hi' 'ALEWarning' 'term=NONE' 'guibg='.s:darkgold_gui 'ctermbg=58'
+hi Flake8_Error term=NONE guifg=#fd8489 ctermfg=210 guibg=#3a4b5c ctermbg=235
+hi Flake8_Warning term=NONE guifg=#f0eaaa ctermfg=229 guibg=#3a4b5c ctermbg=235
+hi Flake8_PyFlake term=NONE guifg=#a8d2eb ctermfg=153 guibg=#3a4b5c ctermbg=235
+hi Flake8_Complexity term=NONE guifg=#a8d2eb ctermfg=153 guibg=#3a4b5c ctermbg=235
+hi Flake8_Naming term=NONE guifg=#a8d2eb ctermfg=153 guibg=#3a4b5c ctermbg=235
+hi SignifySignAdd term=NONE guifg=#a9dd9d ctermfg=150 guibg=#3a4b5c ctermbg=235
+hi SignifySignChange term=NONE guifg=#f0eaaa ctermfg=229 guibg=#3a4b5c ctermbg=235
+hi SignifySignChangeDelete term=NONE guifg=#fedf81 ctermfg=222 guibg=#3a4b5c ctermbg=235
+hi SignifySignDelete term=NONE guifg=#fd8489 ctermfg=210 guibg=#3a4b5c ctermbg=235
 exe 'hi' 'CleverFChar' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fd8489' 'ctermbg=210'
 exe 'hi' 'DirvishArg' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
 exe 'hi' 'EasyMotionTarget' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' s:bold_attr
