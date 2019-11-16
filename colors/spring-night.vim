@@ -96,7 +96,7 @@ hi PmenuThumb term=NONE guifg=#fedf81 ctermfg=222 guibg=#8d9eb2 ctermbg=103
 hi PreProc term=NONE guifg=#f0aa8a ctermfg=216
 hi Question term=NONE guifg=#a8d2eb ctermfg=153
 hi Search term=NONE guifg=NONE ctermfg=NONE guibg=#605779 ctermbg=60 gui=underline cterm=underline
-hi SignColumn term=NONE guibg=#3a4b5c ctermbg=235
+exe 'hi' 'SignColumn' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg=#3a4b5c' 'ctermbg=235'
 exe 'hi' 'Special' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
 hi SpecialKey term=NONE guifg=#607080 ctermfg=60
 if s:gui_running
@@ -139,7 +139,7 @@ hi Underlined term=NONE guifg=#a8d2eb ctermfg=153 gui=underline cterm=underline
 exe 'hi' 'VertSplit' 'term=NONE' 'guifg=#3a4b5c' 'ctermfg=235' 'guibg='.s:bg_gui 'ctermbg=233'
 hi Visual term=NONE guibg=#70495d ctermbg=95
 hi WarningMsg term=NONE guifg=#fb8965 ctermfg=209 guibg=#3a4b5c ctermbg=235
-hi WildMenu term=NONE guibg=#fedf81 ctermbg=222
+exe 'hi' 'WildMenu' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fedf81' 'ctermbg=222'
 hi cmakeArguments term=NONE guifg=#f0eaaa ctermfg=229
 hi cmakeOperators term=NONE guifg=#fd8489 ctermfg=210
 exe 'hi' 'DiffAdd' 'term=NONE' 'guibg=#5f8770' 'ctermbg=65' s:bold_attr

@@ -637,7 +637,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(PreProc,               orange,     -,            Nothing)),
         Always(fgbg!(Question,              skyblue,    -,            Nothing)),
         Always(fgbg!(Search,                NONE,       darkpurple,   Underline)),
-        Always(fgbg!(SignColumn,            -,          bgemphasis,   Nothing)),
+        Always(fgbg!(SignColumn,            fg,         bgemphasis,   Nothing)),
         Always(fgbg!(Special,               yellow,     -,            Bold)),
         Always(fgbg!(SpecialKey,            hiddenfg,   -,            Nothing)),
         Switch(
@@ -676,7 +676,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(VertSplit,             bgemphasis, bg,           Nothing)),
         Always(fgbg!(Visual,                -,          yaezakura,    Nothing)),
         Always(fgbg!(WarningMsg,            mikan,      bgemphasis,   Nothing)),
-        Always(fgbg!(WildMenu,              -,          gold,         Nothing)),
+        Always(fgbg!(WildMenu,              bg,         gold,         Nothing)),
 
         // File type specific
         //
