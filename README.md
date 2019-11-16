@@ -110,7 +110,7 @@ Color layouts are optimized for following filetypes/plugins:
 - `ruby`
 - `rust`
 - `toml`
-- `typescript`
+- `typescript` ([yats.vim][])
 - `vim`
 - `wast`
 - `zsh`
@@ -196,3 +196,4 @@ THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 [ale]: https://github.com/w0rp/ale
 [vim-highlightedyank]: https://github.com/machakann/vim-highlightedyank
 [vim-github-actions]: https://github.com/rhysd/vim-github-actions
+[yats.vim]: https://github.com/HerringtonDarkholme/yats.vim
