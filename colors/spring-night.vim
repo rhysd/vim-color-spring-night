@@ -185,6 +185,7 @@ hi tomlTableArray term=NONE guifg=#a8d2eb ctermfg=153
 hi tomlKey term=NONE guifg=#fedf81 ctermfg=222
 exe 'hi' 'typescriptBraces' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
 hi typescriptAsyncFuncKeyword term=NONE guifg=#a8d2eb ctermfg=153
+exe 'hi' 'typescriptKeywordOp' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
 hi vimfilerColumn__SizeLine term=NONE guifg=#8d9eb2 ctermfg=103
 hi vimfilerClosedFile term=NONE guifg=#a9dd9d ctermfg=150
 hi vimCommand term=NONE guifg=#a8d2eb ctermfg=153

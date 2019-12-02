@@ -727,6 +727,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(tomlKey,               gold,       -,            Nothing)),
         Always(fgbg!(typescriptBraces,      fg,         -,            Nothing)),
         Always(fgbg!(typescriptAsyncFuncKeyword, skyblue, -,          Nothing)),
+        Always(fgbg!(typescriptKeywordOp,   yellow,     -,            Bold)),
         Always(fgbg!(vimfilerColumn__SizeLine, weakfg,  -,            Nothing)),
         Always(fgbg!(vimfilerClosedFile,    green,      -,            Nothing)),
         Always(fgbg!(vimCommand,            skyblue,    -,            Nothing)),
