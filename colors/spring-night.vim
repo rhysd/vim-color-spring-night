@@ -191,6 +191,7 @@ hi vimfilerClosedFile term=NONE guifg=#a9dd9d ctermfg=150
 hi vimCommand term=NONE guifg=#a8d2eb ctermfg=153
 exe 'hi' 'wastListDelimiter' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
 hi wastInstGeneral term=NONE guifg=#f0eaaa ctermfg=229
+hi wastInstGetSet term=NONE guifg=#f0eaaa ctermfg=229
 hi wastInstWithType term=NONE guifg=#f0eaaa ctermfg=229
 hi wastUnnamedVar term=NONE guifg=#e7d5ff ctermfg=189
 hi zshDelimiter term=NONE guifg=#a8d2eb ctermfg=153

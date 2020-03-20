@@ -733,6 +733,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(vimCommand,            skyblue,    -,            Nothing)),
         Always(fgbg!(wastListDelimiter,     fg,         -,            Nothing)),
         Always(fgbg!(wastInstGeneral,       yellow,     -,            Nothing)),
+        Always(fgbg!(wastInstGetSet,        yellow,     -,            Nothing)),
         Always(fgbg!(wastInstWithType,      yellow,     -,            Nothing)),
         Always(fgbg!(wastUnnamedVar  ,      purple,     -,            Nothing)),
         Always(fgbg!(zshDelimiter,          skyblue,    -,            Nothing)),
