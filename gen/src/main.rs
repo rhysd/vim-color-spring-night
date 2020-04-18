@@ -640,6 +640,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(SignColumn,            fg,         bgemphasis,   Nothing)),
         Always(fgbg!(Special,               yellow,     -,            Bold)),
         Always(fgbg!(SpecialKey,            hiddenfg,   -,            Nothing)),
+        Always(fgbg!(SpecialComment,        palepink,   -,            Nothing)),
         Switch(
             fgbgsp!(SpellBad,               red,        -,    red,    Undercurl),
             fgbgsp!(SpellBad,               red,        NONE, red,    Undercurl),

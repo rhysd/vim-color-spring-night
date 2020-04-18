@@ -99,6 +99,7 @@ hi Search term=NONE guifg=NONE ctermfg=NONE guibg=#605779 ctermbg=60 gui=underli
 exe 'hi' 'SignColumn' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg=#3a4b5c' 'ctermbg=235'
 exe 'hi' 'Special' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
 hi SpecialKey term=NONE guifg=#607080 ctermfg=60
+hi SpecialComment term=NONE guifg=#e7c6b7 ctermfg=181
 if s:gui_running
     exe 'hi' 'SpellBad' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guisp=#fd8489' s:undercurl_attr
 else
