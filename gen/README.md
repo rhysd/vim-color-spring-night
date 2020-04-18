@@ -22,7 +22,7 @@ $ cargo test
 To build an executable:
 
 ```
-$ cargo build
+$ cargo build --release
 $ ./target/release/gen-color-spring-night --dir ..
 ```
 
