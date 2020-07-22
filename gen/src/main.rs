@@ -535,9 +535,9 @@ let g:airline#themes#spring_night#palette.accents = {{
     }
 }
 
+#[rustfmt::skip::macros(color_name, fgbg, fgbgsp)]
 fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
     let mut table = HashMap::new();
-    #[cfg_attr(rustfmt, rustfmt_skip)]
     {
         fn normal<T: Display>(c: T) -> ColorCode<T> {
             ColorCode::Normal(c)
@@ -549,8 +549,17 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
 
         macro_rules! color_name {
             ($name:ident, $gui:expr, $cterm:expr) => {
-                assert_eq!(table.insert(stringify!($name), Color{gui: $gui, cterm: $cterm}), None)
-            }
+                assert_eq!(
+                    table.insert(
+                        stringify!($name),
+                        Color {
+                            gui: $gui,
+                            cterm: $cterm
+                        }
+                    ),
+                    None
+                )
+            };
         }
 
         color_name!(bg,         contrast("#132132", "#334152"), normal(233));
@@ -594,7 +603,6 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
     }
     let table = table;
 
-    #[cfg_attr(rustfmt, rustfmt_skip)]
     let highlights = &[
         // Normal colors
         Always(fgbg!(Boolean,               red,        -,            Nothing)),
@@ -678,7 +686,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(Visual,                -,          yaezakura,    Nothing)),
         Always(fgbg!(WarningMsg,            mikan,      bgemphasis,   Nothing)),
         Always(fgbg!(WildMenu,              bg,         gold,         Nothing)),
-
+        //
         // File type specific
         //
         // Markdown is highlighted with HTML highlights in gVim but link text doesn't
@@ -742,7 +750,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(ghaworkflowAttrName,   yellow,     -,            Nothing)),
         Always(fgbg!(debugPC,               bg,         skyblue,      Nothing)),
         Always(fgbg!(debugBreakPoint,       bg,         gold,         Nothing)),
-
+        //
         // Plugin specific
         //
         // Some plugins introduce its own highlight definitions. Adjust them for
@@ -759,9 +767,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(Flake8_Naming,         skyblue,    bgemphasis,   Nothing)),
         Always(fgbg!(SignifySignAdd,        green,      bgemphasis,   Nothing)),
         Always(fgbg!(SignifySignChange,     yellow,     bgemphasis,   Nothing)),
-        Always(
-            fgbg!(SignifySignChangeDelete,  gold,       bgemphasis,   Nothing)
-        ),
+        Always(fgbg!(SignifySignChangeDelete,  gold,       bgemphasis,   Nothing)),
         Always(fgbg!(SignifySignDelete,     red,        bgemphasis,   Nothing)),
         Always(fgbg!(CleverFChar,           bg,         red,          Nothing)),
         Always(fgbg!(DirvishArg,            yellow,     -,            Bold)),
