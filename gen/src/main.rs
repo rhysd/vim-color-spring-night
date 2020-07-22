@@ -623,7 +623,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(Keyword,               yellow,     -,            Bold)),
         Always(fgbg!(Label,                 skyblue,    -,            Nothing)),
         Always(fgbg!(LineNr,                weakerfg,   bgemphasis,   Nothing)),
-        Always(fgbg!(MatchParen,            bg,         sakura,       Bold)),
+        Always(fgbg!(MatchParen,            bg,         gold,         Bold)),
         Always(fgbg!(ModeMsg,               gold,       -,            Nothing)),
         Always(fgbg!(MoreMsg,               green,      -,            Nothing)),
         Always(fgbg!(NonText,               light,      -,            Nothing)),
