@@ -16,5 +16,5 @@ function run() {
 cd ./gen
 run 'cargo check'
 run 'cargo test'
-run 'cargo clippy -- --allow cyclomatic_complexity,deprecated_cfg_attr'
+run 'cargo clippy -- --deny warnings'
 run 'cargo fmt -- --check'
