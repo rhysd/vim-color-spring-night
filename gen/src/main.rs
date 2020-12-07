@@ -770,6 +770,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(SignifySignChangeDelete,  gold,       bgemphasis,   Nothing)),
         Always(fgbg!(SignifySignDelete,     red,        bgemphasis,   Nothing)),
         Always(fgbg!(CleverFChar,           bg,         red,          Nothing)),
+        Always(fgbg!(CleverFDirect,         bg,         red,          Nothing)),
         Always(fgbg!(DirvishArg,            yellow,     -,            Bold)),
         Always(fgbg!(EasyMotionTarget,      red,        -,            Bold)),
         Always(fgbg!(EasyMotionShade,       weakfg,     bg,           Nothing)),
