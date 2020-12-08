@@ -7,7 +7,7 @@ edition = "2018"
 
 [dependencies]
 getopts = "0.2"
-failure = "0.1"
+anyhow = "1"
 
 [dev-dependencies]
 regex = "1"

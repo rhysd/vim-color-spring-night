@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod test;
 
+use anyhow::{Context, Result};
 use getopts::Options;
 use std::collections::HashMap;
 use std::env;
@@ -874,7 +875,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
     }
 }
 
-fn main() -> Result<(), failure::Error> {
+fn main() -> Result<()> {
     let (program, args) = {
         let mut argv = env::args();
         (argv.next().unwrap(), argv.collect::<Vec<_>>())
@@ -894,7 +895,7 @@ fn main() -> Result<(), failure::Error> {
 
     let matches = opts
         .parse(args)
-        .expect("Invalid command line arguments. Please use --help option for more detail");
+        .with_context(|| "Please use --help option for more detail")?;
 
     if matches.opt_present("h") {
         let brief = &format!("Usage: {} [options]", program);
@@ -905,24 +906,38 @@ fn main() -> Result<(), failure::Error> {
     match matches.opt_str("d") {
         Some(dir) => {
             let path = PathBuf::from(&dir).join("colors").join("spring-night.vim");
-            let out = io::BufWriter::new(File::create(path)?);
+            let out = io::BufWriter::new(
+                File::create(&path)
+                    .with_context(|| format!("Failed to read colorscheme file: {:?}", &path))?,
+            );
             let mut writer = spring_night_writer(out);
-            writer.write_color_scheme()?;
+            writer
+                .write_color_scheme()
+                .with_context(|| format!("While writing to colorscheme file {:?}", &path))?;
             let path = PathBuf::from(dir)
                 .join("autoload")
                 .join("airline")
                 .join("themes")
                 .join("spring_night.vim");
-            writer.out = io::BufWriter::new(File::create(path)?);
-            writer.write_airline_theme()?;
+            writer.out = io::BufWriter::new(
+                File::create(&path)
+                    .with_context(|| format!("Could not make airline theme file {:?}", &path))?,
+            );
+            writer
+                .write_airline_theme()
+                .with_context(|| format!("While writing to airline theme file {:?}", &path))?;
         }
         None => {
             use std::io::Write;
             let out = io::BufWriter::new(io::stdout());
             let mut writer = spring_night_writer(out);
-            writer.write_color_scheme()?;
+            writer
+                .write_color_scheme()
+                .with_context(|| "While writing colorscheme script to stdout")?;
             writeln!(writer.out)?;
-            writer.write_airline_theme()?;
+            writer
+                .write_airline_theme()
+                .with_context(|| "While writing airline theme to stdout")?;
         }
     }
 
