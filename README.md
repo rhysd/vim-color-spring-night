@@ -113,6 +113,7 @@ Color layouts are optimized for following filetypes/plugins:
 - `typescript` ([yats.vim][])
 - `vim`
 - `wast`
+- `zig`
 - `zsh`
 - `ghaworkflow` ([vim-github-actions][])
 - [ctrlp][]
