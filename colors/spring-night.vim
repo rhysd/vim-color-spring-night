@@ -74,6 +74,7 @@ exe 'hi' 'Error' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guibg=#3a4b5c' 'cter
 exe 'hi' 'ErrorMsg' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guibg='.s:bg_gui 'ctermbg=233' s:bold_attr
 hi Float term=NONE guifg=#fd8489 ctermfg=210
 exe 'hi' 'NormalFloat' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg='.s:bgweaker_gui 'ctermbg=235'
+exe 'hi' 'FloatBorder' 'term=NONE' 'guifg=#8d9eb2' 'ctermfg=103' 'guibg='.s:bgweaker_gui 'ctermbg=235'
 hi FoldColumn term=NONE guifg=#e7d5ff ctermfg=189 guibg=#3a4b5c ctermbg=235
 hi Folded term=NONE guifg=#e7d5ff ctermfg=189 guibg=#646f7c ctermbg=60
 hi Function term=NONE guifg=#f0aa8a ctermfg=216
