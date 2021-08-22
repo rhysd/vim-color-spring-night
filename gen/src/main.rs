@@ -290,7 +290,7 @@ endif
             HighlightAttr::CommentItalic => "g:spring_night_italic_comments ? s:italic_attr : ''",
             HighlightAttr::Undercurl => "s:undercurl_attr",
         };
-        if attr_item != "" {
+        if !attr_item.is_empty() {
             args.push(attr_item.to_string());
         }
 
