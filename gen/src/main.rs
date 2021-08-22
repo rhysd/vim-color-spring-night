@@ -733,6 +733,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(rustEnumVariant,       gold,       -,            Nothing)),
         Always(fgbg!(rustFuncCall,          fg,         -,            Nothing)),
         Always(fgbg!(rustCommentLineDoc,    palepink,   -,            Nothing)),
+        Always(fgbg!(scalaInstanceDeclaration, gold,    -,            Nothing)),
         Always(fgbg!(tomlTable,             skyblue,    -,            Nothing)),
         Always(fgbg!(tomlTableArray,        skyblue,    -,            Nothing)),
         Always(fgbg!(tomlKey,               gold,       -,            Nothing)),
