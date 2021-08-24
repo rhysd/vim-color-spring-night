@@ -60,6 +60,12 @@ This package provides a theme for [vim-airline][].
 let g:airline_theme = 'spring_night'
 ```
 
+For [lightline.vim](https://github.com/itchyny/lightline.vim):
+
+```vim
+let g:lightline.colorscheme = 'spring_night'
+```
+
 If you want to use 24bit colors on Vim in a terminal window, you also need to set `termguicolors`
 option. Please note that it requires a ISO-8613-3 compatible terminal to enable 24bit colors.
 
