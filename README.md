@@ -81,6 +81,9 @@ endif
 set termguicolors
 ```
 
+For Iterm2:
+
+To get the theme into Iterm2, download the spring-night.itermcolors file and import it into your settings.
 
 ## Customize
 
