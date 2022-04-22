@@ -1,0 +1,33 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with:
+          repository: vim-airline/vim-airline
+          path: ./vim-airline
+      - uses: rhysd/action-setup-vim@v1
+      - run: vim -E -c 'set t_Co=256 rtp+=.,./vim-airline | runtime plugin/airline.vim' -c 'try | colorscheme spring-night | AirlineTheme spring_night | catch | cquit | endtry' -c 'quit'
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+      - run: nvim -E -c 'set t_Co=256 termguicolors rtp+=.,./vim-airline | runtime plugin/airline.vim' -c 'try | colorscheme spring-night | AirlineTheme spring_night | catch | cquit | endtry' -c 'quit'
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: rustfmt, clippy
+          override: true
+      - run: cd ./gen
+      - name: rustfmt
+        run: cargo fmt -- --check --color always
+      - name: clippy
+        run: cargo clippy --color always -- -D warnings
