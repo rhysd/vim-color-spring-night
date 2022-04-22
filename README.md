@@ -1,5 +1,5 @@
-Calm Spring Color Scheme for Vim [![Build Status][]][Travis CI]
-===============================================================
+Calm Spring Color Scheme for Vim [![CI status][]][CI]
+=====================================================
 
 `spring-night` is a low contrast calm color scheme for Vim. It's colored with deep blue background,
 shiny yellow foreground and *sakura*:cherry_blossom: text selection.
@@ -211,11 +211,11 @@ THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 [Go on Vim (24bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-64bit-go.jpg?raw=true
 [Vim script on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-vim.jpg?raw=true
 [Go on Vim (8bit color)]: https://github.com/rhysd/ss/blob/master/vim-color-spring-night/terminal-8bit-go.jpg?raw=true
-[Build Status]: https://travis-ci.org/rhysd/vim-color-spring-night.svg?branch=travis
-[Travis CI]: https://travis-ci.org/rhysd/vim-color-spring-night
 [clever-f.vim]: https://github.com/rhysd/clever-f.vim
 [vimfiler.vim]: https://github.com/Shougo/vimfiler.vim
 [ale]: https://github.com/w0rp/ale
 [vim-highlightedyank]: https://github.com/machakann/vim-highlightedyank
 [vim-github-actions]: https://github.com/rhysd/vim-github-actions
 [yats.vim]: https://github.com/HerringtonDarkholme/yats.vim
+[CI status]: https://github.com/rhysd/vim-color-spring-night/actions/workflows/ci.yml/badge.svg
+[CI]: https://github.com/rhysd/vim-color-spring-night/actions/workflows/ci.yml
