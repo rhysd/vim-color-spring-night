@@ -11,7 +11,7 @@ jobs:
           repository: vim-airline/vim-airline
           path: ./vim-airline
       - uses: rhysd/action-setup-vim@v1
-      - run: vim -E -c 'set t_Co=256 rtp+=.,./vim-airline | runtime plugin/airline.vim' -c 'try | colorscheme spring-night | AirlineTheme spring_night | catch | cquit | endtry' -c 'quit'
+      - run: vim --not-a-term -N -E -c 'set t_Co=256 rtp+=.,./vim-airline | runtime plugin/airline.vim' -c 'try | colorscheme spring-night | AirlineTheme spring_night | catch | cquit | endtry' -c 'quit'
       - uses: rhysd/action-setup-vim@v1
         with:
           neovim: true
@@ -26,8 +26,7 @@ jobs:
           toolchain: stable
           components: rustfmt, clippy
           override: true
-      - run: cd ./gen
       - name: rustfmt
-        run: cargo fmt -- --check --color always
+        run: cd ./gen && cargo fmt -- --check --color always
       - name: clippy
-        run: cargo clippy --color always -- -D warnings
+        run: cd ./gen && cargo clippy --color always -- -D warnings
