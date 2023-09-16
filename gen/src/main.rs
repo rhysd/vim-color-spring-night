@@ -695,6 +695,8 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         // have a color. So define it here.
         Always(fgbg!(cmakeArguments,        yellow,     -,            Nothing)),
         Always(fgbg!(cmakeOperators,        red,        -,            Nothing)),
+        Always(fgbg!(cStorageClass,         yellow,     -,            Nothing)),
+        Always(fgbg!(cTypedef,              yellow,     -,            Nothing)),
         Always(fgbg!(DiffAdd,               -,          darkgreen,    Bold)),
         Always(fgbg!(DiffChange,            -,          darkgold,     Bold)),
         Always(fgbg!(DiffDelete,            fg,         mildred,      Bold)),
@@ -733,6 +735,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(rustEnumVariant,       gold,       -,            Nothing)),
         Always(fgbg!(rustFuncCall,          fg,         -,            Nothing)),
         Always(fgbg!(rustCommentLineDoc,    palepink,   -,            Nothing)),
+        Always(fgbg!(scalaInstanceDeclaration, gold,    -,            Nothing)),
         Always(fgbg!(scalaInstanceDeclaration, gold,    -,            Nothing)),
         Always(fgbg!(tomlTable,             skyblue,    -,            Nothing)),
         Always(fgbg!(tomlTableArray,        skyblue,    -,            Nothing)),

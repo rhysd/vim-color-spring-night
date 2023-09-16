@@ -144,6 +144,8 @@ hi WarningMsg term=NONE guifg=#fb8965 ctermfg=209 guibg=#3a4b5c ctermbg=235
 exe 'hi' 'WildMenu' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fedf81' 'ctermbg=222'
 hi cmakeArguments term=NONE guifg=#f0eaaa ctermfg=229
 hi cmakeOperators term=NONE guifg=#fd8489 ctermfg=210
+hi cStorageClass term=NONE guifg=#f0eaaa ctermfg=229
+hi cTypedef term=NONE guifg=#f0eaaa ctermfg=229
 exe 'hi' 'DiffAdd' 'term=NONE' 'guibg=#5f8770' 'ctermbg=65' s:bold_attr
 exe 'hi' 'DiffChange' 'term=NONE' 'guibg='.s:darkgold_gui 'ctermbg=58' s:bold_attr
 exe 'hi' 'DiffDelete' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg=#ab6560' 'ctermbg=167' s:bold_attr
@@ -182,6 +184,7 @@ hi rubyIdentifier term=NONE guifg=#f0eaaa ctermfg=229
 hi rustEnumVariant term=NONE guifg=#fedf81 ctermfg=222
 exe 'hi' 'rustFuncCall' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
 hi rustCommentLineDoc term=NONE guifg=#e7c6b7 ctermfg=181
+hi scalaInstanceDeclaration term=NONE guifg=#fedf81 ctermfg=222
 hi scalaInstanceDeclaration term=NONE guifg=#fedf81 ctermfg=222
 hi tomlTable term=NONE guifg=#a8d2eb ctermfg=153
 hi tomlTableArray term=NONE guifg=#a8d2eb ctermfg=153
