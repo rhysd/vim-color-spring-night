@@ -202,7 +202,6 @@ hi wastInstWithType term=NONE guifg=#f0eaaa ctermfg=229
 hi wastUnnamedVar term=NONE guifg=#e7d5ff ctermfg=189
 hi zshDelimiter term=NONE guifg=#a8d2eb ctermfg=153
 hi zshPrecommand term=NONE guifg=#fd8489 ctermfg=210
-hi ghaworkflowAttrName term=NONE guifg=#f0eaaa ctermfg=229
 exe 'hi' 'debugPC' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#a8d2eb' 'ctermbg=153'
 exe 'hi' 'debugBreakPoint' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fedf81' 'ctermbg=222'
 hi zigMultilineStringDelimiter term=NONE guifg=#f0eaaa ctermfg=229

@@ -120,7 +120,6 @@ Color layouts are optimized for following filetypes/plugins:
 - `wast`
 - `zig`
 - `zsh`
-- `ghaworkflow` ([vim-github-actions][])
 - [ctrlp][]
 - [vim-gitgutter][]
 - [vim-easymotion][]
@@ -216,7 +215,6 @@ THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 [vimfiler.vim]: https://github.com/Shougo/vimfiler.vim
 [ale]: https://github.com/w0rp/ale
 [vim-highlightedyank]: https://github.com/machakann/vim-highlightedyank
-[vim-github-actions]: https://github.com/rhysd/vim-github-actions
 [yats.vim]: https://github.com/HerringtonDarkholme/yats.vim
 [vim-indent-guides]: https://github.com/preservim/vim-indent-guides
 [CI status]: https://github.com/rhysd/vim-color-spring-night/actions/workflows/ci.yml/badge.svg

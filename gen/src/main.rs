@@ -753,7 +753,6 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(wastUnnamedVar  ,      purple,     -,            Nothing)),
         Always(fgbg!(zshDelimiter,          skyblue,    -,            Nothing)),
         Always(fgbg!(zshPrecommand,         red,        -,            Nothing)),
-        Always(fgbg!(ghaworkflowAttrName,   yellow,     -,            Nothing)),
         Always(fgbg!(debugPC,               bg,         skyblue,      Nothing)),
         Always(fgbg!(debugBreakPoint,       bg,         gold,         Nothing)),
         Always(fgbg!(zigMultilineStringDelimiter, yellow, -,          Nothing)),
