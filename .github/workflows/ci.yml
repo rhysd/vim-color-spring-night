@@ -5,8 +5,8 @@ jobs:
   smoke:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           repository: vim-airline/vim-airline
           path: ./vim-airline
@@ -18,15 +18,15 @@ jobs:
       - run: nvim -E -c 'set t_Co=256 termguicolors rtp+=.,./vim-airline | runtime plugin/airline.vim' -c 'try | colorscheme spring-night | AirlineTheme spring_night | catch | cquit | endtry' -c 'quit'
   rust:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./gen
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
-          toolchain: stable
           components: rustfmt, clippy
-          override: true
       - name: rustfmt
-        run: cd ./gen && cargo fmt -- --check --color always
+        run: cargo fmt -- --check --color always
       - name: clippy
-        run: cd ./gen && cargo clippy --color always -- -D warnings
+        run: cargo clippy --color always -- -D warnings
