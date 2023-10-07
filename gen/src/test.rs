@@ -3,7 +3,7 @@ use regex::Regex;
 use std::collections::{HashMap, HashSet};
 use std::str;
 
-const DUMMY_TERM_COLORS: [&'static str; 16] = [
+const DUMMY_TERM_COLORS: [&str; 16] = [
     "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",
 ];
 
@@ -103,7 +103,7 @@ fn test_write_contrast_color_variables() {
 
 #[test]
 fn test_write_highlight() {
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     let testcases = vec![
         ((None, None, None, HighlightAttr::Nothing),                           0, "hi HL term=NONE"),
         ((Some("normal"), None, None, HighlightAttr::Nothing),                 0, "hi HL term=NONE guifg=#123456 ctermfg=123"),

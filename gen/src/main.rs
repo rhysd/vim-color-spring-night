@@ -428,12 +428,7 @@ let g:airline#themes#spring_night#palette.accents = {{
         )
     }
 
-    fn write_airline_palette<'b>(
-        &mut self,
-        name: &'b str,
-        error: &str,
-        warning: &str,
-    ) -> io::Result<()> {
+    fn write_airline_palette(&mut self, name: &str, error: &str, warning: &str) -> io::Result<()> {
         let map = &self.airline_theme.mode[name];
 
         writeln!(
