@@ -237,6 +237,8 @@ else
 endif
 hi plugDeleted term=NONE guifg=#8d9eb2 ctermfg=103
 hi ConflictMarker term=NONE guibg=#ab6560 ctermbg=167
+exe 'hi' 'IndentGuidesOdd' 'term=NONE' 'guibg='.s:bgweaker_gui 'ctermbg=235'
+hi IndentGuidesEven term=NONE guibg=#3a4b5c ctermbg=235
 
 if g:spring_night_highlight_terminal
     if has('nvim')

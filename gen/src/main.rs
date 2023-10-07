@@ -792,6 +792,8 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         ),
         Always(fgbg!(plugDeleted,           weakfg,     -,            Nothing)),
         Always(fgbg!(ConflictMarker,        -,          mildred,      Nothing)),
+        Always(fgbg!(IndentGuidesOdd,       -,          bgweaker,     Nothing)),
+        Always(fgbg!(IndentGuidesEven,      -,          bgemphasis,   Nothing)),
     ];
 
     let term_colors = [

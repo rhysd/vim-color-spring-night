@@ -128,6 +128,7 @@ Color layouts are optimized for following filetypes/plugins:
 - [vimfiler.vim][]
 - [ale][]
 - [vim-highlightedyank][]
+- [vim-indent-guides][]
 - ... and more
 
 
@@ -217,5 +218,6 @@ THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 [vim-highlightedyank]: https://github.com/machakann/vim-highlightedyank
 [vim-github-actions]: https://github.com/rhysd/vim-github-actions
 [yats.vim]: https://github.com/HerringtonDarkholme/yats.vim
+[vim-indent-guides]: https://github.com/preservim/vim-indent-guides
 [CI status]: https://github.com/rhysd/vim-color-spring-night/actions/workflows/ci.yml/badge.svg
 [CI]: https://github.com/rhysd/vim-color-spring-night/actions/workflows/ci.yml
