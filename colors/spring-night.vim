@@ -195,11 +195,11 @@ exe 'hi' 'typescriptKeywordOp' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_
 hi vimfilerColumn__SizeLine term=NONE guifg=#8d9eb2 ctermfg=103
 hi vimfilerClosedFile term=NONE guifg=#a9dd9d ctermfg=150
 hi vimCommand term=NONE guifg=#a8d2eb ctermfg=153
-exe 'hi' 'wastListDelimiter' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
-hi wastInstGeneral term=NONE guifg=#f0eaaa ctermfg=229
-hi wastInstGetSet term=NONE guifg=#f0eaaa ctermfg=229
-hi wastInstWithType term=NONE guifg=#f0eaaa ctermfg=229
-hi wastUnnamedVar term=NONE guifg=#e7d5ff ctermfg=189
+exe 'hi' 'watListDelimiter' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
+hi watInstGeneral term=NONE guifg=#f0eaaa ctermfg=229
+hi watInstGetSet term=NONE guifg=#f0eaaa ctermfg=229
+hi watInstWithType term=NONE guifg=#f0eaaa ctermfg=229
+hi watUnnamedVar term=NONE guifg=#e7d5ff ctermfg=189
 hi zshDelimiter term=NONE guifg=#a8d2eb ctermfg=153
 hi zshPrecommand term=NONE guifg=#fd8489 ctermfg=210
 exe 'hi' 'debugPC' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#a8d2eb' 'ctermbg=153'
