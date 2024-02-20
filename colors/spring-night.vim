@@ -189,6 +189,7 @@ hi scalaInstanceDeclaration term=NONE guifg=#fedf81 ctermfg=222
 hi tomlTable term=NONE guifg=#a8d2eb ctermfg=153
 hi tomlTableArray term=NONE guifg=#a8d2eb ctermfg=153
 hi tomlKey term=NONE guifg=#fedf81 ctermfg=222
+hi tmuxCommands term=NONE guifg=#a8d2eb ctermfg=153
 exe 'hi' 'typescriptBraces' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
 hi typescriptAsyncFuncKeyword term=NONE guifg=#a8d2eb ctermfg=153
 exe 'hi' 'typescriptKeywordOp' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr

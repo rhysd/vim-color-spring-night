@@ -115,6 +115,7 @@ Color layouts are optimized for following filetypes/plugins:
 - `ruby`
 - `rust`
 - `toml`
+- `tmux`
 - `typescript` ([yats.vim][])
 - `vim`
 - `wast`

@@ -735,6 +735,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(tomlTable,             skyblue,    -,            Nothing)),
         Always(fgbg!(tomlTableArray,        skyblue,    -,            Nothing)),
         Always(fgbg!(tomlKey,               gold,       -,            Nothing)),
+        Always(fgbg!(tmuxCommands,          skyblue,    -,            Nothing)),
         Always(fgbg!(typescriptBraces,      fg,         -,            Nothing)),
         Always(fgbg!(typescriptAsyncFuncKeyword, skyblue, -,          Nothing)),
         Always(fgbg!(typescriptKeywordOp,   yellow,     -,            Bold)),
