@@ -64,6 +64,7 @@ exe 'hi' 'Conceal' 'term=NONE' 'guifg=#fb8965' 'ctermfg=209' 'guibg='.s:bg_gui '
 hi Conditional term=NONE guifg=#a8d2eb ctermfg=153
 hi Constant term=NONE guifg=#fd8489 ctermfg=210
 exe 'hi' 'Cursor' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fffeeb' 'ctermbg='.s:fg_cterm
+exe 'hi' 'lCursor' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fffeeb' 'ctermbg='.s:fg_cterm
 hi CursorColumn term=NONE guibg=#3a4b5c ctermbg=235
 hi CursorLine term=NONE guibg=#3a4b5c ctermbg=235 gui=NONE cterm=NONE
 hi CursorLineNr term=NONE guifg=#e7d5ff ctermfg=189 guibg=#536273 ctermbg=238

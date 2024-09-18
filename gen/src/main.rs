@@ -609,6 +609,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         Always(fgbg!(Conditional,           skyblue,    -,            Nothing)),
         Always(fgbg!(Constant,              red,        -,            Nothing)),
         Always(fgbg!(Cursor,                bg,         fg,           Nothing)),
+        Always(fgbg!(lCursor,               bg,         fg,           Nothing)),
         Always(fgbg!(CursorColumn,          -,          bgemphasis,   Nothing)),
         Always(fgbg!(CursorLine,            -,          bgemphasis,   None)),
         Always(fgbg!(CursorLineNr,          purple,     bgstrong,     Nothing)),
