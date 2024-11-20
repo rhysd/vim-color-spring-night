@@ -139,7 +139,7 @@ generating colorscheme file.
 
 ## iTerm2 theme
 
-This repository also provides [iTerm2](https://iterm2.com/) theme of this colorscheme.
+This repository provides [iTerm2](https://iterm2.com/) theme of this colorscheme.
 
 ![iTerm2 theme](https://github.com/rhysd/ss/blob/master/vim-color-spring-night/iterm2.png?raw=true)
 
@@ -152,6 +152,24 @@ How to apply this theme:
 5. Select the downloaded file at 1.
 6. Click 'Colors Presets...' again
 7. Select 'spring-night'
+
+## Alacritty theme
+
+This repository provides [Alacritty](https://alacritty.org/) theme of this colorscheme.
+
+![Alacritty theme](https://github.com/rhysd/ss/blob/master/vim-color-spring-night/alacritty.png?raw=true)
+
+How to apply this theme:
+
+1. Download [spring_night.toml](./alacritty/sprint_night.toml) to `~/.config/alacritty/spring_night.toml`
+2. Add the following configuration to `~/.config/alacritty/alacritty.toml`
+
+```toml
+[general]
+import = [
+    "~/.config/alacritty/spring_night.toml"
+]
+```
 
 ## Contribution
 

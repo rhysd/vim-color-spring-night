@@ -35,3 +35,4 @@ To modify colors or highlights, you can update tables and lists in `spring_night
   by `:terminal` command.
 - `airline_theme`: Color palette for [vim-airline](https://github.com/vim-airline/vim-airline). `mode`
   field has the color palettes for each mode in Vim.
+- `alacritty_theme`: Color palette for [alacritty](https://alacritty.org/).
