@@ -139,11 +139,32 @@ struct AirlineThemeColors<'a> {
 }
 
 #[derive(Debug)]
+struct AlacrittyFgColors<'a> {
+    foreground: &'a str,
+    black: &'a str,
+    red: &'a str,
+    green: &'a str,
+    yellow: &'a str,
+    blue: &'a str,
+    magenta: &'a str,
+    cyan: &'a str,
+    white: &'a str,
+}
+
+#[derive(Debug)]
+struct AlacrittyTheme<'a> {
+    background: &'a str,
+    normal: AlacrittyFgColors<'a>,
+    bright: AlacrittyFgColors<'a>,
+}
+
+#[derive(Debug)]
 struct Writer<'a, W: io::Write> {
     table: ColorTable,
     highlights: &'a [HowToHighlight],
     term_colors: [&'static str; 16],
     airline_theme: AirlineThemeColors<'a>,
+    alacritty_theme: AlacrittyTheme<'a>,
     out: W,
 }
 
@@ -529,6 +550,53 @@ let g:airline#themes#spring_night#palette.accents = {{
 
         Ok(())
     }
+
+    fn write_alacritty_theme(&mut self) -> io::Result<()> {
+        fn hex(color: &Color) -> &str {
+            match color.gui {
+                ColorCode::Normal(c) => c,
+                ColorCode::Contrast(c, _) => c,
+            }
+        }
+
+        writeln!(self.out, "[colors.primary]")?;
+        writeln!(
+            self.out,
+            "background = \"{}\"",
+            hex(&self.table[self.alacritty_theme.background])
+        )?;
+        writeln!(
+            self.out,
+            "foreground = \"{}\"",
+            hex(&self.table[self.alacritty_theme.normal.foreground])
+        )?;
+        writeln!(
+            self.out,
+            "bright_foreground = \"{}\"",
+            hex(&self.table[self.alacritty_theme.bright.foreground])
+        )?;
+
+        for (ty, colors) in [
+            ("normal", &self.alacritty_theme.normal),
+            ("bright", &self.alacritty_theme.bright),
+        ] {
+            writeln!(self.out)?;
+            writeln!(self.out, "[colors.{}]", ty)?;
+            writeln!(self.out, "black = \"{}\"", hex(&self.table[colors.black]))?;
+            writeln!(self.out, "red = \"{}\"", hex(&self.table[colors.red]))?;
+            writeln!(self.out, "green = \"{}\"", hex(&self.table[colors.green]))?;
+            writeln!(self.out, "yellow = \"{}\"", hex(&self.table[colors.yellow]))?;
+            writeln!(self.out, "blue = \"{}\"", hex(&self.table[colors.blue]))?;
+            writeln!(
+                self.out,
+                "magenta = \"{}\"",
+                hex(&self.table[colors.magenta])
+            )?;
+            writeln!(self.out, "cyan = \"{}\"", hex(&self.table[colors.cyan]))?;
+            writeln!(self.out, "white = \"{}\"", hex(&self.table[colors.white]))?;
+        }
+        Ok(())
+    }
 }
 
 #[rustfmt::skip::macros(color_name, fgbg, fgbgsp)]
@@ -595,6 +663,7 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         color_name!(whitegreen, normal("#eaf0aa"),              normal(194));
         color_name!(whiteblue,  normal("#d8e2f0"),              normal(195));
         color_name!(whitered,   normal("#ffbfaf"),              normal(217));
+        color_name!(black,      normal("#111e25"),              normal(233));
         color_name!(inu,        normal("#ddbc96"),              normal(180));
     }
     let table = table;
@@ -872,11 +941,38 @@ fn spring_night_writer<'a, W: io::Write>(out: W) -> Writer<'a, W> {
         warning: ("bg", "mikan"),
     };
 
+    let alacritty_theme = AlacrittyTheme {
+        background: "bg",
+        normal: AlacrittyFgColors {
+            foreground: "fg",
+            black: "black",
+            red: "crimson",
+            green: "green",
+            yellow: "gold",
+            blue: "blue",
+            magenta: "darkpurple",
+            cyan: "skyblue",
+            white: "white",
+        },
+        bright: AlacrittyFgColors {
+            foreground: "fg",
+            black: "gray",
+            red: "red",
+            green: "lime",
+            yellow: "yellow",
+            blue: "paleblue",
+            magenta: "purple",
+            cyan: "skyblue",
+            white: "white",
+        },
+    };
+
     Writer {
         table,
         highlights,
         term_colors,
         airline_theme,
+        alacritty_theme,
         out,
     }
 }
@@ -920,7 +1016,7 @@ fn main() -> Result<()> {
             writer
                 .write_color_scheme()
                 .with_context(|| format!("While writing to colorscheme file {:?}", &path))?;
-            let path = PathBuf::from(dir)
+            let path = PathBuf::from(&dir)
                 .join("autoload")
                 .join("airline")
                 .join("themes")
@@ -932,6 +1028,16 @@ fn main() -> Result<()> {
             writer
                 .write_airline_theme()
                 .with_context(|| format!("While writing to airline theme file {:?}", &path))?;
+            let path = PathBuf::from(&dir)
+                .join("alacritty")
+                .join("sprint_night.toml");
+            writer.out = io::BufWriter::new(
+                File::create(&path)
+                    .with_context(|| format!("Could not make alacritty theme file {:?}", &path))?,
+            );
+            writer
+                .write_alacritty_theme()
+                .with_context(|| format!("While writing to alacritty theme file {:?}", &path))?;
         }
         None => {
             use std::io::Write;
