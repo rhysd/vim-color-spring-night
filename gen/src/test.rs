@@ -2,6 +2,7 @@ use super::*;
 use regex::Regex;
 use std::collections::{HashMap, HashSet};
 use std::str;
+use toml_edit::DocumentMut;
 
 const DUMMY_TERM_COLORS: [&str; 16] = [
     "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",
@@ -424,4 +425,71 @@ fn test_write_airline_theme() {
             assert!(re_palette.is_match(line), "Invalid color palette: {}", line);
         }
     }
+}
+
+#[test]
+fn test_write_alacritty_theme() {
+    let mut table = HashMap::new();
+    table.insert(
+        "color1",
+        Color {
+            gui: ColorCode::Normal("#ff0000"),
+            cterm: ColorCode::Normal(123),
+        },
+    );
+    table.insert(
+        "color2",
+        Color {
+            gui: ColorCode::Normal("#00ff00"),
+            cterm: ColorCode::Normal(123),
+        },
+    );
+    table.insert(
+        "color3",
+        Color {
+            gui: ColorCode::Normal("#0000ff"),
+            cterm: ColorCode::Normal(123),
+        },
+    );
+
+    let normal = AlacrittyFgColors {
+        foreground: "color2",
+        black: "color2",
+        red: "color2",
+        green: "color2",
+        yellow: "color2",
+        blue: "color2",
+        magenta: "color2",
+        cyan: "color2",
+        white: "color2",
+    };
+    let bright = AlacrittyFgColors {
+        foreground: "color3",
+        black: "color3",
+        red: "color3",
+        green: "color3",
+        yellow: "color3",
+        blue: "color3",
+        magenta: "color3",
+        cyan: "color3",
+        white: "color3",
+    };
+    let alacritty_theme = AlacrittyTheme {
+        background: "color1",
+        normal,
+        bright,
+    };
+
+    let mut w = Writer {
+        table,
+        highlights: &[],
+        term_colors: DUMMY_TERM_COLORS,
+        airline_theme: Default::default(),
+        alacritty_theme,
+        out: Vec::new(),
+    };
+
+    w.write_alacritty_theme().unwrap();
+    let rendered = str::from_utf8(&w.out).unwrap();
+    rendered.parse::<DocumentMut>().unwrap();
 }

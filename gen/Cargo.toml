@@ -11,3 +11,4 @@ anyhow = "1"
 
 [dev-dependencies]
 regex = "1"
+toml_edit = { version = "0.22", default-features = false, features = ["parse"] }

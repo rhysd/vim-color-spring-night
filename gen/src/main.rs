@@ -138,7 +138,7 @@ struct AirlineThemeColors<'a> {
     warning: (&'a str, &'a str),
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 struct AlacrittyFgColors<'a> {
     foreground: &'a str,
     black: &'a str,
@@ -551,6 +551,7 @@ let g:airline#themes#spring_night#palette.accents = {{
         Ok(())
     }
 
+    #[rustfmt::skip]
     fn write_alacritty_theme(&mut self) -> io::Result<()> {
         fn hex(color: &Color) -> &str {
             match color.gui {
@@ -560,21 +561,9 @@ let g:airline#themes#spring_night#palette.accents = {{
         }
 
         writeln!(self.out, "[colors.primary]")?;
-        writeln!(
-            self.out,
-            "background = \"{}\"",
-            hex(&self.table[self.alacritty_theme.background])
-        )?;
-        writeln!(
-            self.out,
-            "foreground = \"{}\"",
-            hex(&self.table[self.alacritty_theme.normal.foreground])
-        )?;
-        writeln!(
-            self.out,
-            "bright_foreground = \"{}\"",
-            hex(&self.table[self.alacritty_theme.bright.foreground])
-        )?;
+        writeln!(self.out, "background = \"{}\"", hex(&self.table[self.alacritty_theme.background]))?;
+        writeln!(self.out, "foreground = \"{}\"", hex(&self.table[self.alacritty_theme.normal.foreground]))?;
+        writeln!(self.out, "bright_foreground = \"{}\"", hex(&self.table[self.alacritty_theme.bright.foreground]))?;
 
         for (ty, colors) in [
             ("normal", &self.alacritty_theme.normal),
@@ -587,11 +576,7 @@ let g:airline#themes#spring_night#palette.accents = {{
             writeln!(self.out, "green = \"{}\"", hex(&self.table[colors.green]))?;
             writeln!(self.out, "yellow = \"{}\"", hex(&self.table[colors.yellow]))?;
             writeln!(self.out, "blue = \"{}\"", hex(&self.table[colors.blue]))?;
-            writeln!(
-                self.out,
-                "magenta = \"{}\"",
-                hex(&self.table[colors.magenta])
-            )?;
+            writeln!(self.out, "magenta = \"{}\"", hex(&self.table[colors.magenta]))?;
             writeln!(self.out, "cyan = \"{}\"", hex(&self.table[colors.cyan]))?;
             writeln!(self.out, "white = \"{}\"", hex(&self.table[colors.white]))?;
         }
