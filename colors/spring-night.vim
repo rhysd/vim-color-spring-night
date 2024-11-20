@@ -186,7 +186,6 @@ hi rustEnumVariant term=NONE guifg=#fedf81 ctermfg=222
 exe 'hi' 'rustFuncCall' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
 hi rustCommentLineDoc term=NONE guifg=#e7c6b7 ctermfg=181
 hi scalaInstanceDeclaration term=NONE guifg=#fedf81 ctermfg=222
-hi scalaInstanceDeclaration term=NONE guifg=#fedf81 ctermfg=222
 hi tomlTable term=NONE guifg=#a8d2eb ctermfg=153
 hi tomlTableArray term=NONE guifg=#a8d2eb ctermfg=153
 hi tomlKey term=NONE guifg=#fedf81 ctermfg=222
