@@ -1014,7 +1014,7 @@ fn main() -> Result<()> {
                 .with_context(|| format!("While writing to airline theme file {:?}", &path))?;
             let path = PathBuf::from(&dir)
                 .join("alacritty")
-                .join("sprint_night.toml");
+                .join("spring_night.toml");
             writer.out = io::BufWriter::new(
                 File::create(&path)
                     .with_context(|| format!("Could not make alacritty theme file {:?}", &path))?,

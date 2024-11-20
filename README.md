@@ -161,13 +161,13 @@ This repository provides [Alacritty](https://alacritty.org/) theme of this color
 
 How to apply this theme:
 
-1. Download [spring_night.toml](./alacritty/sprint_night.toml) to `~/.config/alacritty/spring_night.toml`
+1. Download [spring_night.toml](./alacritty/spring_night.toml) to `~/.config/alacritty/theme/spring_night.toml`
 2. Add the following configuration to `~/.config/alacritty/alacritty.toml`
 
 ```toml
 [general]
 import = [
-    "~/.config/alacritty/spring_night.toml"
+    "~/.config/alacritty/theme/spring_night.toml"
 ]
 ```
 
