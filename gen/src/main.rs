@@ -120,7 +120,7 @@ macro_rules! fgbgsp {
     };
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Default)]
 struct ThemeModeColor<'a> {
     label: (&'a str, &'a str),
     info: (&'a str, &'a str),
@@ -129,7 +129,7 @@ struct ThemeModeColor<'a> {
     modified_main: Option<&'a str>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 struct AirlineThemeColors<'a> {
     mode: HashMap<&'a str, ThemeModeColor<'a>>,
     paste: &'a str,
@@ -138,7 +138,7 @@ struct AirlineThemeColors<'a> {
     warning: (&'a str, &'a str),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 struct AlacrittyFgColors<'a> {
     foreground: &'a str,
     black: &'a str,
@@ -151,7 +151,7 @@ struct AlacrittyFgColors<'a> {
     white: &'a str,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 struct AlacrittyTheme<'a> {
     background: &'a str,
     normal: AlacrittyFgColors<'a>,
