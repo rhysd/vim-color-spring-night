@@ -4,10 +4,6 @@ use std::collections::{HashMap, HashSet};
 use std::str;
 use toml_edit::DocumentMut;
 
-const DUMMY_TERM_COLORS: [&str; 16] = [
-    "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",
-];
-
 #[test]
 fn test_color_code() {
     assert_eq!(*ColorCode::Normal(10).normal(), 10);
@@ -16,14 +12,8 @@ fn test_color_code() {
 
 #[test]
 fn test_write_header() {
-    let mut w = Writer {
-        table: HashMap::new(),
-        highlights: &[],
-        term_colors: DUMMY_TERM_COLORS,
-        airline_theme: Default::default(),
-        alacritty_theme: Default::default(),
-        out: Vec::new(),
-    };
+    let palette = Palette(HashMap::new());
+    let mut w = ColorschemeWriter::new(Vec::new(), &palette);
     w.write_header().unwrap();
     let rendered = str::from_utf8(&w.out).unwrap();
     assert!(rendered.starts_with(r#"" spring-night: Calm-colored dark color scheme"#));
@@ -32,14 +22,8 @@ fn test_write_header() {
 
 #[test]
 fn test_write_contrast_color_variables() {
-    let mut w = Writer {
-        table: HashMap::new(),
-        highlights: &[],
-        term_colors: DUMMY_TERM_COLORS,
-        airline_theme: Default::default(),
-        alacritty_theme: Default::default(),
-        out: Vec::new(),
-    };
+    let palette = Palette(HashMap::new());
+    let mut w = ColorschemeWriter::new(Vec::new(), &palette);
     w.write_contrast_color_variables().unwrap();
     assert_eq!(str::from_utf8(&w.out).unwrap(), "\n");
 
@@ -72,14 +56,8 @@ fn test_write_contrast_color_variables() {
             cterm: ColorCode::Normal(123),
         },
     );
-    let mut w = Writer {
-        table: m,
-        highlights: &[],
-        term_colors: DUMMY_TERM_COLORS,
-        airline_theme: Default::default(),
-        alacritty_theme: Default::default(),
-        out: Vec::new(),
-    };
+    let palette = Palette(m);
+    let mut w = ColorschemeWriter::new(Vec::new(), &palette);
     w.write_contrast_color_variables().unwrap();
     for (actual, expected) in [
         "let s:goodbye_gui = g:spring_night_high_contrast ? '#000000' : '#ffffff'",
@@ -140,34 +118,23 @@ fn test_write_highlight() {
                 cterm: ColorCode::Contrast(123, 234),
             },
         );
-        let mut w = Writer {
-            table: m,
-            highlights: &[],
-            term_colors: DUMMY_TERM_COLORS,
-            airline_theme: Default::default(),
-            alacritty_theme: Default::default(),
-            out: Vec::new(),
-        };
+        let palette = Palette(m);
+        let mut w = ColorschemeWriter::new(Vec::new(), &palette);
         w.write_highlight(&hl, indent as u32).unwrap();
         assert_eq!(str::from_utf8(&w.out).unwrap(), format!("{}\n", expected));
     }
 
     // Edge case
-    let mut w = Writer {
-        table: HashMap::new(),
-        highlights: &[],
-        term_colors: DUMMY_TERM_COLORS,
-        airline_theme: Default::default(),
-        alacritty_theme: Default::default(),
-        out: Vec::new(),
-    };
-    w.write_highlights().unwrap();
+    let palette = Palette(HashMap::new());
+    let mut w = ColorschemeWriter::new(Vec::new(), &palette);
+    w.highlightings = &[];
+    w.write_highlightings().unwrap();
     assert_eq!(str::from_utf8(&w.out).unwrap(), "\n");
 }
 
 #[test]
 fn test_write_highlights() {
-    fn hl() -> Highlight {
+    const fn hl() -> Highlight {
         Highlight {
             name: "HL",
             fg: None,
@@ -176,26 +143,22 @@ fn test_write_highlights() {
             attr: HighlightAttr::Nothing,
         }
     }
-    let mut w = Writer {
-        table: HashMap::new(),
-        highlights: &[Always(hl())],
-        term_colors: DUMMY_TERM_COLORS,
-        airline_theme: Default::default(),
-        alacritty_theme: Default::default(),
-        out: Vec::new(),
-    };
-    w.write_highlights().unwrap();
+
+    let palette = Palette(HashMap::new());
+    let mut w = ColorschemeWriter::new(Vec::new(), &palette);
+    let fixed = &[Fixed(hl())];
+    w.highlightings = fixed;
+    w.write_highlightings().unwrap();
     assert_eq!(str::from_utf8(&w.out).unwrap(), "hi HL term=NONE\n\n");
 
-    let mut w = Writer {
-        table: HashMap::new(),
-        highlights: &[Switch(hl(), hl())],
-        term_colors: DUMMY_TERM_COLORS,
-        airline_theme: Default::default(),
-        alacritty_theme: Default::default(),
-        out: Vec::new(),
-    };
-    w.write_highlights().unwrap();
+    let dynamic = &[Dynamic {
+        gui: hl(),
+        term: hl(),
+    }];
+    let palette = Palette(HashMap::new());
+    let mut w = ColorschemeWriter::new(Vec::new(), &palette);
+    w.highlightings = dynamic;
+    w.write_highlightings().unwrap();
     assert_eq!(
         str::from_utf8(&w.out).unwrap().lines().collect::<Vec<_>>(),
         vec![
@@ -226,17 +189,12 @@ fn test_write_term_colors() {
             cterm: ColorCode::Contrast(1, 2),
         },
     );
-    let mut w = Writer {
-        table: m,
-        highlights: &[],
-        term_colors: [
-            "normal", "contrast", "normal", "contrast", "normal", "contrast", "normal", "contrast",
-            "normal", "contrast", "normal", "contrast", "normal", "contrast", "normal", "contrast",
-        ],
-        airline_theme: Default::default(),
-        alacritty_theme: Default::default(),
-        out: Vec::new(),
-    };
+    let palette = Palette(m);
+    let mut w = ColorschemeWriter::new(Vec::new(), &palette);
+    w.term_colors = [
+        "normal", "contrast", "normal", "contrast", "normal", "contrast", "normal", "contrast",
+        "normal", "contrast", "normal", "contrast", "normal", "contrast", "normal", "contrast",
+    ];
     w.write_term_colors().unwrap();
     let rendered = str::from_utf8(&w.out).unwrap();
     assert!(rendered.contains("let g:terminal_color_0 = '#123456'"));
@@ -247,16 +205,18 @@ fn test_write_term_colors() {
 }
 
 #[test]
-fn test_spring_night_writer() {
+fn test_colorscheme_writer() {
+    let palette = Palette::default();
+    let w = ColorschemeWriter::new(Vec::new(), &palette);
+
     // Check duplicate highlights
-    let w = spring_night_writer(Vec::new());
     let mut unique_check = HashSet::new();
-    for hl in w.highlights {
+    for hl in w.highlightings {
         let name = match hl {
-            Always(h) => h.name,
-            Switch(g, t) => {
-                assert_eq!(g.name, t.name);
-                g.name
+            Fixed(h) => h.name,
+            Dynamic { gui, term } => {
+                assert_eq!(gui.name, term.name);
+                gui.name
             }
         };
         assert!(unique_check.insert(name), "Duplicate highlight '{}'", name);
@@ -265,7 +225,7 @@ fn test_spring_night_writer() {
     // Check terminal colors are correct
     for tc in &w.term_colors {
         assert!(
-            w.table.contains_key(tc),
+            w.palette.contains_key(tc),
             "Terminal color '{}' is not present in color names",
             tc
         );
@@ -273,7 +233,7 @@ fn test_spring_night_writer() {
 
     // Check color code is correct
     let re = Regex::new(r"^#[[:xdigit:]]{6}$").unwrap();
-    for (name, c) in w.table {
+    for (name, c) in w.palette.iter() {
         match c.gui {
             ColorCode::Normal(c) => assert!(
                 re.is_match(c),
@@ -301,15 +261,15 @@ fn test_spring_night_writer() {
 
 #[test]
 fn test_write_airline_theme() {
-    let mut table = HashMap::new();
-    table.insert(
+    let mut m = HashMap::new();
+    m.insert(
         "color1",
         Color {
             gui: ColorCode::Normal("#123456"),
             cterm: ColorCode::Normal(123),
         },
     );
-    table.insert(
+    m.insert(
         "color2",
         Color {
             gui: ColorCode::Contrast("#000000", "#ffffff"),
@@ -317,7 +277,7 @@ fn test_write_airline_theme() {
         },
     );
     // Userd for accents
-    table.insert(
+    m.insert(
         "red",
         Color {
             gui: ColorCode::Normal("#ff0000"),
@@ -325,12 +285,12 @@ fn test_write_airline_theme() {
         },
     );
 
-    let airline_theme = AirlineThemeColors {
-        mode: {
+    let theme = AirlineThemeColors {
+        modes: {
             let mut m = HashMap::new();
             m.insert(
                 "normal",
-                ThemeModeColor {
+                AirlineModeColors {
                     label: ("color1", "color2"),
                     info: ("color2", "color1"),
                     main: ("color2", "color2"),
@@ -340,7 +300,7 @@ fn test_write_airline_theme() {
             );
             m.insert(
                 "insert",
-                ThemeModeColor {
+                AirlineModeColors {
                     label: ("color2", "color1"),
                     info: ("color1", "color2"),
                     main: ("color1", "color1"),
@@ -350,7 +310,7 @@ fn test_write_airline_theme() {
             );
             m.insert(
                 "visual",
-                ThemeModeColor {
+                AirlineModeColors {
                     label: ("color1", "color1"),
                     info: ("color2", "color2"),
                     main: ("color1", "color1"),
@@ -360,7 +320,7 @@ fn test_write_airline_theme() {
             );
             m.insert(
                 "replace",
-                ThemeModeColor {
+                AirlineModeColors {
                     label: ("color1", "color1"),
                     info: ("color2", "color2"),
                     main: ("color1", "color1"),
@@ -370,7 +330,7 @@ fn test_write_airline_theme() {
             );
             m.insert(
                 "inactive",
-                ThemeModeColor {
+                AirlineModeColors {
                     label: ("color1", "color1"),
                     info: ("color2", "color2"),
                     main: ("color1", "color1"),
@@ -386,16 +346,11 @@ fn test_write_airline_theme() {
         warning: ("color2", "color1"),
     };
 
-    let mut w = Writer {
-        table,
-        highlights: &[],
-        term_colors: DUMMY_TERM_COLORS,
-        airline_theme,
-        alacritty_theme: Default::default(),
-        out: Vec::new(),
-    };
+    let palette = Palette(m);
+    let mut w = AirlineThemeWriter::new(Vec::new(), &palette);
+    w.theme = theme;
 
-    w.write_airline_theme().unwrap();
+    w.write().unwrap();
     let rendered = str::from_utf8(&w.out).unwrap();
 
     let re_var = Regex::new(r"^let g:airline#themes#spring_night#palette\.(\w+) =").unwrap();
@@ -407,7 +362,7 @@ fn test_write_airline_theme() {
                 Some(found) => {
                     let mode = &found[1];
                     assert!(
-                        w.airline_theme.mode.keys().any(|m| *m == mode
+                        w.theme.modes.keys().any(|m| *m == mode
                             || format!("{}_modified", m) == mode
                             || format!("{}_paste", m) == mode
                             || "accents" == mode),
@@ -429,22 +384,22 @@ fn test_write_airline_theme() {
 
 #[test]
 fn test_write_alacritty_theme() {
-    let mut table = HashMap::new();
-    table.insert(
+    let mut m = HashMap::new();
+    m.insert(
         "color1",
         Color {
             gui: ColorCode::Normal("#ff0000"),
             cterm: ColorCode::Normal(123),
         },
     );
-    table.insert(
+    m.insert(
         "color2",
         Color {
             gui: ColorCode::Normal("#00ff00"),
             cterm: ColorCode::Normal(123),
         },
     );
-    table.insert(
+    m.insert(
         "color3",
         Color {
             gui: ColorCode::Normal("#0000ff"),
@@ -474,22 +429,17 @@ fn test_write_alacritty_theme() {
         cyan: "color3",
         white: "color3",
     };
-    let alacritty_theme = AlacrittyTheme {
+    let theme = AlacrittyTheme {
         background: "color1",
         normal,
         bright,
     };
 
-    let mut w = Writer {
-        table,
-        highlights: &[],
-        term_colors: DUMMY_TERM_COLORS,
-        airline_theme: Default::default(),
-        alacritty_theme,
-        out: Vec::new(),
-    };
+    let palette = Palette(m);
+    let mut w = AlacrittyThemeWriter::new(Vec::new(), &palette);
+    w.theme = theme;
 
-    w.write_alacritty_theme().unwrap();
+    w.write().unwrap();
     let rendered = str::from_utf8(&w.out).unwrap();
     rendered.parse::<DocumentMut>().unwrap();
 }
