@@ -1065,15 +1065,15 @@ fn write_to_stdout() -> Result<()> {
 
     ColorschemeWriter::new(&mut stdout, &palette)
         .write()
-        .with_context(|| "While writing colorscheme to stdout")?;
+        .context("While writing colorscheme to stdout")?;
     writeln!(stdout)?;
     AirlineThemeWriter::new(&mut stdout, &palette)
         .write()
-        .with_context(|| "While writing airline theme to stdout")?;
+        .context("While writing airline theme to stdout")?;
     writeln!(stdout)?;
     AlacrittyThemeWriter::new(&mut stdout, &palette)
         .write()
-        .with_context(|| "While writing alacritty theme to stdout")?;
+        .context("While writing alacritty theme to stdout")?;
     Ok(())
 }
 
@@ -1083,16 +1083,14 @@ fn main() -> Result<()> {
         (argv.next().unwrap(), argv)
     };
 
-    let opts = {
-        let mut o = Options::new();
-        o.optopt("d", "dir", "repository root directory", "PATH");
-        o.optflag("h", "help", "print this help");
-        o
-    };
+    let mut opts = Options::new();
+    opts.optopt("d", "dir", "repository root directory", "PATH");
+    opts.optflag("h", "help", "print this help");
+    let opts = opts;
 
     let matches = opts
         .parse(args)
-        .with_context(|| "Please use --help option for more detail")?;
+        .context("Please use --help option for more detail")?;
 
     if matches.opt_present("h") {
         let brief = &format!("Usage: {} [options]", program);
