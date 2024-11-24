@@ -5,7 +5,7 @@ use anyhow::{Context, Result};
 use getopts::Options;
 use std::collections::HashMap;
 use std::env;
-use std::fmt::Display;
+use std::fmt::{self, Display};
 use std::fs::File;
 use std::io::{self, BufWriter, Write};
 use std::ops::Deref;
@@ -65,45 +65,6 @@ enum Highlighting {
 
 use Highlighting::{Dynamic, Fixed};
 
-#[derive(Debug, PartialEq, Default)]
-struct AirlineModeColors<'a> {
-    label: (&'a str, &'a str),
-    info: (&'a str, &'a str),
-    main: (&'a str, &'a str),
-    modified: Option<&'a str>,
-    modified_main: Option<&'a str>,
-}
-
-#[derive(Debug, Default)]
-struct AirlineThemeColors<'a> {
-    modes: HashMap<&'a str, AirlineModeColors<'a>>,
-    paste: &'a str,
-    info_mod: &'a str,
-    error: (&'a str, &'a str),
-    warning: (&'a str, &'a str),
-}
-
-#[derive(Debug, Default, Clone)]
-struct AlacrittyFgColors<'a> {
-    foreground: &'a str,
-    black: &'a str,
-    red: &'a str,
-    green: &'a str,
-    yellow: &'a str,
-    blue: &'a str,
-    magenta: &'a str,
-    cyan: &'a str,
-    white: &'a str,
-}
-
-#[derive(Debug, Default)]
-struct AlacrittyTheme<'a> {
-    background: &'a str,
-    dim: AlacrittyFgColors<'a>,
-    normal: AlacrittyFgColors<'a>,
-    bright: AlacrittyFgColors<'a>,
-}
-
 #[derive(Debug)]
 struct Palette(HashMap<&'static str, Color>);
 
@@ -128,64 +89,61 @@ impl Default for Palette {
 
         let mut table = HashMap::new();
 
-        macro_rules! color_name {
+        macro_rules! color {
             ($name:ident, $gui:expr, $cterm:expr) => {
                 assert_eq!(
                     table.insert(
                         stringify!($name),
-                        Color {
-                            gui: $gui,
-                            cterm: $cterm
-                        }
+                        Color { gui: $gui, cterm: $cterm },
                     ),
                     None
                 )
             };
         }
 
-        color_name!(bg,         contrast("#132132", "#334152"), normal(233));
-        color_name!(bgweaker,   contrast("#213243", "#3a4b5c"), normal(235));
-        color_name!(bgemphasis, normal("#3a4b5c"),              normal(235));
-        color_name!(bglight,    normal("#435060"),              normal(236));
-        color_name!(bgstrong,   normal("#536273"),              normal(238));
-        color_name!(light,      normal("#646f7c"),              normal(60));
-        color_name!(fg,         normal("#fffeeb"),              contrast(231, 230));
-        color_name!(hiddenfg,   normal("#607080"),              normal(60));
-        color_name!(weakfg,     normal("#8d9eb2"),              normal(103));
-        color_name!(weakerfg,   normal("#788898"),              normal(102));
-        color_name!(black,      normal("#111e25"),              normal(233));
-        color_name!(gray,       normal("#545f6e"),              normal(59));
-        color_name!(white,      normal("#ffffff"),              normal(231));
-        color_name!(nasu,       normal("#605779"),              normal(61));
-        color_name!(fuchsia,    normal("#b9a5cf"),              normal(183));
-        color_name!(purple,     normal("#e7d5ff"),              normal(189));
-        color_name!(yaezakura,  normal("#70495d"),              normal(95));
-        color_name!(sakura,     normal("#a9667a"),              normal(132));
-        color_name!(kakezakura, normal("#e996aa"),              normal(175));
-        color_name!(palepink,   normal("#e7c6b7"),              normal(181));
-        color_name!(mikan,      normal("#fb8965"),              normal(209));
-        color_name!(orange,     normal("#f0aa8a"),              normal(216));
-        color_name!(darkgreen,  normal("#5f8770"),              normal(65));
-        color_name!(green,      normal("#a9dd9d"),              normal(150));
-        color_name!(lime,       normal("#c9fd88"),              normal(149));
-        color_name!(blue,       normal("#7098e6"),              normal(69));
-        color_name!(paleblue,   normal("#98b8e6"),              normal(111));
-        color_name!(cloudy,     normal("#90aecb"),              normal(75));
-        color_name!(skyblue,    normal("#a8d2eb"),              normal(153));
-        color_name!(sunny,      normal("#b8e2fb"),              normal(195));
-        color_name!(yellow,     normal("#f0eaaa"),              normal(229));
-        color_name!(gold,       normal("#fedf81"),              normal(222));
-        color_name!(dullgold,   normal("#b6955b"),              normal(221));
-        color_name!(darkgold,   contrast("#484000", "#685800"), normal(58));
-        color_name!(mildred,    normal("#ab6560"),              normal(167));
-        color_name!(red,        normal("#fd8489"),              normal(210));
-        color_name!(crimson,    normal("#ff6a6f"),              normal(203));
-        color_name!(darkblue,   normal("#00091e"),              normal(235));
-        color_name!(whitepink,  normal("#ebeadb"),              normal(224));
-        color_name!(whitegreen, normal("#eaf0aa"),              normal(194));
-        color_name!(whiteblue,  normal("#d8e2f0"),              normal(195));
-        color_name!(whitered,   normal("#ffbfaf"),              normal(217));
-        color_name!(inu,        normal("#ddbc96"),              normal(180));
+        color!(bg,         contrast("#132132", "#334152"), normal(233));
+        color!(bgweaker,   contrast("#213243", "#3a4b5c"), normal(235));
+        color!(bgemphasis, normal("#3a4b5c"),              normal(235));
+        color!(bglight,    normal("#435060"),              normal(236));
+        color!(bgstrong,   normal("#536273"),              normal(238));
+        color!(light,      normal("#646f7c"),              normal(60));
+        color!(fg,         normal("#fffeeb"),              contrast(231, 230));
+        color!(hiddenfg,   normal("#607080"),              normal(60));
+        color!(weakfg,     normal("#8d9eb2"),              normal(103));
+        color!(weakerfg,   normal("#788898"),              normal(102));
+        color!(black,      normal("#111e25"),              normal(233));
+        color!(gray,       normal("#545f6e"),              normal(59));
+        color!(white,      normal("#ffffff"),              normal(231));
+        color!(nasu,       normal("#605779"),              normal(61));
+        color!(fuchsia,    normal("#b9a5cf"),              normal(183));
+        color!(purple,     normal("#e7d5ff"),              normal(189));
+        color!(yaezakura,  normal("#70495d"),              normal(95));
+        color!(sakura,     normal("#a9667a"),              normal(132));
+        color!(kakezakura, normal("#e996aa"),              normal(175));
+        color!(palepink,   normal("#e7c6b7"),              normal(181));
+        color!(mikan,      normal("#fb8965"),              normal(209));
+        color!(orange,     normal("#f0aa8a"),              normal(216));
+        color!(darkgreen,  normal("#5f8770"),              normal(65));
+        color!(green,      normal("#a9dd9d"),              normal(150));
+        color!(lime,       normal("#c9fd88"),              normal(149));
+        color!(blue,       normal("#7098e6"),              normal(69));
+        color!(paleblue,   normal("#98b8e6"),              normal(111));
+        color!(cloudy,     normal("#90aecb"),              normal(75));
+        color!(skyblue,    normal("#a8d2eb"),              normal(153));
+        color!(sunny,      normal("#b8e2fb"),              normal(195));
+        color!(yellow,     normal("#f0eaaa"),              normal(229));
+        color!(gold,       normal("#fedf81"),              normal(222));
+        color!(dullgold,   normal("#b6955b"),              normal(221));
+        color!(darkgold,   contrast("#484000", "#685800"), normal(58));
+        color!(mildred,    normal("#ab6560"),              normal(167));
+        color!(red,        normal("#fd8489"),              normal(210));
+        color!(crimson,    normal("#ff6a6f"),              normal(203));
+        color!(darkblue,   normal("#00091e"),              normal(235));
+        color!(whitepink,  normal("#ebeadb"),              normal(224));
+        color!(whitegreen, normal("#eaf0aa"),              normal(194));
+        color!(whiteblue,  normal("#d8e2f0"),              normal(195));
+        color!(whitered,   normal("#ffbfaf"),              normal(217));
+        color!(inu,        normal("#ddbc96"),              normal(180));
 
         Self(table)
     }
@@ -200,7 +158,6 @@ struct ColorschemeWriter<'a, W> {
 }
 
 impl<'a, W: Write> ColorschemeWriter<'a, W> {
-    #[rustfmt::skip]
     fn new(out: W, palette: &'a Palette) -> Self {
         macro_rules! highlight {
             ($name:ident, $fg:expr, $bg:expr, $sp:expr, $attr:ident) => {
@@ -256,6 +213,7 @@ impl<'a, W: Write> ColorschemeWriter<'a, W> {
             };
         }
 
+        #[rustfmt::skip]
         let highlightings = &[
             // Normal colors
             Fixed(fgbg!(Boolean,               red,        -,            Nothing)),
@@ -469,7 +427,12 @@ impl<'a, W: Write> ColorschemeWriter<'a, W> {
             "white",    // 15: bright white
         ];
 
-        Self { palette, highlightings, term_colors, out }
+        Self {
+            palette,
+            highlightings,
+            term_colors,
+            out,
+        }
     }
 
     fn write_header(&mut self) -> io::Result<()> {
@@ -709,6 +672,24 @@ endif
     }
 }
 
+#[derive(Debug, PartialEq, Default)]
+struct AirlineModeColors<'a> {
+    label: (&'a str, &'a str),
+    info: (&'a str, &'a str),
+    main: (&'a str, &'a str),
+    modified: Option<&'a str>,
+    modified_main: Option<&'a str>,
+}
+
+#[derive(Debug, Default)]
+struct AirlineThemeColors<'a> {
+    modes: HashMap<&'a str, AirlineModeColors<'a>>,
+    paste: &'a str,
+    info_mod: &'a str,
+    error: (&'a str, &'a str),
+    warning: (&'a str, &'a str),
+}
+
 #[derive(Debug)]
 struct AirlineThemeWriter<'a, W> {
     palette: &'a Palette,
@@ -922,6 +903,45 @@ let g:airline#themes#spring_night#palette.accents = {{
     }
 }
 
+#[derive(Debug, Default, Clone)]
+struct AlacrittyFgColors<'a> {
+    foreground: &'a str,
+    black: &'a str,
+    red: &'a str,
+    green: &'a str,
+    yellow: &'a str,
+    blue: &'a str,
+    magenta: &'a str,
+    cyan: &'a str,
+    white: &'a str,
+}
+
+#[derive(Clone, Copy, Debug)]
+enum AlacrittyBrightness {
+    Dim,
+    Normal,
+    Bright,
+}
+
+impl Display for AlacrittyBrightness {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        use AlacrittyBrightness::*;
+        match self {
+            Dim => write!(f, "dim"),
+            Normal => write!(f, "normal"),
+            Bright => write!(f, "bright"),
+        }
+    }
+}
+
+#[derive(Debug, Default)]
+struct AlacrittyTheme<'a> {
+    background: &'a str,
+    dim: AlacrittyFgColors<'a>,
+    normal: AlacrittyFgColors<'a>,
+    bright: AlacrittyFgColors<'a>,
+}
+
 #[derive(Debug)]
 struct AlacrittyThemeWriter<'a, W> {
     palette: &'a Palette,
@@ -975,7 +995,7 @@ impl<'a, W: Write> AlacrittyThemeWriter<'a, W> {
         }
     }
 
-    fn write_header(&mut self) -> io::Result<()> {
+    fn write_header_comment(&mut self) -> io::Result<()> {
         write!(
             self.out,
             r#"# Alacritty theme for spring-night colorscheme
@@ -985,38 +1005,56 @@ impl<'a, W: Write> AlacrittyThemeWriter<'a, W> {
 #   Copyright (c) 2016 rhysd
 #
 # PLEASE DO NOT MODIFY THIS FILE DIRECTLY!
-# Generated by script vim-color-spring-night/gen/{source}
-
+# Generated by script vim-color-spring-night/gen/{}
 "#,
-            source = file!(),
+            file!(),
         )
     }
 
     #[rustfmt::skip]
-    fn write(&mut self) -> io::Result<()> {
-        self.write_header()?;
-
+    fn write_primary_section(&mut self) -> io::Result<()> {
+        writeln!(self.out)?;
         writeln!(self.out, "[colors.primary]")?;
-        writeln!(self.out, "background = \"{}\"", &self.palette[self.theme.background].gui.normal())?;
-        writeln!(self.out, "foreground = \"{}\"", &self.palette[self.theme.normal.foreground].gui.normal())?;
-        writeln!(self.out, "dim_foreground = \"{}\"", &self.palette[self.theme.dim.foreground].gui.normal())?;
+        writeln!(self.out, "background = \"{}\"",        &self.palette[self.theme.background].gui.normal())?;
+        writeln!(self.out, "foreground = \"{}\"",        &self.palette[self.theme.normal.foreground].gui.normal())?;
+        writeln!(self.out, "dim_foreground = \"{}\"",    &self.palette[self.theme.dim.foreground].gui.normal())?;
         writeln!(self.out, "bright_foreground = \"{}\"", &self.palette[self.theme.bright.foreground].gui.normal())?;
+        Ok(())
+    }
 
-        for (ty, colors) in [
-            ("dim", &self.theme.dim),
-            ("normal", &self.theme.normal),
-            ("bright", &self.theme.bright),
-        ] {
-            writeln!(self.out)?;
-            writeln!(self.out, "[colors.{}]", ty)?;
-            writeln!(self.out, "black = \"{}\"", &self.palette[colors.black].gui.normal())?;
-            writeln!(self.out, "red = \"{}\"", &self.palette[colors.red].gui.normal())?;
-            writeln!(self.out, "green = \"{}\"", &self.palette[colors.green].gui.normal())?;
-            writeln!(self.out, "yellow = \"{}\"", &self.palette[colors.yellow].gui.normal())?;
-            writeln!(self.out, "blue = \"{}\"", &self.palette[colors.blue].gui.normal())?;
-            writeln!(self.out, "magenta = \"{}\"", &self.palette[colors.magenta].gui.normal())?;
-            writeln!(self.out, "cyan = \"{}\"", &self.palette[colors.cyan].gui.normal())?;
-            writeln!(self.out, "white = \"{}\"", &self.palette[colors.white].gui.normal())?;
+    #[rustfmt::skip]
+    fn write_colors_section(&mut self, bright: AlacrittyBrightness) -> io::Result<()> {
+        use AlacrittyBrightness::*;
+
+        let colors = match bright {
+            Dim => &self.theme.dim,
+            Normal => &self.theme.normal,
+            Bright => &self.theme.bright,
+        };
+
+        writeln!(self.out)?;
+        writeln!(self.out, "[colors.{bright}]")?;
+        writeln!(self.out, "black = \"{}\"",   &self.palette[colors.black].gui.normal())?;
+        writeln!(self.out, "red = \"{}\"",     &self.palette[colors.red].gui.normal())?;
+        writeln!(self.out, "green = \"{}\"",   &self.palette[colors.green].gui.normal())?;
+        writeln!(self.out, "yellow = \"{}\"",  &self.palette[colors.yellow].gui.normal())?;
+        writeln!(self.out, "blue = \"{}\"",    &self.palette[colors.blue].gui.normal())?;
+        writeln!(self.out, "magenta = \"{}\"", &self.palette[colors.magenta].gui.normal())?;
+        writeln!(self.out, "cyan = \"{}\"",    &self.palette[colors.cyan].gui.normal())?;
+        writeln!(self.out, "white = \"{}\"",   &self.palette[colors.white].gui.normal())?;
+
+        Ok(())
+    }
+
+    #[rustfmt::skip]
+    fn write(&mut self) -> io::Result<()> {
+        use AlacrittyBrightness::*;
+
+        self.write_header_comment()?;
+        self.write_primary_section()?;
+
+        for bright in [Dim, Normal, Bright] {
+            self.write_colors_section(bright)?;
         }
 
         Ok(())
@@ -1037,24 +1075,24 @@ fn write_to_files(dir: &str) -> Result<()> {
 
     let path = join(&[dir, "colors", "spring-night.vim"]);
     let file = File::create(&path)
-        .with_context(|| format!("Failed to read colorscheme file: {:?}", &path))?;
+        .with_context(|| format!("Could not create colorscheme file: {:?}", &path))?;
     ColorschemeWriter::new(BufWriter::new(file), &palette)
         .write()
-        .with_context(|| format!("While writing to colorscheme file {:?}", &path))?;
+        .with_context(|| format!("While generate colorscheme file {:?}", &path))?;
 
     let path = join(&[dir, "autoload", "airline", "themes", "spring_night.vim"]);
     let file = File::create(&path)
-        .with_context(|| format!("Could not make airline theme file {:?}", &path))?;
+        .with_context(|| format!("Could not create airline theme file {:?}", &path))?;
     AirlineThemeWriter::new(BufWriter::new(file), &palette)
         .write()
-        .with_context(|| format!("While writing to airline theme file {:?}", &path))?;
+        .with_context(|| format!("Could not generate airline theme file {:?}", &path))?;
 
     let path = join(&[dir, "alacritty", "spring_night.toml"]);
     let file = File::create(&path)
-        .with_context(|| format!("Could not make alacritty theme file {:?}", &path))?;
+        .with_context(|| format!("Could not create alacritty theme file {:?}", &path))?;
     AlacrittyThemeWriter::new(BufWriter::new(file), &palette)
         .write()
-        .with_context(|| format!("While writing to alacritty theme file {:?}", &path))?;
+        .with_context(|| format!("Could not generate alacritty theme file {:?}", &path))?;
 
     Ok(())
 }
