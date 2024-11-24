@@ -949,7 +949,7 @@ impl<'a, W: Write> AlacrittyThemeWriter<'a, W> {
                 black: "black",
                 red: "crimson",
                 green: "green",
-                yellow: "dullgold",
+                yellow: "gold",
                 blue: "blue",
                 magenta: "purple",
                 cyan: "skyblue",
