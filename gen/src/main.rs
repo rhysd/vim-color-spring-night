@@ -200,7 +200,7 @@ struct ColorschemeWriter<'a, W> {
 }
 
 impl<'a, W: Write> ColorschemeWriter<'a, W> {
-    #[rustfmt::skip::macros(fgbg, fgbgsp)]
+    #[rustfmt::skip]
     fn new(out: W, palette: &'a Palette) -> Self {
         macro_rules! highlight {
             ($name:ident, $fg:expr, $bg:expr, $sp:expr, $attr:ident) => {
@@ -262,85 +262,85 @@ impl<'a, W: Write> ColorschemeWriter<'a, W> {
             Fixed(fgbg!(Character,             green,      -,            Nothing)),
             Fixed(fgbg!(ColorColumn,           -,          bgstrong,     Nothing)),
             Fixed(fgbg!(Comment,               weakfg,     -,            CommentItalic)),
-            Fixed(fgbg!(Conceal, mikan, bg, Nothing)),
+            Fixed(fgbg!(Conceal,               mikan,      bg,           Nothing)),
             Fixed(fgbg!(Conditional,           skyblue,    -,            Nothing)),
             Fixed(fgbg!(Constant,              red,        -,            Nothing)),
-            Fixed(fgbg!(Cursor, bg, fg, Nothing)),
-            Fixed(fgbg!(lCursor, bg, fg, Nothing)),
+            Fixed(fgbg!(Cursor,                bg,         fg,           Nothing)),
+            Fixed(fgbg!(lCursor,               bg,         fg,           Nothing)),
             Fixed(fgbg!(CursorColumn,          -,          bgemphasis,   Nothing)),
             Fixed(fgbg!(CursorLine,            -,          bgemphasis,   None)),
-            Fixed(fgbg!(CursorLineNr, purple, bgstrong, Nothing)),
+            Fixed(fgbg!(CursorLineNr,          purple,     bgstrong,     Nothing)),
             Fixed(fgbg!(Define,                orange,     -,            Nothing)),
             Fixed(fgbg!(Directory,             green,      -,            Nothing)),
             Fixed(fgbg!(EndOfBuffer,           bgstrong,   -,            Nothing)),
-            Fixed(fgbg!(Error, red, bgemphasis, Bold)),
-            Fixed(fgbg!(ErrorMsg, red, bg, Bold)),
+            Fixed(fgbg!(Error,                 red,        bgemphasis,   Bold)),
+            Fixed(fgbg!(ErrorMsg,              red,        bg,           Bold)),
             Fixed(fgbg!(Float,                 red,        -,            Nothing)),
-            Fixed(fgbg!(NormalFloat, fg, bgweaker, Nothing)),
-            Fixed(fgbg!(FloatBorder, weakfg, bgweaker, Nothing)),
-            Fixed(fgbg!(FoldColumn, purple, bgemphasis, Nothing)),
-            Fixed(fgbg!(Folded, purple, light, Nothing)),
+            Fixed(fgbg!(NormalFloat,           fg,         bgweaker,     Nothing)),
+            Fixed(fgbg!(FloatBorder,           weakfg,     bgweaker,     Nothing)),
+            Fixed(fgbg!(FoldColumn,            purple,     bgemphasis,   Nothing)),
+            Fixed(fgbg!(Folded,                purple,     light,        Nothing)),
             Fixed(fgbg!(Function,              orange,     -,            Nothing)),
             Fixed(fgbg!(Identifier,            gold,       -,            Italic)),
-            Fixed(fgbg!(IncSearch, NONE, sakura, Underline)),
+            Fixed(fgbg!(IncSearch,             NONE,       sakura,       Underline)),
             Fixed(fgbg!(Keyword,               yellow,     -,            Bold)),
             Fixed(fgbg!(Label,                 skyblue,    -,            Nothing)),
-            Fixed(fgbg!(LineNr, weakerfg, bgemphasis, Nothing)),
-            Fixed(fgbg!(MatchParen, bg, gold, Bold)),
+            Fixed(fgbg!(LineNr,                weakerfg,   bgemphasis,   Nothing)),
+            Fixed(fgbg!(MatchParen,            bg,         gold,         Bold)),
             Fixed(fgbg!(ModeMsg,               gold,       -,            Nothing)),
             Fixed(fgbg!(MoreMsg,               green,      -,            Nothing)),
             Fixed(fgbg!(NonText,               light,      -,            Nothing)),
-            Fixed(fgbg!(Normal, fg, bg, Nothing)),
+            Fixed(fgbg!(Normal,                fg,         bg,           Nothing)),
             Fixed(fgbg!(Number,                red,        -,            Nothing)),
             Fixed(fgbg!(Operater,              orange,     -,            Nothing)),
-            Fixed(fgbg!(Pmenu, purple, bgemphasis, Nothing)),
-            Fixed(fgbg!(PmenuSbar, gold, bgstrong, Nothing)),
-            Fixed(fgbg!(PmenuSel, gold, bgstrong, Nothing)),
-            Fixed(fgbg!(PmenuThumb, gold, weakfg, Nothing)),
+            Fixed(fgbg!(Pmenu,                 purple,     bgemphasis,   Nothing)),
+            Fixed(fgbg!(PmenuSbar,             gold,       bgstrong,     Nothing)),
+            Fixed(fgbg!(PmenuSel,              gold,       bgstrong,     Nothing)),
+            Fixed(fgbg!(PmenuThumb,            gold,       weakfg,       Nothing)),
             Fixed(fgbg!(PreProc,               orange,     -,            Nothing)),
             Fixed(fgbg!(Question,              skyblue,    -,            Nothing)),
-            Fixed(fgbg!(Search, NONE, nasu, Underline)),
-            Fixed(fgbg!(SignColumn, fg, bgemphasis, Nothing)),
+            Fixed(fgbg!(Search,                NONE,       nasu,         Underline)),
+            Fixed(fgbg!(SignColumn,            fg,         bgemphasis,   Nothing)),
             Fixed(fgbg!(Special,               yellow,     -,            Bold)),
             Fixed(fgbg!(SpecialKey,            hiddenfg,   -,            Nothing)),
             Fixed(fgbg!(SpecialComment,        palepink,   -,            Nothing)),
             Dynamic {
-                gui: fgbgsp!(SpellBad,         red,        -,    red,    Undercurl),
-                term: fgbgsp!(SpellBad, red, NONE, red, Undercurl),
+                gui:  fgbgsp!(SpellBad,        red,        -,    red,    Undercurl),
+                term: fgbgsp!(SpellBad,        red,        NONE, red,    Undercurl),
             },
             Dynamic {
-                gui: fgbgsp!(SpellCap,         purple,     -,    purple, Undercurl),
-                term: fgbgsp!(SpellCap, purple, NONE, purple, Undercurl),
+                gui:  fgbgsp!(SpellCap,        purple,     -,    purple, Undercurl),
+                term: fgbgsp!(SpellCap,        purple,     NONE, purple, Undercurl),
             },
             Dynamic {
-                gui: fgbgsp!(SpellLocal,       red,        -,    red,    Undercurl),
-                term: fgbgsp!(SpellLocal, red, NONE, red, Undercurl),
+                gui:  fgbgsp!(SpellLocal,      red,        -,    red,    Undercurl),
+                term: fgbgsp!(SpellLocal,      red,        NONE, red,    Undercurl),
             },
             Dynamic {
-                gui: fgbgsp!(SpellRare,        yellow,     -,    yellow, Undercurl),
-                term: fgbgsp!(SpellRare, yellow, NONE, yellow, Undercurl),
+                gui:  fgbgsp!(SpellRare,       yellow,     -,    yellow, Undercurl),
+                term: fgbgsp!(SpellRare,       yellow,     NONE, yellow, Undercurl),
             },
             Fixed(fgbg!(Statement,             skyblue,    -,            Nothing)),
-            Fixed(fgbg!(StatusLine, fg, bgstrong, Bold)),
-            Fixed(fgbg!(StatusLineNC, weakfg, bgemphasis, None)),
-            Fixed(fgbg!(StatusLineTerm, fg, bgstrong, Bold)),
-            Fixed(fgbg!(StatusLineTermNC, weakfg, bgemphasis, None)),
+            Fixed(fgbg!(StatusLine,            fg,         bgstrong,     Bold)),
+            Fixed(fgbg!(StatusLineNC,          weakfg,     bgemphasis,   None)),
+            Fixed(fgbg!(StatusLineTerm,        fg,         bgstrong,     Bold)),
+            Fixed(fgbg!(StatusLineTermNC,      weakfg,     bgemphasis,   None)),
             Fixed(fgbg!(StorageClass,          gold,       -,            Italic)),
             Fixed(fgbg!(String,                green,      -,            Nothing)),
-            Fixed(fgbg!(TabLine, weakfg, bgstrong, Nothing)),
+            Fixed(fgbg!(TabLine,               weakfg,     bgstrong,     Nothing)),
             Fixed(fgbg!(TabLineFill,           bgemphasis, -,            Nothing)),
-            Fixed(fgbg!(TabLineSel, gold, bg, Bold)),
+            Fixed(fgbg!(TabLineSel,            gold,       bg,           Bold)),
             Fixed(fgbg!(Tag,                   orange,     -,            Nothing)),
             Fixed(fgbg!(Title,                 gold,       -,            Bold)),
-            Fixed(fgbg!(Todo, bg, red, Bold)),
-            Fixed(fgbg!(ToolbarButton, gold, bg, Bold)),
-            Fixed(fgbg!(ToolbarLine, weakfg, bgstrong, Nothing)),
+            Fixed(fgbg!(Todo,                  bg,         red,          Bold)),
+            Fixed(fgbg!(ToolbarButton,         gold,       bg,           Bold)),
+            Fixed(fgbg!(ToolbarLine,           weakfg,     bgstrong,     Nothing)),
             Fixed(fgbg!(Type,                  gold,       -,            Nothing)),
             Fixed(fgbg!(Underlined,            skyblue,    -,            Underline)),
-            Fixed(fgbg!(VertSplit, bgemphasis, bg, Nothing)),
+            Fixed(fgbg!(VertSplit,             bgemphasis, bg,           Nothing)),
             Fixed(fgbg!(Visual,                -,          yaezakura,    Nothing)),
-            Fixed(fgbg!(WarningMsg, mikan, bgemphasis, Nothing)),
-            Fixed(fgbg!(WildMenu, bg, gold, Nothing)),
+            Fixed(fgbg!(WarningMsg,            mikan,      bgemphasis,   Nothing)),
+            Fixed(fgbg!(WildMenu,              bg,         gold,         Nothing)),
             //
             // File type specific
             //
@@ -352,7 +352,7 @@ impl<'a, W: Write> ColorschemeWriter<'a, W> {
             Fixed(fgbg!(cTypedef,              yellow,     -,            Nothing)),
             Fixed(fgbg!(DiffAdd,               -,          darkgreen,    Bold)),
             Fixed(fgbg!(DiffChange,            -,          darkgold,     Bold)),
-            Fixed(fgbg!(DiffDelete, fg, mildred, Bold)),
+            Fixed(fgbg!(DiffDelete,            fg,         mildred,      Bold)),
             Fixed(fgbg!(DiffText,              -,          bg,           Nothing)),
             Fixed(fgbg!(diffAdded,             green,      -,            Nothing)),
             Fixed(fgbg!(diffFile,              yellow,     -,            Nothing)),
@@ -408,40 +408,40 @@ impl<'a, W: Write> ColorschemeWriter<'a, W> {
             Fixed(fgbg!(watUnnamedVar  ,       purple,     -,            Nothing)),
             Fixed(fgbg!(zshDelimiter,          skyblue,    -,            Nothing)),
             Fixed(fgbg!(zshPrecommand,         red,        -,            Nothing)),
-            Fixed(fgbg!(debugPC, bg, skyblue, Nothing)),
-            Fixed(fgbg!(debugBreakPoint, bg, gold, Nothing)),
+            Fixed(fgbg!(debugPC,               bg,         skyblue,      Nothing)),
+            Fixed(fgbg!(debugBreakPoint,       bg,         gold,         Nothing)),
             Fixed(fgbg!(zigMultilineStringDelimiter, yellow, -,          Nothing)),
             //
             // Plugin specific
             //
             // Some plugins introduce its own highlight definitions. Adjust them for
             // working fine with this colorscheme.
-            Fixed(fgbg!(ALEWarningSign, orange, bgemphasis, Bold)),
-            Fixed(fgbg!(ALEErrorSign, bgemphasis, mildred, Bold)),
+            Fixed(fgbg!(ALEWarningSign,        orange,     bgemphasis,   Bold)),
+            Fixed(fgbg!(ALEErrorSign,          bgemphasis, mildred,      Bold)),
             Fixed(fgbg!(ALEInfoSign,           -,          light,        Nothing)),
             Fixed(fgbg!(ALEError,              -,          mildred,      Nothing)),
             Fixed(fgbg!(ALEWarning,            -,          darkgold,     Nothing)),
-            Fixed(fgbg!(Flake8_Error, red, bgemphasis, Nothing)),
-            Fixed(fgbg!(Flake8_Warning, yellow, bgemphasis, Nothing)),
-            Fixed(fgbg!(Flake8_PyFlake, skyblue, bgemphasis, Nothing)),
-            Fixed(fgbg!(Flake8_Complexity, skyblue, bgemphasis, Nothing)),
-            Fixed(fgbg!(Flake8_Naming, skyblue, bgemphasis, Nothing)),
-            Fixed(fgbg!(SignifySignAdd, green, bgemphasis, Nothing)),
-            Fixed(fgbg!(SignifySignChange, yellow, bgemphasis, Nothing)),
-            Fixed(fgbg!(SignifySignChangeDelete, gold, bgemphasis, Nothing)),
-            Fixed(fgbg!(SignifySignDelete, red, bgemphasis, Nothing)),
-            Fixed(fgbg!(CleverFChar, bg, red, Nothing)),
-            Fixed(fgbg!(CleverFDirect, bg, red, Nothing)),
+            Fixed(fgbg!(Flake8_Error,          red,        bgemphasis,   Nothing)),
+            Fixed(fgbg!(Flake8_Warning,        yellow,     bgemphasis,   Nothing)),
+            Fixed(fgbg!(Flake8_PyFlake,        skyblue,    bgemphasis,   Nothing)),
+            Fixed(fgbg!(Flake8_Complexity,     skyblue,    bgemphasis,   Nothing)),
+            Fixed(fgbg!(Flake8_Naming,         skyblue,    bgemphasis,   Nothing)),
+            Fixed(fgbg!(SignifySignAdd,        green,      bgemphasis,   Nothing)),
+            Fixed(fgbg!(SignifySignChange,     yellow,     bgemphasis,   Nothing)),
+            Fixed(fgbg!(SignifySignChangeDelete, gold,     bgemphasis,   Nothing)),
+            Fixed(fgbg!(SignifySignDelete,     red,        bgemphasis,   Nothing)),
+            Fixed(fgbg!(CleverFChar,           bg,         red,          Nothing)),
+            Fixed(fgbg!(CleverFDirect,         bg,         red,          Nothing)),
             Fixed(fgbg!(DirvishArg,            yellow,     -,            Bold)),
             Fixed(fgbg!(EasyMotionTarget,      red,        -,            Bold)),
-            Fixed(fgbg!(EasyMotionShade, weakfg, bg, Nothing)),
-            Fixed(fgbg!(GitGutterAdd, green, bgemphasis, Nothing)),
-            Fixed(fgbg!(GitGutterChange, yellow, bgemphasis, Nothing)),
-            Fixed(fgbg!(GitGutterChangeDelete, gold, bgemphasis, Nothing)),
-            Fixed(fgbg!(GitGutterDelete, red, bgemphasis, Nothing)),
+            Fixed(fgbg!(EasyMotionShade,       weakfg,     bg,           Nothing)),
+            Fixed(fgbg!(GitGutterAdd,          green,      bgemphasis,   Nothing)),
+            Fixed(fgbg!(GitGutterChange,       yellow,     bgemphasis,   Nothing)),
+            Fixed(fgbg!(GitGutterChangeDelete, gold,       bgemphasis,   Nothing)),
+            Fixed(fgbg!(GitGutterDelete,       red,        bgemphasis,   Nothing)),
             Fixed(fgbg!(HighlightedyankRegion, -,          bgemphasis,   Nothing)),
             Dynamic {
-                gui: fgbg!(EasyMotionIncCursor, bg, fg, Nothing),
+                gui:  fgbg!(EasyMotionIncCursor, bg,       fg,           Nothing),
                 term: fgbg!(EasyMotionIncCursor, -,        -,            Reverse),
             },
             Fixed(fgbg!(plugDeleted,           weakfg,     -,            Nothing)),
@@ -451,16 +451,25 @@ impl<'a, W: Write> ColorschemeWriter<'a, W> {
         ];
 
         let term_colors = [
-            "bg", "crimson", "green", "gold", "blue", "purple", "skyblue", "fg", "weakerfg", "red",
-            "lime", "yellow", "paleblue", "purple", "sunny", "white",
+            "bg",       //  0: black
+            "crimson",  //  1: red
+            "green",    //  2: green
+            "gold",     //  3: yellow
+            "blue",     //  4: blue
+            "purple",   //  5: magenta
+            "skyblue",  //  6: cyan
+            "fg",       //  7: white
+            "weakerfg", //  8: bright black (gray)
+            "red",      //  9: bright red
+            "lime",     // 10: bright green
+            "yellow",   // 11: bright yellow
+            "paleblue", // 12: bright blue
+            "purple",   // 13: bright magenta
+            "sunny",    // 14: bright cyan
+            "white",    // 15: bright white
         ];
 
-        Self {
-            palette,
-            highlightings,
-            term_colors,
-            out,
-        }
+        Self { palette, highlightings, term_colors, out }
     }
 
     fn write_header(&mut self) -> io::Result<()> {
