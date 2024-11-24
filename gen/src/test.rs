@@ -406,6 +406,13 @@ fn test_write_alacritty_theme() {
             cterm: ColorCode::Normal(123),
         },
     );
+    m.insert(
+        "color4",
+        Color {
+            gui: ColorCode::Normal("#ffff00"),
+            cterm: ColorCode::Normal(123),
+        },
+    );
 
     let normal = AlacrittyFgColors {
         foreground: "color2",
@@ -429,8 +436,20 @@ fn test_write_alacritty_theme() {
         cyan: "color3",
         white: "color3",
     };
+    let dim = AlacrittyFgColors {
+        foreground: "color4",
+        black: "color4",
+        red: "color4",
+        green: "color4",
+        yellow: "color4",
+        blue: "color4",
+        magenta: "color4",
+        cyan: "color4",
+        white: "color4",
+    };
     let theme = AlacrittyTheme {
         background: "color1",
+        dim,
         normal,
         bright,
     };

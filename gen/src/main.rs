@@ -99,6 +99,7 @@ struct AlacrittyFgColors<'a> {
 #[derive(Debug, Default)]
 struct AlacrittyTheme<'a> {
     background: &'a str,
+    dim: AlacrittyFgColors<'a>,
     normal: AlacrittyFgColors<'a>,
     bright: AlacrittyFgColors<'a>,
 }
@@ -147,39 +148,43 @@ impl Default for Palette {
         color_name!(bgemphasis, normal("#3a4b5c"),              normal(235));
         color_name!(bglight,    normal("#435060"),              normal(236));
         color_name!(bgstrong,   normal("#536273"),              normal(238));
+        color_name!(light,      normal("#646f7c"),              normal(60));
         color_name!(fg,         normal("#fffeeb"),              contrast(231, 230));
         color_name!(hiddenfg,   normal("#607080"),              normal(60));
         color_name!(weakfg,     normal("#8d9eb2"),              normal(103));
         color_name!(weakerfg,   normal("#788898"),              normal(102));
-        color_name!(palepink,   normal("#e7c6b7"),              normal(181));
-        color_name!(yellow,     normal("#f0eaaa"),              normal(229));
-        color_name!(white,      normal("#ffffff"),              normal(231));
-        color_name!(purple,     normal("#e7d5ff"),              normal(189));
-        color_name!(darkpurple, normal("#605779"),              normal(60));
+        color_name!(black,      normal("#111e25"),              normal(233));
         color_name!(gray,       normal("#545f6e"),              normal(59));
-        color_name!(light,      normal("#646f7c"),              normal(60));
+        color_name!(white,      normal("#ffffff"),              normal(231));
+        color_name!(nasu,       normal("#605779"),              normal(61));
+        color_name!(fuchsia,    normal("#b9a5cf"),              normal(183));
+        color_name!(purple,     normal("#e7d5ff"),              normal(189));
         color_name!(yaezakura,  normal("#70495d"),              normal(95));
         color_name!(sakura,     normal("#a9667a"),              normal(132));
-        color_name!(orange,     normal("#f0aa8a"),              normal(216));
-        color_name!(green,      normal("#a9dd9d"),              normal(150));
-        color_name!(darkgreen,  normal("#5f8770"),              normal(65));
-        color_name!(skyblue,    normal("#a8d2eb"),              normal(153));
-        color_name!(gold,       normal("#fedf81"),              normal(222));
-        color_name!(darkgold,   contrast("#484000", "#685800"), normal(58));
-        color_name!(red,        normal("#fd8489"),              normal(210));
-        color_name!(mildred,    normal("#ab6560"),              normal(167));
-        color_name!(crimson,    normal("#ff6a6f"),              normal(203));
+        color_name!(kakezakura, normal("#e996aa"),              normal(175));
+        color_name!(palepink,   normal("#e7c6b7"),              normal(181));
         color_name!(mikan,      normal("#fb8965"),              normal(209));
-        color_name!(darkblue,   normal("#00091e"),              normal(235));
+        color_name!(orange,     normal("#f0aa8a"),              normal(216));
+        color_name!(darkgreen,  normal("#5f8770"),              normal(65));
+        color_name!(green,      normal("#a9dd9d"),              normal(150));
+        color_name!(lime,       normal("#c9fd88"),              normal(149));
         color_name!(blue,       normal("#7098e6"),              normal(69));
         color_name!(paleblue,   normal("#98b8e6"),              normal(111));
-        color_name!(lime,       normal("#c9fd88"),              normal(149));
-        color_name!(palesakura, normal("#e996aa"),              normal(175));
+        color_name!(cloudy,     normal("#90aecb"),              normal(75));
+        color_name!(skyblue,    normal("#a8d2eb"),              normal(153));
+        color_name!(sunny,      normal("#b8e2fb"),              normal(195));
+        color_name!(yellow,     normal("#f0eaaa"),              normal(229));
+        color_name!(gold,       normal("#fedf81"),              normal(222));
+        color_name!(dullgold,   normal("#b6955b"),              normal(221));
+        color_name!(darkgold,   contrast("#484000", "#685800"), normal(58));
+        color_name!(mildred,    normal("#ab6560"),              normal(167));
+        color_name!(red,        normal("#fd8489"),              normal(210));
+        color_name!(crimson,    normal("#ff6a6f"),              normal(203));
+        color_name!(darkblue,   normal("#00091e"),              normal(235));
         color_name!(whitepink,  normal("#ebeadb"),              normal(224));
         color_name!(whitegreen, normal("#eaf0aa"),              normal(194));
         color_name!(whiteblue,  normal("#d8e2f0"),              normal(195));
         color_name!(whitered,   normal("#ffbfaf"),              normal(217));
-        color_name!(black,      normal("#111e25"),              normal(233));
         color_name!(inu,        normal("#ddbc96"),              normal(180));
 
         Self(table)
@@ -294,7 +299,7 @@ impl<'a, W: Write> ColorschemeWriter<'a, W> {
             Fixed(fgbg!(PmenuThumb, gold, weakfg, Nothing)),
             Fixed(fgbg!(PreProc,               orange,     -,            Nothing)),
             Fixed(fgbg!(Question,              skyblue,    -,            Nothing)),
-            Fixed(fgbg!(Search, NONE, darkpurple, Underline)),
+            Fixed(fgbg!(Search, NONE, nasu, Underline)),
             Fixed(fgbg!(SignColumn, fg, bgemphasis, Nothing)),
             Fixed(fgbg!(Special,               yellow,     -,            Bold)),
             Fixed(fgbg!(SpecialKey,            hiddenfg,   -,            Nothing)),
@@ -446,22 +451,8 @@ impl<'a, W: Write> ColorschemeWriter<'a, W> {
         ];
 
         let term_colors = [
-            "bg",
-            "crimson",
-            "green",
-            "gold",
-            "blue",
-            "darkpurple",
-            "skyblue",
-            "fg",
-            "weakfg",
-            "red",
-            "lime",
-            "yellow",
-            "paleblue",
-            "purple",
-            "skyblue",
-            "white",
+            "bg", "crimson", "green", "gold", "blue", "purple", "skyblue", "fg", "weakerfg", "red",
+            "lime", "yellow", "paleblue", "purple", "sunny", "white",
         ];
 
         Self {
@@ -746,8 +737,8 @@ impl<'a, W: Write> AirlineThemeWriter<'a, W> {
                 });
 
                 theme_mode_colors!(visual {
-                    label: ("bg", "palesakura"),
-                    info: ("palesakura", "hiddenfg"),
+                    label: ("bg", "kakezakura"),
+                    info: ("kakezakura", "hiddenfg"),
                     main: ("whitepink", "bglight"),
                     modified: Some("sakura"),
                     modified_main: None,
@@ -933,12 +924,23 @@ impl<'a, W: Write> AlacrittyThemeWriter<'a, W> {
     fn new(out: W, palette: &'a Palette) -> Self {
         let theme = AlacrittyTheme {
             background: "bg",
+            dim: AlacrittyFgColors {
+                foreground: "yellow",
+                black: "black",
+                red: "mildred",
+                green: "darkgreen",
+                yellow: "dullgold",
+                blue: "blue",
+                magenta: "fuchsia",
+                cyan: "cloudy",
+                white: "gray",
+            },
             normal: AlacrittyFgColors {
                 foreground: "fg",
                 black: "black",
                 red: "crimson",
                 green: "green",
-                yellow: "gold",
+                yellow: "dullgold",
                 blue: "blue",
                 magenta: "purple",
                 cyan: "skyblue",
@@ -947,12 +949,12 @@ impl<'a, W: Write> AlacrittyThemeWriter<'a, W> {
             bright: AlacrittyFgColors {
                 foreground: "fg",
                 black: "gray",
-                red: "mildred",
+                red: "red",
                 green: "lime",
                 yellow: "yellow",
                 blue: "paleblue",
                 magenta: "purple",
-                cyan: "skyblue",
+                cyan: "sunny",
                 white: "white",
             },
         };
@@ -988,9 +990,11 @@ impl<'a, W: Write> AlacrittyThemeWriter<'a, W> {
         writeln!(self.out, "[colors.primary]")?;
         writeln!(self.out, "background = \"{}\"", &self.palette[self.theme.background].gui.normal())?;
         writeln!(self.out, "foreground = \"{}\"", &self.palette[self.theme.normal.foreground].gui.normal())?;
+        writeln!(self.out, "dim_foreground = \"{}\"", &self.palette[self.theme.dim.foreground].gui.normal())?;
         writeln!(self.out, "bright_foreground = \"{}\"", &self.palette[self.theme.bright.foreground].gui.normal())?;
 
         for (ty, colors) in [
+            ("dim", &self.theme.dim),
             ("normal", &self.theme.normal),
             ("bright", &self.theme.bright),
         ] {
