@@ -535,7 +535,7 @@ endif
             }
         }
 
-        let mut args = vec![highlight.name.into(), "term=NONE".into()];
+        let mut args = vec![format!("{} term=NONE", highlight.name)];
 
         for (color_name, gui, cterm) in [
             (&highlight.fg, "guifg", "ctermfg"),

@@ -59,36 +59,36 @@ let s:fg_cterm = g:spring_night_high_contrast ? 231 : 230
 hi Boolean term=NONE guifg=#fd8489 ctermfg=210
 hi Character term=NONE guifg=#a9dd9d ctermfg=150
 hi ColorColumn term=NONE guibg=#536273 ctermbg=238
-exe 'hi' 'Comment' 'term=NONE' 'guifg=#8d9eb2' 'ctermfg=103' g:spring_night_italic_comments ? s:italic_attr : ''
-exe 'hi' 'Conceal' 'term=NONE' 'guifg=#fb8965' 'ctermfg=209' 'guibg='.s:bg_gui 'ctermbg=233'
+exe 'hi' 'Comment term=NONE' 'guifg=#8d9eb2' 'ctermfg=103' g:spring_night_italic_comments ? s:italic_attr : ''
+exe 'hi' 'Conceal term=NONE' 'guifg=#fb8965' 'ctermfg=209' 'guibg='.s:bg_gui 'ctermbg=233'
 hi Conditional term=NONE guifg=#a8d2eb ctermfg=153
 hi Constant term=NONE guifg=#fd8489 ctermfg=210
-exe 'hi' 'Cursor' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fffeeb' 'ctermbg='.s:fg_cterm
-exe 'hi' 'lCursor' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fffeeb' 'ctermbg='.s:fg_cterm
+exe 'hi' 'Cursor term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fffeeb' 'ctermbg='.s:fg_cterm
+exe 'hi' 'lCursor term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fffeeb' 'ctermbg='.s:fg_cterm
 hi CursorColumn term=NONE guibg=#3a4b5c ctermbg=235
 hi CursorLine term=NONE guibg=#3a4b5c ctermbg=235 gui=NONE cterm=NONE
 hi CursorLineNr term=NONE guifg=#e7d5ff ctermfg=189 guibg=#536273 ctermbg=238
 hi Define term=NONE guifg=#f0aa8a ctermfg=216
 hi Directory term=NONE guifg=#a9dd9d ctermfg=150
 hi EndOfBuffer term=NONE guifg=#536273 ctermfg=238
-exe 'hi' 'Error' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guibg=#3a4b5c' 'ctermbg=235' s:bold_attr
-exe 'hi' 'ErrorMsg' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guibg='.s:bg_gui 'ctermbg=233' s:bold_attr
+exe 'hi' 'Error term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guibg=#3a4b5c' 'ctermbg=235' s:bold_attr
+exe 'hi' 'ErrorMsg term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guibg='.s:bg_gui 'ctermbg=233' s:bold_attr
 hi Float term=NONE guifg=#fd8489 ctermfg=210
-exe 'hi' 'NormalFloat' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg='.s:bgweaker_gui 'ctermbg=235'
-exe 'hi' 'FloatBorder' 'term=NONE' 'guifg=#8d9eb2' 'ctermfg=103' 'guibg='.s:bgweaker_gui 'ctermbg=235'
+exe 'hi' 'NormalFloat term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg='.s:bgweaker_gui 'ctermbg=235'
+exe 'hi' 'FloatBorder term=NONE' 'guifg=#8d9eb2' 'ctermfg=103' 'guibg='.s:bgweaker_gui 'ctermbg=235'
 hi FoldColumn term=NONE guifg=#e7d5ff ctermfg=189 guibg=#3a4b5c ctermbg=235
 hi Folded term=NONE guifg=#e7d5ff ctermfg=189 guibg=#646f7c ctermbg=60
 hi Function term=NONE guifg=#f0aa8a ctermfg=216
-exe 'hi' 'Identifier' 'term=NONE' 'guifg=#fedf81' 'ctermfg=222' s:italic_attr
+exe 'hi' 'Identifier term=NONE' 'guifg=#fedf81' 'ctermfg=222' s:italic_attr
 hi IncSearch term=NONE guifg=NONE ctermfg=NONE guibg=#a9667a ctermbg=132 gui=underline cterm=underline
-exe 'hi' 'Keyword' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
+exe 'hi' 'Keyword term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
 hi Label term=NONE guifg=#a8d2eb ctermfg=153
 hi LineNr term=NONE guifg=#788898 ctermfg=102 guibg=#3a4b5c ctermbg=235
-exe 'hi' 'MatchParen' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fedf81' 'ctermbg=222' s:bold_attr
+exe 'hi' 'MatchParen term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fedf81' 'ctermbg=222' s:bold_attr
 hi ModeMsg term=NONE guifg=#fedf81 ctermfg=222
 hi MoreMsg term=NONE guifg=#a9dd9d ctermfg=150
 hi NonText term=NONE guifg=#646f7c ctermfg=60
-exe 'hi' 'Normal' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg='.s:bg_gui 'ctermbg=233'
+exe 'hi' 'Normal term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg='.s:bg_gui 'ctermbg=233'
 hi Number term=NONE guifg=#fd8489 ctermfg=210
 hi Operater term=NONE guifg=#f0aa8a ctermfg=216
 hi Pmenu term=NONE guifg=#e7d5ff ctermfg=189 guibg=#3a4b5c ctermbg=235
@@ -98,59 +98,59 @@ hi PmenuThumb term=NONE guifg=#fedf81 ctermfg=222 guibg=#8d9eb2 ctermbg=103
 hi PreProc term=NONE guifg=#f0aa8a ctermfg=216
 hi Question term=NONE guifg=#a8d2eb ctermfg=153
 hi Search term=NONE guifg=NONE ctermfg=NONE guibg=#605779 ctermbg=61 gui=underline cterm=underline
-exe 'hi' 'SignColumn' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg=#3a4b5c' 'ctermbg=235'
-exe 'hi' 'Special' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
+exe 'hi' 'SignColumn term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg=#3a4b5c' 'ctermbg=235'
+exe 'hi' 'Special term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
 hi SpecialKey term=NONE guifg=#607080 ctermfg=60
 hi SpecialComment term=NONE guifg=#e7c6b7 ctermfg=181
 if s:gui_running
-    exe 'hi' 'SpellBad' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guisp=#fd8489' s:undercurl_attr
+    exe 'hi' 'SpellBad term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guisp=#fd8489' s:undercurl_attr
 else
-    exe 'hi' 'SpellBad' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guibg=NONE' 'ctermbg=NONE' 'guisp=#fd8489' s:undercurl_attr
+    exe 'hi' 'SpellBad term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guibg=NONE' 'ctermbg=NONE' 'guisp=#fd8489' s:undercurl_attr
 endif
 if s:gui_running
-    exe 'hi' 'SpellCap' 'term=NONE' 'guifg=#e7d5ff' 'ctermfg=189' 'guisp=#e7d5ff' s:undercurl_attr
+    exe 'hi' 'SpellCap term=NONE' 'guifg=#e7d5ff' 'ctermfg=189' 'guisp=#e7d5ff' s:undercurl_attr
 else
-    exe 'hi' 'SpellCap' 'term=NONE' 'guifg=#e7d5ff' 'ctermfg=189' 'guibg=NONE' 'ctermbg=NONE' 'guisp=#e7d5ff' s:undercurl_attr
+    exe 'hi' 'SpellCap term=NONE' 'guifg=#e7d5ff' 'ctermfg=189' 'guibg=NONE' 'ctermbg=NONE' 'guisp=#e7d5ff' s:undercurl_attr
 endif
 if s:gui_running
-    exe 'hi' 'SpellLocal' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guisp=#fd8489' s:undercurl_attr
+    exe 'hi' 'SpellLocal term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guisp=#fd8489' s:undercurl_attr
 else
-    exe 'hi' 'SpellLocal' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guibg=NONE' 'ctermbg=NONE' 'guisp=#fd8489' s:undercurl_attr
+    exe 'hi' 'SpellLocal term=NONE' 'guifg=#fd8489' 'ctermfg=210' 'guibg=NONE' 'ctermbg=NONE' 'guisp=#fd8489' s:undercurl_attr
 endif
 if s:gui_running
-    exe 'hi' 'SpellRare' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' 'guisp=#f0eaaa' s:undercurl_attr
+    exe 'hi' 'SpellRare term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' 'guisp=#f0eaaa' s:undercurl_attr
 else
-    exe 'hi' 'SpellRare' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' 'guibg=NONE' 'ctermbg=NONE' 'guisp=#f0eaaa' s:undercurl_attr
+    exe 'hi' 'SpellRare term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' 'guibg=NONE' 'ctermbg=NONE' 'guisp=#f0eaaa' s:undercurl_attr
 endif
 hi Statement term=NONE guifg=#a8d2eb ctermfg=153
-exe 'hi' 'StatusLine' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg=#536273' 'ctermbg=238' s:bold_attr
+exe 'hi' 'StatusLine term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg=#536273' 'ctermbg=238' s:bold_attr
 hi StatusLineNC term=NONE guifg=#8d9eb2 ctermfg=103 guibg=#3a4b5c ctermbg=235 gui=NONE cterm=NONE
-exe 'hi' 'StatusLineTerm' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg=#536273' 'ctermbg=238' s:bold_attr
+exe 'hi' 'StatusLineTerm term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg=#536273' 'ctermbg=238' s:bold_attr
 hi StatusLineTermNC term=NONE guifg=#8d9eb2 ctermfg=103 guibg=#3a4b5c ctermbg=235 gui=NONE cterm=NONE
-exe 'hi' 'StorageClass' 'term=NONE' 'guifg=#fedf81' 'ctermfg=222' s:italic_attr
+exe 'hi' 'StorageClass term=NONE' 'guifg=#fedf81' 'ctermfg=222' s:italic_attr
 hi String term=NONE guifg=#a9dd9d ctermfg=150
 hi TabLine term=NONE guifg=#8d9eb2 ctermfg=103 guibg=#536273 ctermbg=238
 hi TabLineFill term=NONE guifg=#3a4b5c ctermfg=235
-exe 'hi' 'TabLineSel' 'term=NONE' 'guifg=#fedf81' 'ctermfg=222' 'guibg='.s:bg_gui 'ctermbg=233' s:bold_attr
+exe 'hi' 'TabLineSel term=NONE' 'guifg=#fedf81' 'ctermfg=222' 'guibg='.s:bg_gui 'ctermbg=233' s:bold_attr
 hi Tag term=NONE guifg=#f0aa8a ctermfg=216
-exe 'hi' 'Title' 'term=NONE' 'guifg=#fedf81' 'ctermfg=222' s:bold_attr
-exe 'hi' 'Todo' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fd8489' 'ctermbg=210' s:bold_attr
-exe 'hi' 'ToolbarButton' 'term=NONE' 'guifg=#fedf81' 'ctermfg=222' 'guibg='.s:bg_gui 'ctermbg=233' s:bold_attr
+exe 'hi' 'Title term=NONE' 'guifg=#fedf81' 'ctermfg=222' s:bold_attr
+exe 'hi' 'Todo term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fd8489' 'ctermbg=210' s:bold_attr
+exe 'hi' 'ToolbarButton term=NONE' 'guifg=#fedf81' 'ctermfg=222' 'guibg='.s:bg_gui 'ctermbg=233' s:bold_attr
 hi ToolbarLine term=NONE guifg=#8d9eb2 ctermfg=103 guibg=#536273 ctermbg=238
 hi Type term=NONE guifg=#fedf81 ctermfg=222
 hi Underlined term=NONE guifg=#a8d2eb ctermfg=153 gui=underline cterm=underline
-exe 'hi' 'VertSplit' 'term=NONE' 'guifg=#3a4b5c' 'ctermfg=235' 'guibg='.s:bg_gui 'ctermbg=233'
+exe 'hi' 'VertSplit term=NONE' 'guifg=#3a4b5c' 'ctermfg=235' 'guibg='.s:bg_gui 'ctermbg=233'
 hi Visual term=NONE guibg=#70495d ctermbg=95
 hi WarningMsg term=NONE guifg=#fb8965 ctermfg=209 guibg=#3a4b5c ctermbg=235
-exe 'hi' 'WildMenu' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fedf81' 'ctermbg=222'
+exe 'hi' 'WildMenu term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fedf81' 'ctermbg=222'
 hi cmakeArguments term=NONE guifg=#f0eaaa ctermfg=229
 hi cmakeOperators term=NONE guifg=#fd8489 ctermfg=210
 hi cStorageClass term=NONE guifg=#f0eaaa ctermfg=229
 hi cTypedef term=NONE guifg=#f0eaaa ctermfg=229
-exe 'hi' 'DiffAdd' 'term=NONE' 'guibg=#5f8770' 'ctermbg=65' s:bold_attr
-exe 'hi' 'DiffChange' 'term=NONE' 'guibg='.s:darkgold_gui 'ctermbg=58' s:bold_attr
-exe 'hi' 'DiffDelete' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg=#ab6560' 'ctermbg=167' s:bold_attr
-exe 'hi' 'DiffText' 'term=NONE' 'guibg='.s:bg_gui 'ctermbg=233'
+exe 'hi' 'DiffAdd term=NONE' 'guibg=#5f8770' 'ctermbg=65' s:bold_attr
+exe 'hi' 'DiffChange term=NONE' 'guibg='.s:darkgold_gui 'ctermbg=58' s:bold_attr
+exe 'hi' 'DiffDelete term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm 'guibg=#ab6560' 'ctermbg=167' s:bold_attr
+exe 'hi' 'DiffText term=NONE' 'guibg='.s:bg_gui 'ctermbg=233'
 hi diffAdded term=NONE guifg=#a9dd9d ctermfg=150
 hi diffFile term=NONE guifg=#f0eaaa ctermfg=229
 hi diffIndexLine term=NONE guifg=#fedf81 ctermfg=222
@@ -159,14 +159,14 @@ hi diffRemoved term=NONE guifg=#fd8489 ctermfg=210
 hi gitCommitOverflow term=NONE guibg=#ab6560 ctermbg=167
 hi gitCommitSummary term=NONE guifg=#f0eaaa ctermfg=229
 hi gitCommitSelectedFile term=NONE guifg=#a8d2eb ctermfg=153
-exe 'hi' 'gitconfigSection' 'term=NONE' 'guifg=#a8d2eb' 'ctermfg=153' s:bold_attr
+exe 'hi' 'gitconfigSection term=NONE' 'guifg=#a8d2eb' 'ctermfg=153' s:bold_attr
 hi goBuiltins term=NONE guifg=#fd8489 ctermfg=210
 hi helpExample term=NONE guifg=#a8d2eb ctermfg=153
 hi helpCommand term=NONE guifg=#e7d5ff ctermfg=189
 hi htmlBold term=NONE guibg=#3a4b5c ctermbg=235
 hi htmlLinkText term=NONE guifg=#a8d2eb ctermfg=153
 hi htmlTagName term=NONE guifg=#f0aa8a ctermfg=216
-exe 'hi' 'javaScriptBraces' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
+exe 'hi' 'javaScriptBraces term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
 hi makeCommands term=NONE guifg=#f0eaaa ctermfg=229
 hi markdownCode term=NONE guifg=#f0eaaa ctermfg=229
 hi markdownUrl term=NONE guifg=#8d9eb2 ctermfg=103
@@ -178,12 +178,12 @@ hi plantumlColonLine term=NONE guifg=#a8d2eb ctermfg=153
 hi pythonBuiltin term=NONE guifg=#fd8489 ctermfg=210
 hi qfFileName term=NONE guifg=#fedf81 ctermfg=222
 hi qfLineNr term=NONE guifg=#a8d2eb ctermfg=153
-exe 'hi' 'rstEmphasis' 'term=NONE' 'guibg=#3a4b5c' 'ctermbg=235' s:italic_attr
-exe 'hi' 'rstStrongEmphasis' 'term=NONE' 'guibg=#536273' 'ctermbg=238' s:bold_attr
+exe 'hi' 'rstEmphasis term=NONE' 'guibg=#3a4b5c' 'ctermbg=235' s:italic_attr
+exe 'hi' 'rstStrongEmphasis term=NONE' 'guibg=#536273' 'ctermbg=238' s:bold_attr
 hi rubyFunction term=NONE guifg=#f0eaaa ctermfg=229
 hi rubyIdentifier term=NONE guifg=#f0eaaa ctermfg=229
 hi rustEnumVariant term=NONE guifg=#fedf81 ctermfg=222
-exe 'hi' 'rustFuncCall' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
+exe 'hi' 'rustFuncCall term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
 hi rustCommentLineDoc term=NONE guifg=#e7c6b7 ctermfg=181
 hi scalaInstanceDeclaration term=NONE guifg=#fedf81 ctermfg=222
 hi tomlTable term=NONE guifg=#a8d2eb ctermfg=153
@@ -192,27 +192,27 @@ hi tomlKey term=NONE guifg=#fedf81 ctermfg=222
 hi tmuxCommands term=NONE guifg=#a8d2eb ctermfg=153
 hi tmuxFlags term=NONE guifg=#fedf81 ctermfg=222
 hi tmuxFormatString term=NONE guifg=#f0eaaa ctermfg=229
-exe 'hi' 'typescriptBraces' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
+exe 'hi' 'typescriptBraces term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
 hi typescriptAsyncFuncKeyword term=NONE guifg=#a8d2eb ctermfg=153
-exe 'hi' 'typescriptKeywordOp' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
+exe 'hi' 'typescriptKeywordOp term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
 hi vimfilerColumn__SizeLine term=NONE guifg=#8d9eb2 ctermfg=103
 hi vimfilerClosedFile term=NONE guifg=#a9dd9d ctermfg=150
 hi vimCommand term=NONE guifg=#a8d2eb ctermfg=153
-exe 'hi' 'watListDelimiter' 'term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
+exe 'hi' 'watListDelimiter term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
 hi watInstGeneral term=NONE guifg=#f0eaaa ctermfg=229
 hi watInstGetSet term=NONE guifg=#f0eaaa ctermfg=229
 hi watInstWithType term=NONE guifg=#f0eaaa ctermfg=229
 hi watUnnamedVar term=NONE guifg=#e7d5ff ctermfg=189
 hi zshDelimiter term=NONE guifg=#a8d2eb ctermfg=153
 hi zshPrecommand term=NONE guifg=#fd8489 ctermfg=210
-exe 'hi' 'debugPC' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#a8d2eb' 'ctermbg=153'
-exe 'hi' 'debugBreakPoint' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fedf81' 'ctermbg=222'
+exe 'hi' 'debugPC term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#a8d2eb' 'ctermbg=153'
+exe 'hi' 'debugBreakPoint term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fedf81' 'ctermbg=222'
 hi zigMultilineStringDelimiter term=NONE guifg=#f0eaaa ctermfg=229
-exe 'hi' 'ALEWarningSign' 'term=NONE' 'guifg=#f0aa8a' 'ctermfg=216' 'guibg=#3a4b5c' 'ctermbg=235' s:bold_attr
-exe 'hi' 'ALEErrorSign' 'term=NONE' 'guifg=#3a4b5c' 'ctermfg=235' 'guibg=#ab6560' 'ctermbg=167' s:bold_attr
+exe 'hi' 'ALEWarningSign term=NONE' 'guifg=#f0aa8a' 'ctermfg=216' 'guibg=#3a4b5c' 'ctermbg=235' s:bold_attr
+exe 'hi' 'ALEErrorSign term=NONE' 'guifg=#3a4b5c' 'ctermfg=235' 'guibg=#ab6560' 'ctermbg=167' s:bold_attr
 hi ALEInfoSign term=NONE guibg=#646f7c ctermbg=60
 hi ALEError term=NONE guibg=#ab6560 ctermbg=167
-exe 'hi' 'ALEWarning' 'term=NONE' 'guibg='.s:darkgold_gui 'ctermbg=58'
+exe 'hi' 'ALEWarning term=NONE' 'guibg='.s:darkgold_gui 'ctermbg=58'
 hi Flake8_Error term=NONE guifg=#fd8489 ctermfg=210 guibg=#3a4b5c ctermbg=235
 hi Flake8_Warning term=NONE guifg=#f0eaaa ctermfg=229 guibg=#3a4b5c ctermbg=235
 hi Flake8_PyFlake term=NONE guifg=#a8d2eb ctermfg=153 guibg=#3a4b5c ctermbg=235
@@ -222,24 +222,24 @@ hi SignifySignAdd term=NONE guifg=#a9dd9d ctermfg=150 guibg=#3a4b5c ctermbg=235
 hi SignifySignChange term=NONE guifg=#f0eaaa ctermfg=229 guibg=#3a4b5c ctermbg=235
 hi SignifySignChangeDelete term=NONE guifg=#fedf81 ctermfg=222 guibg=#3a4b5c ctermbg=235
 hi SignifySignDelete term=NONE guifg=#fd8489 ctermfg=210 guibg=#3a4b5c ctermbg=235
-exe 'hi' 'CleverFChar' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fd8489' 'ctermbg=210'
-exe 'hi' 'CleverFDirect' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fd8489' 'ctermbg=210'
-exe 'hi' 'DirvishArg' 'term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
-exe 'hi' 'EasyMotionTarget' 'term=NONE' 'guifg=#fd8489' 'ctermfg=210' s:bold_attr
-exe 'hi' 'EasyMotionShade' 'term=NONE' 'guifg=#8d9eb2' 'ctermfg=103' 'guibg='.s:bg_gui 'ctermbg=233'
+exe 'hi' 'CleverFChar term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fd8489' 'ctermbg=210'
+exe 'hi' 'CleverFDirect term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fd8489' 'ctermbg=210'
+exe 'hi' 'DirvishArg term=NONE' 'guifg=#f0eaaa' 'ctermfg=229' s:bold_attr
+exe 'hi' 'EasyMotionTarget term=NONE' 'guifg=#fd8489' 'ctermfg=210' s:bold_attr
+exe 'hi' 'EasyMotionShade term=NONE' 'guifg=#8d9eb2' 'ctermfg=103' 'guibg='.s:bg_gui 'ctermbg=233'
 hi GitGutterAdd term=NONE guifg=#a9dd9d ctermfg=150 guibg=#3a4b5c ctermbg=235
 hi GitGutterChange term=NONE guifg=#f0eaaa ctermfg=229 guibg=#3a4b5c ctermbg=235
 hi GitGutterChangeDelete term=NONE guifg=#fedf81 ctermfg=222 guibg=#3a4b5c ctermbg=235
 hi GitGutterDelete term=NONE guifg=#fd8489 ctermfg=210 guibg=#3a4b5c ctermbg=235
 hi HighlightedyankRegion term=NONE guibg=#3a4b5c ctermbg=235
 if s:gui_running
-    exe 'hi' 'EasyMotionIncCursor' 'term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fffeeb' 'ctermbg='.s:fg_cterm
+    exe 'hi' 'EasyMotionIncCursor term=NONE' 'guifg='.s:bg_gui 'ctermfg=233' 'guibg=#fffeeb' 'ctermbg='.s:fg_cterm
 else
     hi EasyMotionIncCursor term=NONE gui=reverse cterm=reverse
 endif
 hi plugDeleted term=NONE guifg=#8d9eb2 ctermfg=103
 hi ConflictMarker term=NONE guibg=#ab6560 ctermbg=167
-exe 'hi' 'IndentGuidesOdd' 'term=NONE' 'guibg='.s:bgweaker_gui 'ctermbg=235'
+exe 'hi' 'IndentGuidesOdd term=NONE' 'guibg='.s:bgweaker_gui 'ctermbg=235'
 hi IndentGuidesEven term=NONE guibg=#3a4b5c ctermbg=235
 
 if g:spring_night_highlight_terminal
