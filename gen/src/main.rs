@@ -87,62 +87,53 @@ impl Default for Palette {
         }
 
         let mut table = HashMap::new();
+        let mut color = |name, gui, cterm| {
+            assert_eq!(table.insert(name, Color { gui, cterm }), None);
+        };
 
-        macro_rules! color {
-            ($name:ident, $gui:expr, $cterm:expr) => {
-                assert_eq!(
-                    table.insert(
-                        stringify!($name),
-                        Color { gui: $gui, cterm: $cterm },
-                    ),
-                    None
-                )
-            };
-        }
-
-        color!(bg,         contrast("#132132", "#334152"), normal(233));
-        color!(bgweaker,   contrast("#213243", "#3a4b5c"), normal(235));
-        color!(bgemphasis, normal("#3a4b5c"),              normal(235));
-        color!(bglight,    normal("#435060"),              normal(236));
-        color!(bgstrong,   normal("#536273"),              normal(238));
-        color!(light,      normal("#646f7c"),              normal(60));
-        color!(fg,         normal("#fffeeb"),              contrast(231, 230));
-        color!(hiddenfg,   normal("#607080"),              normal(60));
-        color!(weakfg,     normal("#8d9eb2"),              normal(103));
-        color!(weakerfg,   normal("#788898"),              normal(102));
-        color!(black,      normal("#111e25"),              normal(233));
-        color!(gray,       normal("#545f6e"),              normal(59));
-        color!(white,      normal("#ffffff"),              normal(231));
-        color!(nasu,       normal("#605779"),              normal(61));
-        color!(fuchsia,    normal("#b9a5cf"),              normal(183));
-        color!(purple,     normal("#e7d5ff"),              normal(189));
-        color!(yaezakura,  normal("#70495d"),              normal(95));
-        color!(sakura,     normal("#a9667a"),              normal(132));
-        color!(kakezakura, normal("#e996aa"),              normal(175));
-        color!(palepink,   normal("#e7c6b7"),              normal(181));
-        color!(mikan,      normal("#fb8965"),              normal(209));
-        color!(orange,     normal("#f0aa8a"),              normal(216));
-        color!(darkgreen,  normal("#5f8770"),              normal(65));
-        color!(green,      normal("#a9dd9d"),              normal(150));
-        color!(lime,       normal("#c9fd88"),              normal(149));
-        color!(blue,       normal("#7098e6"),              normal(69));
-        color!(paleblue,   normal("#98b8e6"),              normal(111));
-        color!(cloudy,     normal("#90aecb"),              normal(75));
-        color!(skyblue,    normal("#a8d2eb"),              normal(153));
-        color!(sunny,      normal("#b8e2fb"),              normal(195));
-        color!(yellow,     normal("#f0eaaa"),              normal(229));
-        color!(gold,       normal("#fedf81"),              normal(222));
-        color!(dullgold,   normal("#b6955b"),              normal(221));
-        color!(darkgold,   contrast("#484000", "#685800"), normal(58));
-        color!(mildred,    normal("#ab6560"),              normal(167));
-        color!(red,        normal("#fd8489"),              normal(210));
-        color!(crimson,    normal("#ff6a6f"),              normal(203));
-        color!(darkblue,   normal("#00091e"),              normal(235));
-        color!(whitepink,  normal("#ebeadb"),              normal(224));
-        color!(whitegreen, normal("#eaf0aa"),              normal(194));
-        color!(whiteblue,  normal("#d8e2f0"),              normal(195));
-        color!(whitered,   normal("#ffbfaf"),              normal(217));
-        color!(inu,        normal("#ddbc96"),              normal(180));
+        color("bg",         contrast("#132132", "#334152"), normal(233));
+        color("bgweaker",   contrast("#213243", "#3a4b5c"), normal(235));
+        color("bgemphasis", normal("#3a4b5c"),              normal(235));
+        color("bglight",    normal("#435060"),              normal(236));
+        color("bgstrong",   normal("#536273"),              normal(238));
+        color("light",      normal("#646f7c"),              normal(60));
+        color("fg",         normal("#fffeeb"),              contrast(231, 230));
+        color("hiddenfg",   normal("#607080"),              normal(60));
+        color("weakfg",     normal("#8d9eb2"),              normal(103));
+        color("weakerfg",   normal("#788898"),              normal(102));
+        color("black",      normal("#111e25"),              normal(233));
+        color("gray",       normal("#545f6e"),              normal(59));
+        color("white",      normal("#ffffff"),              normal(231));
+        color("nasu",       normal("#605779"),              normal(61));
+        color("fuchsia",    normal("#b9a5cf"),              normal(183));
+        color("purple",     normal("#e7d5ff"),              normal(189));
+        color("yaezakura",  normal("#70495d"),              normal(95));
+        color("sakura",     normal("#a9667a"),              normal(132));
+        color("kakezakura", normal("#e996aa"),              normal(175));
+        color("palepink",   normal("#e7c6b7"),              normal(181));
+        color("mikan",      normal("#fb8965"),              normal(209));
+        color("orange",     normal("#f0aa8a"),              normal(216));
+        color("darkgreen",  normal("#5f8770"),              normal(65));
+        color("green",      normal("#a9dd9d"),              normal(150));
+        color("lime",       normal("#c9fd88"),              normal(149));
+        color("blue",       normal("#7098e6"),              normal(69));
+        color("paleblue",   normal("#98b8e6"),              normal(111));
+        color("cloudy",     normal("#90aecb"),              normal(75));
+        color("skyblue",    normal("#a8d2eb"),              normal(153));
+        color("sunny",      normal("#b8e2fb"),              normal(195));
+        color("yellow",     normal("#f0eaaa"),              normal(229));
+        color("gold",       normal("#fedf81"),              normal(222));
+        color("dullgold",   normal("#b6955b"),              normal(221));
+        color("darkgold",   contrast("#484000", "#685800"), normal(58));
+        color("mildred",    normal("#ab6560"),              normal(167));
+        color("red",        normal("#fd8489"),              normal(210));
+        color("crimson",    normal("#ff6a6f"),              normal(203));
+        color("darkblue",   normal("#00091e"),              normal(235));
+        color("whitepink",  normal("#ebeadb"),              normal(224));
+        color("whitegreen", normal("#eaf0aa"),              normal(194));
+        color("whiteblue",  normal("#d8e2f0"),              normal(195));
+        color("whitered",   normal("#ffbfaf"),              normal(217));
+        color("inu",        normal("#ddbc96"),              normal(180));
 
         Self(table)
     }
