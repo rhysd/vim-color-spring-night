@@ -2,10 +2,9 @@
 mod test;
 
 use anyhow::{Context, Result};
-use getopts::Options;
 use std::collections::HashMap;
 use std::env;
-use std::fmt::{self, Display};
+use std::fmt::Display;
 use std::fs::File;
 use std::io::{self, BufWriter, Write};
 use std::ops::Deref;
@@ -149,16 +148,19 @@ impl Default for Palette {
     }
 }
 
+fn indent(level: u8) -> &'static str {
+    &"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "[..level as usize * 4]
+}
+
 #[derive(Debug)]
-struct ColorschemeWriter<'a, W> {
+struct ColorschemeWriter<'a> {
     palette: &'a Palette,
     highlightings: &'a [Highlighting],
     term_colors: [&'static str; 16],
-    out: W,
 }
 
-impl<'a, W: Write> ColorschemeWriter<'a, W> {
-    fn new(out: W, palette: &'a Palette) -> Self {
+impl<'a> ColorschemeWriter<'a> {
+    fn new(palette: &'a Palette) -> Self {
         macro_rules! highlight {
             ($name:ident, $fg:expr, $bg:expr, $sp:expr, $attr:ident) => {
                 Highlight {
@@ -431,13 +433,12 @@ impl<'a, W: Write> ColorschemeWriter<'a, W> {
             palette,
             highlightings,
             term_colors,
-            out,
         }
     }
 
-    fn write_header(&mut self) -> io::Result<()> {
+    fn write_header(&self, w: &mut impl Write) -> io::Result<()> {
         write!(
-            self.out,
+            w,
             r#"" spring-night: Calm-colored dark color scheme
 "
 " Author: rhysd <lin90162@yahoo.co.jp>
@@ -496,48 +497,45 @@ endif
         )
     }
 
-    fn write_contrast_color_variables(&mut self) -> io::Result<()> {
-        // Sort by key name to avoid random order
+    fn write_contrast_color_variables(&self, w: &mut impl Write) -> io::Result<()> {
         for (name, color) in {
             let mut v = self.palette.iter().collect::<Vec<_>>();
-            v.sort_by_key(|(&k, _)| k);
+            v.sort_by_key(|(&k, _)| k); // Sort by color name to avoid random order
             v
         } {
             if let ColorCode::Contrast(high, low) = color.gui {
                 writeln!(
-                    self.out,
-                    "let s:{}_gui = g:spring_night_high_contrast ? '{}' : '{}'",
-                    name, high, low
+                    w,
+                    "let s:{name}_gui = g:spring_night_high_contrast ? '{high}' : '{low}'",
                 )?;
             }
             if let ColorCode::Contrast(high, low) = color.cterm {
                 writeln!(
-                    self.out,
-                    "let s:{}_cterm = g:spring_night_high_contrast ? {} : {}",
-                    name, high, low
+                    w,
+                    "let s:{name}_cterm = g:spring_night_high_contrast ? {high} : {low}",
                 )?;
             }
         }
-        writeln!(self.out)
+        writeln!(w)
     }
 
-    fn build_highlight_item<T: Display>(
+    fn write_highlight(
         &self,
-        name: &'static str,
-        item: &'static str,
-        color: &ColorCode<T>,
-    ) -> String {
-        match color {
-            ColorCode::Normal(c) => format!("{}={}", item, c),
-            ColorCode::Contrast(..) if item.starts_with("gui") => {
-                format!("'{}='.s:{}_gui", item, name)
+        w: &mut impl Write,
+        highlight: &Highlight,
+        indents: u8,
+    ) -> io::Result<()> {
+        fn arg(name: &str, item: &str, color: &ColorCode<impl Display>) -> String {
+            match color {
+                ColorCode::Normal(c) => format!("{item}={c}"),
+                ColorCode::Contrast(..) if item.starts_with("gui") => {
+                    format!("'{item}='.s:{name}_gui")
+                }
+                ColorCode::Contrast(..) => format!("'{item}='.s:{name}_cterm"),
             }
-            ColorCode::Contrast(..) => format!("'{}='.s:{}_cterm", item, name),
         }
-    }
 
-    fn write_highlight(&mut self, highlight: &Highlight, indent: u32) -> io::Result<()> {
-        let mut args = vec![highlight.name.to_string(), "term=NONE".to_string()];
+        let mut args = vec![highlight.name.into(), "term=NONE".into()];
 
         for (color_name, gui, cterm) in [
             (&highlight.fg, "guifg", "ctermfg"),
@@ -546,22 +544,19 @@ endif
             if let Some(name) = color_name {
                 if name != &"NONE" {
                     let color = &self.palette[name];
-                    args.push(self.build_highlight_item(name, gui, &color.gui));
-                    args.push(self.build_highlight_item(name, cterm, &color.cterm));
+                    args.push(arg(name, gui, &color.gui));
+                    args.push(arg(name, cterm, &color.cterm));
                 } else {
-                    args.push(self.build_highlight_item(name, gui, &NONE_COLOR));
-                    args.push(self.build_highlight_item(name, cterm, &NONE_COLOR));
+                    args.push(arg(name, gui, &NONE_COLOR));
+                    args.push(arg(name, cterm, &NONE_COLOR));
                 }
             }
         }
 
         if let Some(name) = highlight.sp {
             // Note: ctermsp does not exist
-            args.push(self.build_highlight_item(
-                name,
-                "guisp",
-                &self.palette[name].gui, // Currently guisp must not be NONE
-            ));
+            let color = &self.palette[name].gui; // Currently guisp must not be NONE
+            args.push(arg(name, "guisp", color));
         }
 
         let attr_item = match highlight.attr {
@@ -575,100 +570,105 @@ endif
             HighlightAttr::Undercurl => "s:undercurl_attr",
         };
         if !attr_item.is_empty() {
-            args.push(attr_item.to_string());
+            args.push(attr_item.into());
         }
 
-        let indent = match indent {
-            0u32 => "",
-            1u32 => "    ",
-            _ => unreachable!(),
-        };
-
-        if args
-            .iter()
-            .any(|a| a.starts_with('\'') || a.ends_with('\'') || a.starts_with("s:"))
-        {
-            for arg in &mut args {
-                if !arg.starts_with('\'') && !arg.ends_with('\'') && !arg.starts_with("s:") {
-                    *arg = format!("'{}'", arg);
-                }
-            }
-            writeln!(self.out, "{}exe 'hi' {}", indent, args.join(" "))
+        let is_execute = args.iter().any(|a| a.contains("s:") || a.contains("g:"));
+        if is_execute {
+            write!(w, "{}exe 'hi'", indent(indents))?;
         } else {
-            writeln!(self.out, "{}hi {}", indent, args.join(" "))
+            write!(w, "{}hi", indent(indents))?;
         }
+
+        for arg in &args {
+            if is_execute && !arg.contains("s:") && !arg.contains("g:") {
+                write!(w, " '{}'", arg)?;
+            } else {
+                write!(w, " {}", arg)?;
+            }
+        }
+
+        writeln!(w)
     }
 
-    fn write_highlightings(&mut self) -> io::Result<()> {
-        for highlighting in self.highlightings {
-            match highlighting {
-                Fixed(hl) => self.write_highlight(hl, 0u32)?,
+    fn write_highlightings(&self, w: &mut impl Write) -> io::Result<()> {
+        for hl in self.highlightings {
+            match hl {
+                Fixed(hl) => self.write_highlight(w, hl, 0)?,
                 Dynamic { gui, term } => {
-                    writeln!(self.out, "if s:gui_running")?;
-                    self.write_highlight(gui, 1u32)?;
-                    writeln!(self.out, "else")?;
-                    self.write_highlight(term, 1u32)?;
-                    writeln!(self.out, "endif")?;
+                    writeln!(w, "if s:gui_running")?;
+                    self.write_highlight(w, gui, 1)?;
+                    writeln!(w, "else")?;
+                    self.write_highlight(w, term, 1)?;
+                    writeln!(w, "endif")?;
                 }
             }
         }
-        writeln!(self.out)
+        writeln!(w)
     }
 
-    fn write_term_colors(&mut self) -> io::Result<()> {
-        writeln!(self.out, "if g:spring_night_highlight_terminal")?;
-        writeln!(self.out, "    if has('nvim')")?;
-        writeln!(self.out, "        if s:gui_running || s:true_colors")?;
+    fn write_nvim_term_colors(&self, w: &mut impl Write, indents: u8) -> io::Result<()> {
+        writeln!(w, "{}if s:gui_running || s:true_colors", indent(indents))?;
         for (index, name) in self.term_colors.iter().enumerate() {
             writeln!(
-                self.out,
-                "            let g:terminal_color_{} = '{}'",
-                index,
-                self.palette[name].gui.normal()
+                w,
+                "{indent}let g:terminal_color_{index} = '{color}'",
+                indent = indent(indents + 1),
+                color = self.palette[name].gui.normal(),
             )?;
         }
-        writeln!(self.out, "        else")?;
+        writeln!(w, "{}else", indent(indents))?;
         for (index, name) in self.term_colors.iter().enumerate() {
             writeln!(
-                self.out,
-                "            let g:terminal_color_{} = {}",
-                index,
-                self.palette[name].cterm.normal()
+                w,
+                "{indent}let g:terminal_color_{index} = {color}",
+                indent = indent(indents + 1),
+                color = self.palette[name].cterm.normal(),
             )?;
         }
-        writeln!(self.out, "        endif")?;
+        writeln!(w, "{}endif", indent(indents))?;
         writeln!(
-            self.out,
-            "        let g:terminal_color_background = g:terminal_color_0"
+            w,
+            "{indent}let g:terminal_color_background = g:terminal_color_0",
+            indent = indent(indents),
         )?;
         writeln!(
-            self.out,
-            "        let g:terminal_color_foreground = g:terminal_color_7"
-        )?;
-        writeln!(
-            self.out,
-            "    elseif (s:gui_running || s:true_colors) && exists('*term_setansicolors')"
-        )?;
-        let elems_for_vim = self
-            .term_colors
-            .iter()
-            .map(|name| format!("'{}'", self.palette[name].gui.normal()))
-            .collect::<Vec<_>>()
-            .join(", ");
-        writeln!(
-            self.out,
-            "        let g:terminal_ansi_colors = [{}]",
-            elems_for_vim
-        )?;
-        writeln!(self.out, "    endif")?;
-        writeln!(self.out, "endif")
+            w,
+            "{indent}let g:terminal_color_foreground = g:terminal_color_7",
+            indent = indent(indents),
+        )
     }
 
-    fn write(&mut self) -> io::Result<()> {
-        self.write_header()?;
-        self.write_contrast_color_variables()?;
-        self.write_highlightings()?;
-        self.write_term_colors()
+    fn write_vim_term_colors(&self, w: &mut impl Write, indents: u8) -> io::Result<()> {
+        write!(w, "{}let g:terminal_ansi_colors = [", indent(indents))?;
+        for (index, name) in self.term_colors.iter().enumerate() {
+            if index > 0 {
+                write!(w, ",")?;
+            }
+            write!(w, "'{}'", self.palette[name].gui.normal())?;
+        }
+        writeln!(w, "]")
+    }
+
+    fn write_term_colors(&self, w: &mut impl Write) -> io::Result<()> {
+        writeln!(w, "if g:spring_night_highlight_terminal")?;
+        writeln!(w, "{}if has('nvim')", indent(1))?;
+        self.write_nvim_term_colors(w, 2)?;
+        writeln!(
+            w,
+            "{indent}elseif (s:gui_running || s:true_colors) && exists('*term_setansicolors')",
+            indent = indent(1),
+        )?;
+        self.write_vim_term_colors(w, 2)?;
+        writeln!(w, "{}endif", indent(1))?;
+        writeln!(w, "endif")
+    }
+
+    fn write_to(&mut self, w: &mut impl Write) -> io::Result<()> {
+        self.write_header(w)?;
+        self.write_contrast_color_variables(w)?;
+        self.write_highlightings(w)?;
+        self.write_term_colors(w)
     }
 }
 
@@ -681,8 +681,9 @@ struct AirlineModeColors<'a> {
     modified_main: Option<&'a str>,
 }
 
-#[derive(Debug, Default)]
-struct AirlineThemeColors<'a> {
+#[derive(Debug)]
+struct AirlineThemeWriter<'a> {
+    palette: &'a Palette,
     modes: HashMap<&'a str, AirlineModeColors<'a>>,
     paste: &'a str,
     info_mod: &'a str,
@@ -690,17 +691,11 @@ struct AirlineThemeColors<'a> {
     warning: (&'a str, &'a str),
 }
 
-#[derive(Debug)]
-struct AirlineThemeWriter<'a, W> {
-    palette: &'a Palette,
-    theme: AirlineThemeColors<'a>,
-    out: W,
-}
-
-impl<'a, W: Write> AirlineThemeWriter<'a, W> {
-    fn new(out: W, palette: &'a Palette) -> Self {
-        //  Note: Pair strings are color names of (fg, bg)
-        let theme = AirlineThemeColors {
+impl<'a> AirlineThemeWriter<'a> {
+    fn new(palette: &'a Palette) -> Self {
+        //  Note: Pairs of strings are color names of (fg, bg)
+        Self {
+            palette,
             modes: {
                 let mut m = HashMap::new();
 
@@ -756,20 +751,14 @@ impl<'a, W: Write> AirlineThemeWriter<'a, W> {
             info_mod: "hiddenfg",
             error: ("bg", "red"),
             warning: ("bg", "mikan"),
-        };
-
-        Self {
-            palette,
-            theme,
-            out,
         }
     }
 
-    fn write_header(&mut self) -> io::Result<()> {
+    fn write_header(&self, w: &mut impl Write) -> io::Result<()> {
         let red = &self.palette["red"];
         // Header
         write!(
-            self.out,
+            w,
             r#"" vim-airline theme for spring-night colorscheme
 "
 " Author: rhysd <lin90162@yahoo.co.jp>
@@ -778,8 +767,6 @@ impl<'a, W: Write> AirlineThemeWriter<'a, W> {
 "
 " PLEASE DO NOT MODIFY THIS FILE DIRECTLY!
 " Generated by script vim-color-spring-night/gen/{source}
-
-" TODO: Terminal mode
 
 let g:airline#themes#spring_night#palette = {{}}
 
@@ -794,117 +781,96 @@ let g:airline#themes#spring_night#palette.accents = {{
         )
     }
 
-    fn build_one_palette_color(&self, fgbg: (&'a str, &'a str)) -> String {
+    fn write_section_color(
+        &self,
+        w: &mut impl Write,
+        name: &str,
+        fgbg: (&'a str, &'a str),
+    ) -> io::Result<()> {
         let fg = &self.palette[fgbg.0];
         let bg = &self.palette[fgbg.1];
-        format!(
-            "['{}', '{}', {}, {}, '']",
-            fg.gui.normal(),
-            bg.gui.normal(),
-            fg.cterm.normal(),
-            bg.cterm.normal()
+        writeln!(
+            w,
+            "\\   'airline_{name}': ['{gui_fg}', '{gui_bg}', {cterm_fg}, {cterm_bg}, ''],",
+            gui_fg = fg.gui.normal(),
+            gui_bg = bg.gui.normal(),
+            cterm_fg = fg.cterm.normal(),
+            cterm_bg = bg.cterm.normal(),
         )
     }
 
-    fn write_mode_palette(&mut self, name: &str, error: &str, warning: &str) -> io::Result<()> {
-        let mode = &self.theme.modes[name];
-
-        writeln!(
-            self.out,
-            "let g:airline#themes#spring_night#palette.{} = {{",
-            name,
-        )?;
-
-        let label = self.build_one_palette_color(mode.label);
-        let info = self.build_one_palette_color(mode.info);
-        let main = self.build_one_palette_color(mode.main);
-
-        writeln!(self.out, "\\   'airline_a': {},", label)?;
-        writeln!(self.out, "\\   'airline_b': {},", info)?;
-        writeln!(self.out, "\\   'airline_c': {},", main)?;
-        writeln!(self.out, "\\   'airline_x': {},", main)?;
-        writeln!(self.out, "\\   'airline_y': {},", info)?;
-        writeln!(self.out, "\\   'airline_z': {},", label)?;
-        writeln!(self.out, "\\   'airline_error': {},", error)?;
-        writeln!(self.out, "\\   'airline_warning': {},", warning)?;
-        writeln!(self.out, "\\ }}")?;
-
-        if let Some(modified) = mode.modified {
-            let label = self.build_one_palette_color((mode.label.0, modified));
-            let info = self.build_one_palette_color((modified, self.theme.info_mod));
-            let main_fg = if let Some(n) = mode.modified_main {
-                n
-            } else {
-                modified
-            };
-            let main = self.build_one_palette_color((main_fg, mode.main.1));
-            writeln!(
-                self.out,
-                "let g:airline#themes#spring_night#palette.{}_modified = {{",
-                name
-            )?;
-            writeln!(self.out, "\\   'airline_a': {},", label)?;
-            writeln!(self.out, "\\   'airline_b': {},", info)?;
-            writeln!(self.out, "\\   'airline_c': {},", main)?;
-            writeln!(self.out, "\\   'airline_error': {},", error)?;
-            writeln!(self.out, "\\   'airline_warning': {},", warning)?;
-            writeln!(self.out, "\\ }}")?;
-        }
-
-        writeln!(self.out)
+    fn write_error_warning(&self, w: &mut impl Write) -> io::Result<()> {
+        self.write_section_color(w, "error", self.error)?;
+        self.write_section_color(w, "warning", self.warning)
     }
 
-    fn write(&mut self) -> io::Result<()> {
-        self.write_header()?;
+    fn write_mode_colors(&self, w: &mut impl Write, name: &str) -> io::Result<()> {
+        let mode = &self.modes[name];
 
-        let error = self.build_one_palette_color(self.theme.error);
-        let warning = self.build_one_palette_color(self.theme.warning);
+        writeln!(w, "let g:airline#themes#spring_night#palette.{name} = {{")?;
+        self.write_section_color(w, "a", mode.label)?;
+        self.write_section_color(w, "b", mode.info)?;
+        self.write_section_color(w, "c", mode.main)?;
+        self.write_section_color(w, "x", mode.main)?;
+        self.write_section_color(w, "y", mode.info)?;
+        self.write_section_color(w, "z", mode.label)?;
+        self.write_error_warning(w)?;
+        writeln!(w, "\\ }}")?;
 
-        for mode in &["normal", "insert", "visual", "replace", "inactive"] {
-            self.write_mode_palette(mode, &error, &warning)?;
+        if let Some(modified) = mode.modified {
+            let main_fg = mode.modified_main.unwrap_or(modified);
+            writeln!(
+                w,
+                "let g:airline#themes#spring_night#palette.{name}_modified = {{",
+            )?;
+            self.write_section_color(w, "a", (mode.label.0, modified))?;
+            self.write_section_color(w, "b", (modified, self.info_mod))?;
+            self.write_section_color(w, "c", (main_fg, mode.main.1))?;
+            self.write_error_warning(w)?;
+            writeln!(w, "\\ }}")?;
         }
 
-        let normal_map = &self.theme.modes["normal"];
-        let insert_map = &self.theme.modes["insert"];
+        writeln!(w)
+    }
+
+    fn write_to(&self, w: &mut impl Write) -> io::Result<()> {
+        self.write_header(w)?;
+
+        for mode in &["normal", "insert", "visual", "replace", "inactive"] {
+            self.write_mode_colors(w, mode)?;
+        }
+
+        let normal_map = &self.modes["normal"];
+        let insert_map = &self.modes["insert"];
 
         // Insert Paste
         writeln!(
-            self.out,
-            "let g:airline#themes#spring_night#palette.insert_paste = {{"
+            w,
+            "let g:airline#themes#spring_night#palette.insert_paste = {{",
         )?;
-        let label = self.build_one_palette_color((insert_map.label.0, self.theme.paste));
-        let info = self.build_one_palette_color((self.theme.paste, self.theme.info_mod));
-        let main = self.build_one_palette_color((self.theme.paste, normal_map.main.1));
-        writeln!(self.out, "\\   'airline_a': {},", label)?;
-        writeln!(self.out, "\\   'airline_b': {},", info)?;
-        writeln!(self.out, "\\   'airline_c': {},", main)?;
-        writeln!(self.out, "\\   'airline_error': {},", error)?;
-        writeln!(self.out, "\\   'airline_warning': {},", warning)?;
-        writeln!(self.out, "\\ }}\n")?;
+        self.write_section_color(w, "a", (insert_map.label.0, self.paste))?;
+        self.write_section_color(w, "b", (self.paste, self.info_mod))?;
+        self.write_section_color(w, "c", (self.paste, normal_map.main.1))?;
+        self.write_error_warning(w)?;
+        writeln!(w, "\\ }}\n")?;
 
         // Inactive Modified is a special case
         writeln!(
-            self.out,
-            "let g:airline#themes#spring_night#palette.inactive_modified = {{"
+            w,
+            "let g:airline#themes#spring_night#palette.inactive_modified = {{",
         )?;
-        let modified_color = &self.palette[normal_map.modified.unwrap()];
-        let guifg = modified_color.gui.normal();
-        let ctermfg = modified_color.cterm.normal();
-        writeln!(
-            self.out,
-            "\\   'airline_c': ['{}', '', {}, '', ''],",
-            guifg, ctermfg
-        )?;
-        writeln!(self.out, "\\   'airline_error': {},", error)?;
-        writeln!(self.out, "\\   'airline_warning': {},", warning)?;
-        writeln!(self.out, "\\ }}")?;
-
-        Ok(())
+        let modified = &self.palette[normal_map.modified.unwrap()];
+        let guifg = modified.gui.normal();
+        let ctermfg = modified.cterm.normal();
+        writeln!(w, "\\   'airline_c': ['{guifg}', '', {ctermfg}, '', ''],")?;
+        self.write_error_warning(w)?;
+        writeln!(w, "\\ }}")
     }
 }
 
 #[derive(Debug, Default, Clone)]
 struct AlacrittyFgColors<'a> {
+    name: &'static str,
     foreground: &'a str,
     black: &'a str,
     red: &'a str,
@@ -916,44 +882,22 @@ struct AlacrittyFgColors<'a> {
     white: &'a str,
 }
 
-#[derive(Clone, Copy, Debug)]
-enum AlacrittyBrightness {
-    Dim,
-    Normal,
-    Bright,
-}
-
-impl Display for AlacrittyBrightness {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        use AlacrittyBrightness::*;
-        match self {
-            Dim => write!(f, "dim"),
-            Normal => write!(f, "normal"),
-            Bright => write!(f, "bright"),
-        }
-    }
-}
-
-#[derive(Debug, Default)]
-struct AlacrittyTheme<'a> {
+#[derive(Debug)]
+struct AlacrittyThemeWriter<'a> {
+    palette: &'a Palette,
     background: &'a str,
     dim: AlacrittyFgColors<'a>,
     normal: AlacrittyFgColors<'a>,
     bright: AlacrittyFgColors<'a>,
 }
 
-#[derive(Debug)]
-struct AlacrittyThemeWriter<'a, W> {
-    palette: &'a Palette,
-    theme: AlacrittyTheme<'a>,
-    out: W,
-}
-
-impl<'a, W: Write> AlacrittyThemeWriter<'a, W> {
-    fn new(out: W, palette: &'a Palette) -> Self {
-        let theme = AlacrittyTheme {
+impl<'a> AlacrittyThemeWriter<'a> {
+    fn new(palette: &'a Palette) -> Self {
+        Self {
+            palette,
             background: "bg",
             dim: AlacrittyFgColors {
+                name: "dim",
                 foreground: "yellow",
                 black: "black",
                 red: "mildred",
@@ -965,6 +909,7 @@ impl<'a, W: Write> AlacrittyThemeWriter<'a, W> {
                 white: "gray",
             },
             normal: AlacrittyFgColors {
+                name: "normal",
                 foreground: "fg",
                 black: "black",
                 red: "crimson",
@@ -976,6 +921,7 @@ impl<'a, W: Write> AlacrittyThemeWriter<'a, W> {
                 white: "white",
             },
             bright: AlacrittyFgColors {
+                name: "bright",
                 foreground: "fg",
                 black: "gray",
                 red: "red",
@@ -986,18 +932,12 @@ impl<'a, W: Write> AlacrittyThemeWriter<'a, W> {
                 cyan: "sunny",
                 white: "white",
             },
-        };
-
-        Self {
-            palette,
-            theme,
-            out,
         }
     }
 
-    fn write_header_comment(&mut self) -> io::Result<()> {
+    fn write_header_comment(&self, w: &mut impl Write) -> io::Result<()> {
         write!(
-            self.out,
+            w,
             r#"# Alacritty theme for spring-night colorscheme
 #
 # Author: rhysd <lin90162@yahoo.co.jp>
@@ -1012,51 +952,36 @@ impl<'a, W: Write> AlacrittyThemeWriter<'a, W> {
     }
 
     #[rustfmt::skip]
-    fn write_primary_section(&mut self) -> io::Result<()> {
-        writeln!(self.out)?;
-        writeln!(self.out, "[colors.primary]")?;
-        writeln!(self.out, "background = \"{}\"",        &self.palette[self.theme.background].gui.normal())?;
-        writeln!(self.out, "foreground = \"{}\"",        &self.palette[self.theme.normal.foreground].gui.normal())?;
-        writeln!(self.out, "dim_foreground = \"{}\"",    &self.palette[self.theme.dim.foreground].gui.normal())?;
-        writeln!(self.out, "bright_foreground = \"{}\"", &self.palette[self.theme.bright.foreground].gui.normal())?;
-        Ok(())
+    fn write_primary_section(&self, w: &mut impl Write) -> io::Result<()> {
+        writeln!(w)?;
+        writeln!(w, "[colors.primary]")?;
+        writeln!(w, "background = \"{}\"",        &self.palette[self.background].gui.normal())?;
+        writeln!(w, "foreground = \"{}\"",        &self.palette[self.normal.foreground].gui.normal())?;
+        writeln!(w, "dim_foreground = \"{}\"",    &self.palette[self.dim.foreground].gui.normal())?;
+        writeln!(w, "bright_foreground = \"{}\"", &self.palette[self.bright.foreground].gui.normal())
     }
 
     #[rustfmt::skip]
-    fn write_colors_section(&mut self, bright: AlacrittyBrightness) -> io::Result<()> {
-        use AlacrittyBrightness::*;
-
-        let colors = match bright {
-            Dim => &self.theme.dim,
-            Normal => &self.theme.normal,
-            Bright => &self.theme.bright,
-        };
-
-        writeln!(self.out)?;
-        writeln!(self.out, "[colors.{bright}]")?;
-        writeln!(self.out, "black = \"{}\"",   &self.palette[colors.black].gui.normal())?;
-        writeln!(self.out, "red = \"{}\"",     &self.palette[colors.red].gui.normal())?;
-        writeln!(self.out, "green = \"{}\"",   &self.palette[colors.green].gui.normal())?;
-        writeln!(self.out, "yellow = \"{}\"",  &self.palette[colors.yellow].gui.normal())?;
-        writeln!(self.out, "blue = \"{}\"",    &self.palette[colors.blue].gui.normal())?;
-        writeln!(self.out, "magenta = \"{}\"", &self.palette[colors.magenta].gui.normal())?;
-        writeln!(self.out, "cyan = \"{}\"",    &self.palette[colors.cyan].gui.normal())?;
-        writeln!(self.out, "white = \"{}\"",   &self.palette[colors.white].gui.normal())?;
-
-        Ok(())
+    fn write_colors_section(&self, w: &mut impl Write, colors: &AlacrittyFgColors<'a>) -> io::Result<()> {
+        writeln!(w)?;
+        writeln!(w, "[colors.{}]", colors.name)?;
+        writeln!(w, "black = \"{}\"",   &self.palette[colors.black].gui.normal())?;
+        writeln!(w, "red = \"{}\"",     &self.palette[colors.red].gui.normal())?;
+        writeln!(w, "green = \"{}\"",   &self.palette[colors.green].gui.normal())?;
+        writeln!(w, "yellow = \"{}\"",  &self.palette[colors.yellow].gui.normal())?;
+        writeln!(w, "blue = \"{}\"",    &self.palette[colors.blue].gui.normal())?;
+        writeln!(w, "magenta = \"{}\"", &self.palette[colors.magenta].gui.normal())?;
+        writeln!(w, "cyan = \"{}\"",    &self.palette[colors.cyan].gui.normal())?;
+        writeln!(w, "white = \"{}\"",   &self.palette[colors.white].gui.normal())
     }
 
     #[rustfmt::skip]
-    fn write(&mut self) -> io::Result<()> {
-        use AlacrittyBrightness::*;
-
-        self.write_header_comment()?;
-        self.write_primary_section()?;
-
-        for bright in [Dim, Normal, Bright] {
-            self.write_colors_section(bright)?;
+    fn write_to(&self, w: &mut impl Write) -> io::Result<()> {
+        self.write_header_comment(w)?;
+        self.write_primary_section(w)?;
+        for colors in [&self.dim, &self.normal, &self.bright] {
+            self.write_colors_section(w, colors)?;
         }
-
         Ok(())
     }
 }
@@ -1076,43 +1001,40 @@ fn write_to_files(dir: &str) -> Result<()> {
     let path = join(&[dir, "colors", "spring-night.vim"]);
     let file = File::create(&path)
         .with_context(|| format!("Could not create colorscheme file: {:?}", &path))?;
-    ColorschemeWriter::new(BufWriter::new(file), &palette)
-        .write()
+    ColorschemeWriter::new(&palette)
+        .write_to(&mut BufWriter::new(file))
         .with_context(|| format!("While generate colorscheme file {:?}", &path))?;
 
     let path = join(&[dir, "autoload", "airline", "themes", "spring_night.vim"]);
     let file = File::create(&path)
         .with_context(|| format!("Could not create airline theme file {:?}", &path))?;
-    AirlineThemeWriter::new(BufWriter::new(file), &palette)
-        .write()
+    AirlineThemeWriter::new(&palette)
+        .write_to(&mut BufWriter::new(file))
         .with_context(|| format!("Could not generate airline theme file {:?}", &path))?;
 
     let path = join(&[dir, "alacritty", "spring_night.toml"]);
     let file = File::create(&path)
         .with_context(|| format!("Could not create alacritty theme file {:?}", &path))?;
-    AlacrittyThemeWriter::new(BufWriter::new(file), &palette)
-        .write()
-        .with_context(|| format!("Could not generate alacritty theme file {:?}", &path))?;
-
-    Ok(())
+    AlacrittyThemeWriter::new(&palette)
+        .write_to(&mut BufWriter::new(file))
+        .with_context(|| format!("Could not generate alacritty theme file {:?}", &path))
 }
 
 fn write_to_stdout() -> Result<()> {
     let palette = Palette::default();
     let mut stdout = io::stdout().lock();
 
-    ColorschemeWriter::new(&mut stdout, &palette)
-        .write()
+    ColorschemeWriter::new(&palette)
+        .write_to(&mut stdout)
         .context("While writing colorscheme to stdout")?;
     writeln!(stdout)?;
-    AirlineThemeWriter::new(&mut stdout, &palette)
-        .write()
+    AirlineThemeWriter::new(&palette)
+        .write_to(&mut stdout)
         .context("While writing airline theme to stdout")?;
     writeln!(stdout)?;
-    AlacrittyThemeWriter::new(&mut stdout, &palette)
-        .write()
-        .context("While writing alacritty theme to stdout")?;
-    Ok(())
+    AlacrittyThemeWriter::new(&palette)
+        .write_to(&mut stdout)
+        .context("While writing alacritty theme to stdout")
 }
 
 fn main() -> Result<()> {
@@ -1121,7 +1043,7 @@ fn main() -> Result<()> {
         (argv.next().unwrap(), argv)
     };
 
-    let mut opts = Options::new();
+    let mut opts = getopts::Options::new();
     opts.optopt("d", "dir", "repository root directory", "PATH");
     opts.optflag("h", "help", "print this help");
     let opts = opts;
@@ -1137,10 +1059,8 @@ fn main() -> Result<()> {
     }
 
     if let Some(dir) = matches.opt_str("d") {
-        write_to_files(&dir)?;
+        write_to_files(&dir)
     } else {
-        write_to_stdout()?;
+        write_to_stdout()
     }
-
-    Ok(())
 }

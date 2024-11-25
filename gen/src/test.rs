@@ -13,9 +13,10 @@ fn test_color_code() {
 #[test]
 fn test_write_header() {
     let palette = Palette(HashMap::new());
-    let mut w = ColorschemeWriter::new(Vec::new(), &palette);
-    w.write_header().unwrap();
-    let rendered = str::from_utf8(&w.out).unwrap();
+    let w = ColorschemeWriter::new(&palette);
+    let mut out = vec![];
+    w.write_header(&mut out).unwrap();
+    let rendered = str::from_utf8(&out).unwrap();
     assert!(rendered.starts_with(r#"" spring-night: Calm-colored dark color scheme"#));
     assert!(rendered.contains("let g:colors_name = 'spring-night'"));
 }
@@ -23,9 +24,10 @@ fn test_write_header() {
 #[test]
 fn test_write_contrast_color_variables() {
     let palette = Palette(HashMap::new());
-    let mut w = ColorschemeWriter::new(Vec::new(), &palette);
-    w.write_contrast_color_variables().unwrap();
-    assert_eq!(str::from_utf8(&w.out).unwrap(), "\n");
+    let w = ColorschemeWriter::new(&palette);
+    let mut out = vec![];
+    w.write_contrast_color_variables(&mut out).unwrap();
+    assert_eq!(str::from_utf8(&out).unwrap(), "\n");
 
     let mut m = HashMap::new();
     m.insert(
@@ -57,8 +59,9 @@ fn test_write_contrast_color_variables() {
         },
     );
     let palette = Palette(m);
-    let mut w = ColorschemeWriter::new(Vec::new(), &palette);
-    w.write_contrast_color_variables().unwrap();
+    let w = ColorschemeWriter::new(&palette);
+    let mut out = vec![];
+    w.write_contrast_color_variables(&mut out).unwrap();
     for (actual, expected) in [
         "let s:goodbye_gui = g:spring_night_high_contrast ? '#000000' : '#ffffff'",
         "let s:hello_gui = g:spring_night_high_contrast ? '#123456' : '#7890ab'",
@@ -67,7 +70,7 @@ fn test_write_contrast_color_variables() {
         "",
     ]
     .iter()
-    .zip(str::from_utf8(&w.out).unwrap().lines())
+    .zip(str::from_utf8(&out).unwrap().lines())
     {
         assert_eq!(*actual, expected);
     }
@@ -119,17 +122,19 @@ fn test_write_highlight() {
             },
         );
         let palette = Palette(m);
-        let mut w = ColorschemeWriter::new(Vec::new(), &palette);
-        w.write_highlight(&hl, indent as u32).unwrap();
-        assert_eq!(str::from_utf8(&w.out).unwrap(), format!("{}\n", expected));
+        let w = ColorschemeWriter::new(&palette);
+        let mut out = vec![];
+        w.write_highlight(&mut out, &hl, indent).unwrap();
+        assert_eq!(str::from_utf8(&out).unwrap(), format!("{}\n", expected));
     }
 
     // Edge case
     let palette = Palette(HashMap::new());
-    let mut w = ColorschemeWriter::new(Vec::new(), &palette);
+    let mut w = ColorschemeWriter::new(&palette);
     w.highlightings = &[];
-    w.write_highlightings().unwrap();
-    assert_eq!(str::from_utf8(&w.out).unwrap(), "\n");
+    let mut out = vec![];
+    w.write_highlightings(&mut out).unwrap();
+    assert_eq!(str::from_utf8(&out).unwrap(), "\n");
 }
 
 #[test]
@@ -145,22 +150,24 @@ fn test_write_highlights() {
     }
 
     let palette = Palette(HashMap::new());
-    let mut w = ColorschemeWriter::new(Vec::new(), &palette);
+    let mut w = ColorschemeWriter::new(&palette);
     let fixed = &[Fixed(hl())];
     w.highlightings = fixed;
-    w.write_highlightings().unwrap();
-    assert_eq!(str::from_utf8(&w.out).unwrap(), "hi HL term=NONE\n\n");
+    let mut out = vec![];
+    w.write_highlightings(&mut out).unwrap();
+    assert_eq!(str::from_utf8(&out).unwrap(), "hi HL term=NONE\n\n");
 
     let dynamic = &[Dynamic {
         gui: hl(),
         term: hl(),
     }];
     let palette = Palette(HashMap::new());
-    let mut w = ColorschemeWriter::new(Vec::new(), &palette);
+    let mut w = ColorschemeWriter::new(&palette);
     w.highlightings = dynamic;
-    w.write_highlightings().unwrap();
+    let mut out = vec![];
+    w.write_highlightings(&mut out).unwrap();
     assert_eq!(
-        str::from_utf8(&w.out).unwrap().lines().collect::<Vec<_>>(),
+        str::from_utf8(&out).unwrap().lines().collect::<Vec<_>>(),
         vec![
             "if s:gui_running",
             "    hi HL term=NONE",
@@ -190,24 +197,25 @@ fn test_write_term_colors() {
         },
     );
     let palette = Palette(m);
-    let mut w = ColorschemeWriter::new(Vec::new(), &palette);
+    let mut w = ColorschemeWriter::new(&palette);
     w.term_colors = [
         "normal", "contrast", "normal", "contrast", "normal", "contrast", "normal", "contrast",
         "normal", "contrast", "normal", "contrast", "normal", "contrast", "normal", "contrast",
     ];
-    w.write_term_colors().unwrap();
-    let rendered = str::from_utf8(&w.out).unwrap();
+    let mut out = vec![];
+    w.write_term_colors(&mut out).unwrap();
+    let rendered = str::from_utf8(&out).unwrap();
     assert!(rendered.contains("let g:terminal_color_0 = '#123456'"));
     assert!(rendered.contains("let g:terminal_color_1 = '#000000'"));
     assert!(rendered.contains("let g:terminal_color_0 = 123"));
     assert!(rendered.contains("let g:terminal_color_1 = 1"));
-    assert!(rendered.contains("let g:terminal_ansi_colors = ['#123456', '#000000', '#123456', '#000000', '#123456', '#000000', '#123456', '#000000', '#123456', '#000000', '#123456', '#000000', '#123456', '#000000', '#123456', '#000000']"));
+    assert!(rendered.contains("let g:terminal_ansi_colors = ['#123456','#000000','#123456','#000000','#123456','#000000','#123456','#000000','#123456','#000000','#123456','#000000','#123456','#000000','#123456','#000000']"));
 }
 
 #[test]
 fn test_colorscheme_writer() {
     let palette = Palette::default();
-    let w = ColorschemeWriter::new(Vec::new(), &palette);
+    let w = ColorschemeWriter::new(&palette);
 
     // Check duplicate highlights
     let mut unique_check = HashSet::new();
@@ -226,8 +234,7 @@ fn test_colorscheme_writer() {
     for tc in &w.term_colors {
         assert!(
             w.palette.contains_key(tc),
-            "Terminal color '{}' is not present in color names",
-            tc
+            "Terminal color '{tc}' is not present in color names",
         );
     }
 
@@ -235,25 +242,12 @@ fn test_colorscheme_writer() {
     let re = Regex::new(r"^#[[:xdigit:]]{6}$").unwrap();
     for (name, c) in w.palette.iter() {
         match c.gui {
-            ColorCode::Normal(c) => assert!(
-                re.is_match(c),
-                "'{}' is invalid color code at '{}'",
-                c,
-                name
-            ),
+            ColorCode::Normal(c) => {
+                assert!(re.is_match(c), "'{c}' is invalid color code at '{name}'");
+            }
             ColorCode::Contrast(c1, c2) => {
-                assert!(
-                    re.is_match(c1),
-                    "'{}' is invalid color code at '{}'",
-                    c1,
-                    name
-                );
-                assert!(
-                    re.is_match(c2),
-                    "'{}' is invalid color code at '{}'",
-                    c2,
-                    name
-                );
+                assert!(re.is_match(c1), "'{c1}' is invalid color code at '{name}'");
+                assert!(re.is_match(c2), "'{c2}' is invalid color code at '{name}'");
             }
         }
     }
@@ -285,7 +279,9 @@ fn test_write_airline_theme() {
         },
     );
 
-    let theme = AirlineThemeColors {
+    let palette = Palette(m);
+    let w = AirlineThemeWriter {
+        palette: &palette,
         modes: {
             let mut m = HashMap::new();
             m.insert(
@@ -346,12 +342,9 @@ fn test_write_airline_theme() {
         warning: ("color2", "color1"),
     };
 
-    let palette = Palette(m);
-    let mut w = AirlineThemeWriter::new(Vec::new(), &palette);
-    w.theme = theme;
-
-    w.write().unwrap();
-    let rendered = str::from_utf8(&w.out).unwrap();
+    let mut out = vec![];
+    w.write_to(&mut out).unwrap();
+    let rendered = str::from_utf8(&out).unwrap();
 
     let re_var = Regex::new(r"^let g:airline#themes#spring_night#palette\.(\w+) =").unwrap();
     let re_palette =
@@ -362,7 +355,7 @@ fn test_write_airline_theme() {
                 Some(found) => {
                     let mode = &found[1];
                     assert!(
-                        w.theme.modes.keys().any(|m| *m == mode
+                        w.modes.keys().any(|m| *m == mode
                             || format!("{}_modified", m) == mode
                             || format!("{}_paste", m) == mode
                             || "accents" == mode),
@@ -413,52 +406,51 @@ fn test_write_alacritty_theme() {
             cterm: ColorCode::Normal(123),
         },
     );
-
-    let normal = AlacrittyFgColors {
-        foreground: "color2",
-        black: "color2",
-        red: "color2",
-        green: "color2",
-        yellow: "color2",
-        blue: "color2",
-        magenta: "color2",
-        cyan: "color2",
-        white: "color2",
-    };
-    let bright = AlacrittyFgColors {
-        foreground: "color3",
-        black: "color3",
-        red: "color3",
-        green: "color3",
-        yellow: "color3",
-        blue: "color3",
-        magenta: "color3",
-        cyan: "color3",
-        white: "color3",
-    };
-    let dim = AlacrittyFgColors {
-        foreground: "color4",
-        black: "color4",
-        red: "color4",
-        green: "color4",
-        yellow: "color4",
-        blue: "color4",
-        magenta: "color4",
-        cyan: "color4",
-        white: "color4",
-    };
-    let theme = AlacrittyTheme {
-        background: "color1",
-        dim,
-        normal,
-        bright,
-    };
-
     let palette = Palette(m);
-    let mut w = AlacrittyThemeWriter::new(Vec::new(), &palette);
-    w.theme = theme;
 
-    w.write().unwrap();
-    let rendered = str::from_utf8(&w.out).unwrap();
+    let w = AlacrittyThemeWriter {
+        palette: &palette,
+        background: "color1",
+        dim: AlacrittyFgColors {
+            name: "dim",
+            foreground: "color4",
+            black: "color4",
+            red: "color4",
+            green: "color4",
+            yellow: "color4",
+            blue: "color4",
+            magenta: "color4",
+            cyan: "color4",
+            white: "color4",
+        },
+        normal: AlacrittyFgColors {
+            name: "normal",
+            foreground: "color2",
+            black: "color2",
+            red: "color2",
+            green: "color2",
+            yellow: "color2",
+            blue: "color2",
+            magenta: "color2",
+            cyan: "color2",
+            white: "color2",
+        },
+        bright: AlacrittyFgColors {
+            name: "bright",
+            foreground: "color3",
+            black: "color3",
+            red: "color3",
+            green: "color3",
+            yellow: "color3",
+            blue: "color3",
+            magenta: "color3",
+            cyan: "color3",
+            white: "color3",
+        },
+    };
+
+    let mut out = vec![];
+    w.write_to(&mut out).unwrap();
+    let rendered = str::from_utf8(&out).unwrap();
     rendered.parse::<DocumentMut>().unwrap();
 }
