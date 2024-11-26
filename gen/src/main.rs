@@ -144,13 +144,13 @@ fn indent(level: u8) -> &'static str {
 }
 
 #[derive(Debug)]
-struct ColorschemeWriter<'a> {
+struct Colorscheme<'a> {
     palette: &'a Palette,
     highlightings: &'a [Highlighting],
     term_colors: [&'static str; 16],
 }
 
-impl<'a> ColorschemeWriter<'a> {
+impl<'a> Colorscheme<'a> {
     fn new(palette: &'a Palette) -> Self {
         macro_rules! highlight {
             ($name:ident, $fg:expr, $bg:expr, $sp:expr, $attr:ident) => {
@@ -673,7 +673,7 @@ struct AirlineModeColors<'a> {
 }
 
 #[derive(Debug)]
-struct AirlineThemeWriter<'a> {
+struct AirlineTheme<'a> {
     palette: &'a Palette,
     modes: HashMap<&'a str, AirlineModeColors<'a>>,
     paste: &'a str,
@@ -682,7 +682,7 @@ struct AirlineThemeWriter<'a> {
     warning: (&'a str, &'a str),
 }
 
-impl<'a> AirlineThemeWriter<'a> {
+impl<'a> AirlineTheme<'a> {
     fn new(palette: &'a Palette) -> Self {
         //  Note: Pairs of strings are color names of (fg, bg)
         Self {
@@ -874,7 +874,7 @@ struct AlacrittyFgColors<'a> {
 }
 
 #[derive(Debug)]
-struct AlacrittyThemeWriter<'a> {
+struct AlacrittyTheme<'a> {
     palette: &'a Palette,
     background: &'a str,
     dim: AlacrittyFgColors<'a>,
@@ -882,7 +882,7 @@ struct AlacrittyThemeWriter<'a> {
     bright: AlacrittyFgColors<'a>,
 }
 
-impl<'a> AlacrittyThemeWriter<'a> {
+impl<'a> AlacrittyTheme<'a> {
     fn new(palette: &'a Palette) -> Self {
         Self {
             palette,
@@ -992,21 +992,21 @@ fn write_to_files(dir: &str) -> Result<()> {
     let path = join(&[dir, "colors", "spring-night.vim"]);
     let file = File::create(&path)
         .with_context(|| format!("Could not create colorscheme file: {:?}", &path))?;
-    ColorschemeWriter::new(&palette)
+    Colorscheme::new(&palette)
         .write_to(&mut BufWriter::new(file))
         .with_context(|| format!("While generate colorscheme file {:?}", &path))?;
 
     let path = join(&[dir, "autoload", "airline", "themes", "spring_night.vim"]);
     let file = File::create(&path)
         .with_context(|| format!("Could not create airline theme file {:?}", &path))?;
-    AirlineThemeWriter::new(&palette)
+    AirlineTheme::new(&palette)
         .write_to(&mut BufWriter::new(file))
         .with_context(|| format!("Could not generate airline theme file {:?}", &path))?;
 
     let path = join(&[dir, "alacritty", "spring_night.toml"]);
     let file = File::create(&path)
         .with_context(|| format!("Could not create alacritty theme file {:?}", &path))?;
-    AlacrittyThemeWriter::new(&palette)
+    AlacrittyTheme::new(&palette)
         .write_to(&mut BufWriter::new(file))
         .with_context(|| format!("Could not generate alacritty theme file {:?}", &path))
 }
@@ -1015,15 +1015,15 @@ fn write_to_stdout() -> Result<()> {
     let palette = Palette::default();
     let mut stdout = io::stdout().lock();
 
-    ColorschemeWriter::new(&palette)
+    Colorscheme::new(&palette)
         .write_to(&mut stdout)
         .context("While writing colorscheme to stdout")?;
     writeln!(stdout)?;
-    AirlineThemeWriter::new(&palette)
+    AirlineTheme::new(&palette)
         .write_to(&mut stdout)
         .context("While writing airline theme to stdout")?;
     writeln!(stdout)?;
-    AlacrittyThemeWriter::new(&palette)
+    AlacrittyTheme::new(&palette)
         .write_to(&mut stdout)
         .context("While writing alacritty theme to stdout")
 }

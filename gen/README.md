@@ -31,10 +31,10 @@ To modify colors or highlights, you can update tables and lists in `src/main.rs`
 
 - `Palette` is a struct to define colors. `Palette::default` method constructs the instance. You
   can find the color palette inside the function body.
-- `ColorschemeWriter` is a struct to generate Vim colorscheme file. `ColorschemeWriter::new` method
+- `Colorscheme` is a struct to generate Vim colorscheme file. `ColorschemeWriter::new` method
   constructs the definition of highlights. Read the function body to know/modify the highlights for
   each syntax items. The terminal colors used in `:terminal` are also defined here.
-- `AirlineThemeWriter` is a struct to generate [vim-airline](https://github.com/vim-airline/vim-airline)
+- `AirlineTheme` is a struct to generate [vim-airline](https://github.com/vim-airline/vim-airline)
   theme file. `AirlineThemeWriter::new` method defines color palettes for each modes.
-- `AlacrittyThemeWriter` is a struct to generate [Alacritty](https://alacritty.org/) theme file.
-  `AlacrittyThemeWriter` defines the terminal ANSI colors.
+- `AlacrittyTheme` is a struct to generate [Alacritty](https://alacritty.org/) theme file.
+  `AlacrittyTheme::new` method defines the terminal ANSI colors.

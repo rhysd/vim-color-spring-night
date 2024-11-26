@@ -13,7 +13,7 @@ fn test_color_code() {
 #[test]
 fn test_write_header() {
     let palette = Palette(HashMap::new());
-    let w = ColorschemeWriter::new(&palette);
+    let w = Colorscheme::new(&palette);
     let mut out = vec![];
     w.write_header(&mut out).unwrap();
     let rendered = str::from_utf8(&out).unwrap();
@@ -24,7 +24,7 @@ fn test_write_header() {
 #[test]
 fn test_write_contrast_color_variables() {
     let palette = Palette(HashMap::new());
-    let w = ColorschemeWriter::new(&palette);
+    let w = Colorscheme::new(&palette);
     let mut out = vec![];
     w.write_contrast_color_variables(&mut out).unwrap();
     assert_eq!(str::from_utf8(&out).unwrap(), "\n");
@@ -59,7 +59,7 @@ fn test_write_contrast_color_variables() {
         },
     );
     let palette = Palette(m);
-    let w = ColorschemeWriter::new(&palette);
+    let w = Colorscheme::new(&palette);
     let mut out = vec![];
     w.write_contrast_color_variables(&mut out).unwrap();
     for (actual, expected) in [
@@ -122,7 +122,7 @@ fn test_write_highlight() {
             },
         );
         let palette = Palette(m);
-        let w = ColorschemeWriter::new(&palette);
+        let w = Colorscheme::new(&palette);
         let mut out = vec![];
         w.write_highlight(&mut out, &hl, indent).unwrap();
         assert_eq!(str::from_utf8(&out).unwrap(), format!("{}\n", expected));
@@ -130,7 +130,7 @@ fn test_write_highlight() {
 
     // Edge case
     let palette = Palette(HashMap::new());
-    let mut w = ColorschemeWriter::new(&palette);
+    let mut w = Colorscheme::new(&palette);
     w.highlightings = &[];
     let mut out = vec![];
     w.write_highlightings(&mut out).unwrap();
@@ -150,7 +150,7 @@ fn test_write_highlights() {
     }
 
     let palette = Palette(HashMap::new());
-    let mut w = ColorschemeWriter::new(&palette);
+    let mut w = Colorscheme::new(&palette);
     let fixed = &[Fixed(hl())];
     w.highlightings = fixed;
     let mut out = vec![];
@@ -162,7 +162,7 @@ fn test_write_highlights() {
         term: hl(),
     }];
     let palette = Palette(HashMap::new());
-    let mut w = ColorschemeWriter::new(&palette);
+    let mut w = Colorscheme::new(&palette);
     w.highlightings = dynamic;
     let mut out = vec![];
     w.write_highlightings(&mut out).unwrap();
@@ -197,7 +197,7 @@ fn test_write_term_colors() {
         },
     );
     let palette = Palette(m);
-    let mut w = ColorschemeWriter::new(&palette);
+    let mut w = Colorscheme::new(&palette);
     w.term_colors = [
         "normal", "contrast", "normal", "contrast", "normal", "contrast", "normal", "contrast",
         "normal", "contrast", "normal", "contrast", "normal", "contrast", "normal", "contrast",
@@ -215,7 +215,7 @@ fn test_write_term_colors() {
 #[test]
 fn test_colorscheme_writer() {
     let palette = Palette::default();
-    let w = ColorschemeWriter::new(&palette);
+    let w = Colorscheme::new(&palette);
 
     // Check duplicate highlights
     let mut unique_check = HashSet::new();
@@ -280,7 +280,7 @@ fn test_write_airline_theme() {
     );
 
     let palette = Palette(m);
-    let w = AirlineThemeWriter {
+    let w = AirlineTheme {
         palette: &palette,
         modes: {
             let mut m = HashMap::new();
@@ -408,7 +408,7 @@ fn test_write_alacritty_theme() {
     );
     let palette = Palette(m);
 
-    let w = AlacrittyThemeWriter {
+    let w = AlacrittyTheme {
         palette: &palette,
         background: "color1",
         dim: AlacrittyFgColors {
