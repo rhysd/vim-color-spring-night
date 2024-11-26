@@ -36,7 +36,7 @@ struct Color {
 type ColorName = Option<&'static str>;
 
 #[derive(Debug, PartialEq)]
-enum HighlightAttr {
+enum HiAttr {
     Nothing,
     Bold,
     Italic,
@@ -48,21 +48,19 @@ enum HighlightAttr {
 }
 
 #[derive(Debug)]
-struct Highlight {
+struct HiCommand {
     name: &'static str,
     fg: ColorName,
     bg: ColorName,
     sp: ColorName,
-    attr: HighlightAttr,
+    attr: HiAttr,
 }
 
 #[derive(Debug)]
-enum Highlighting {
-    Fixed(Highlight),
-    Dynamic { gui: Highlight, term: Highlight }, // Use different highlights for GUI and CUI
+enum Highlight {
+    Fixed(HiCommand),
+    Dynamic { gui: HiCommand, term: HiCommand }, // Use different highlights for GUI and CUI
 }
-
-use Highlighting::{Dynamic, Fixed};
 
 #[derive(Debug)]
 struct Palette(HashMap<&'static str, Color>);
@@ -146,7 +144,7 @@ fn indent(level: u8) -> &'static str {
 #[derive(Debug)]
 struct Colorscheme<'a> {
     palette: &'a Palette,
-    highlightings: &'a [Highlighting],
+    highlights: &'a [Highlight],
     term_colors: [&'static str; 16],
 }
 
@@ -163,18 +161,20 @@ impl<'a> Colorscheme<'a> {
 
         macro_rules! hi {
             ($name:ident, $fg:tt, $bg:tt , $sp:tt, $attr:ident) => {
-                Highlight {
+                HiCommand {
                     name: stringify!($name),
                     fg: color!($fg),
                     bg: color!($bg),
                     sp: color!($sp),
-                    attr: HighlightAttr::$attr,
+                    attr: HiAttr::$attr,
                 }
             };
         }
 
+        use Highlight::{Dynamic, Fixed};
+
         #[rustfmt::skip]
-        let highlightings = &[
+        let highlights = &[
             //        NAME                         FG          BG            SP      ATTRIBUTES
             //---------------------------------------------------------------------------------
             // Normal colors
@@ -391,7 +391,7 @@ impl<'a> Colorscheme<'a> {
 
         Self {
             palette,
-            highlightings,
+            highlights,
             term_colors,
         }
     }
@@ -479,12 +479,7 @@ endif
         writeln!(w)
     }
 
-    fn write_highlight(
-        &self,
-        w: &mut impl Write,
-        highlight: &Highlight,
-        indents: u8,
-    ) -> io::Result<()> {
+    fn write_hi_command(&self, w: &mut impl Write, cmd: &HiCommand, indents: u8) -> io::Result<()> {
         fn arg(name: &str, item: &str, color: &ColorCode<impl Display>) -> String {
             match color {
                 ColorCode::Normal(c) => format!("{item}={c}"),
@@ -495,12 +490,11 @@ endif
             }
         }
 
-        let mut args = vec![format!("{} term=NONE", highlight.name)];
+        let mut args = vec![format!("{} term=NONE", cmd.name)];
 
-        for (color_name, gui, cterm) in [
-            (&highlight.fg, "guifg", "ctermfg"),
-            (&highlight.bg, "guibg", "ctermbg"),
-        ] {
+        for (color_name, gui, cterm) in
+            [(&cmd.fg, "guifg", "ctermfg"), (&cmd.bg, "guibg", "ctermbg")]
+        {
             if let Some(name) = color_name {
                 if name != &"NONE" {
                     let color = &self.palette[name];
@@ -513,21 +507,21 @@ endif
             }
         }
 
-        if let Some(name) = highlight.sp {
+        if let Some(name) = cmd.sp {
             // Note: ctermsp does not exist
             let color = &self.palette[name].gui; // Currently guisp must not be NONE
             args.push(arg(name, "guisp", color));
         }
 
-        let attr_item = match highlight.attr {
-            HighlightAttr::Nothing => "",
-            HighlightAttr::Bold => "s:bold_attr",
-            HighlightAttr::Italic => "s:italic_attr",
-            HighlightAttr::Underline => "gui=underline cterm=underline",
-            HighlightAttr::Reverse => "gui=reverse cterm=reverse",
-            HighlightAttr::None => "gui=NONE cterm=NONE",
-            HighlightAttr::CommentItalic => "g:spring_night_italic_comments ? s:italic_attr : ''",
-            HighlightAttr::Undercurl => "s:undercurl_attr",
+        let attr_item = match cmd.attr {
+            HiAttr::Nothing => "",
+            HiAttr::Bold => "s:bold_attr",
+            HiAttr::Italic => "s:italic_attr",
+            HiAttr::Underline => "gui=underline cterm=underline",
+            HiAttr::Reverse => "gui=reverse cterm=reverse",
+            HiAttr::None => "gui=NONE cterm=NONE",
+            HiAttr::CommentItalic => "g:spring_night_italic_comments ? s:italic_attr : ''",
+            HiAttr::Undercurl => "s:undercurl_attr",
         };
         if !attr_item.is_empty() {
             args.push(attr_item.into());
@@ -551,15 +545,15 @@ endif
         writeln!(w)
     }
 
-    fn write_highlightings(&self, w: &mut impl Write) -> io::Result<()> {
-        for hl in self.highlightings {
+    fn write_highlights(&self, w: &mut impl Write) -> io::Result<()> {
+        for hl in self.highlights {
             match hl {
-                Fixed(hl) => self.write_highlight(w, hl, 0)?,
-                Dynamic { gui, term } => {
+                Highlight::Fixed(hl) => self.write_hi_command(w, hl, 0)?,
+                Highlight::Dynamic { gui, term } => {
                     writeln!(w, "if s:gui_running")?;
-                    self.write_highlight(w, gui, 1)?;
+                    self.write_hi_command(w, gui, 1)?;
                     writeln!(w, "else")?;
-                    self.write_highlight(w, term, 1)?;
+                    self.write_hi_command(w, term, 1)?;
                     writeln!(w, "endif")?;
                 }
             }
@@ -627,7 +621,7 @@ endif
     fn write_to(&mut self, w: &mut impl Write) -> io::Result<()> {
         self.write_header(w)?;
         self.write_contrast_color_variables(w)?;
-        self.write_highlightings(w)?;
+        self.write_highlights(w)?;
         self.write_term_colors(w)
     }
 }
