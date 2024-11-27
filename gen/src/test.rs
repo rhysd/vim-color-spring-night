@@ -411,6 +411,8 @@ fn test_write_alacritty_theme() {
     let w = AlacrittyTheme {
         palette: &palette,
         background: "color1",
+        search_background: "color1",
+        search_focus_background: "color1",
         dim: AlacrittyFgColors {
             name: "dim",
             foreground: "color4",

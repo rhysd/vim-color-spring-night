@@ -42,3 +42,7 @@ blue = "#98b8e6"
 magenta = "#e7d5ff"
 cyan = "#b8e2fb"
 white = "#ffffff"
+
+[colors.search]
+matches = { foreground = "#fffeeb", background = "#a9667a" }
+focused_match = { foreground = "#fffeeb", background = "#e996aa" }

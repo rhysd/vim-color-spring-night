@@ -840,6 +840,8 @@ struct AlacrittyFgColors<'a> {
 struct AlacrittyTheme<'a> {
     palette: &'a Palette,
     background: &'a str,
+    search_background: &'a str,
+    search_focus_background: &'a str,
     dim: AlacrittyFgColors<'a>,
     normal: AlacrittyFgColors<'a>,
     bright: AlacrittyFgColors<'a>,
@@ -886,6 +888,8 @@ impl<'a> AlacrittyTheme<'a> {
                 cyan: "sunny",
                 white: "white",
             },
+            search_background: "sakura",
+            search_focus_background: "kakezakura",
         }
     }
 
@@ -929,6 +933,23 @@ impl<'a> AlacrittyTheme<'a> {
         writeln!(w, "white = \"{}\"",   &self.palette[colors.white].gui.normal())
     }
 
+    fn write_search_colors(&self, w: &mut impl Write) -> io::Result<()> {
+        writeln!(w)?;
+        writeln!(w, "[colors.search]")?;
+        writeln!(
+            w,
+            r#"matches = {{ foreground = "{fg}", background = "{bg}" }}"#,
+            fg = &self.palette[self.normal.foreground].gui.normal(),
+            bg = &self.palette[self.search_background].gui.normal(),
+        )?;
+        writeln!(
+            w,
+            r#"focused_match = {{ foreground = "{fg}", background = "{bg}" }}"#,
+            fg = &self.palette[self.bright.foreground].gui.normal(),
+            bg = &self.palette[self.search_focus_background].gui.normal(),
+        )
+    }
+
     #[rustfmt::skip]
     fn write_to(&self, w: &mut impl Write) -> io::Result<()> {
         self.write_header_comment(w)?;
@@ -936,7 +957,7 @@ impl<'a> AlacrittyTheme<'a> {
         for colors in [&self.dim, &self.normal, &self.bright] {
             self.write_colors_section(w, colors)?;
         }
-        Ok(())
+        self.write_search_colors(w)
     }
 }
 
