@@ -933,7 +933,7 @@ impl<'a> AlacrittyTheme<'a> {
         writeln!(w, "white = \"{}\"",   &self.palette[colors.white].gui.normal())
     }
 
-    fn write_search_colors(&self, w: &mut impl Write) -> io::Result<()> {
+    fn write_search_section(&self, w: &mut impl Write) -> io::Result<()> {
         writeln!(w)?;
         writeln!(w, "[colors.search]")?;
         writeln!(
@@ -957,7 +957,7 @@ impl<'a> AlacrittyTheme<'a> {
         for colors in [&self.dim, &self.normal, &self.bright] {
             self.write_colors_section(w, colors)?;
         }
-        self.write_search_colors(w)
+        self.write_search_section(w)
     }
 }
 

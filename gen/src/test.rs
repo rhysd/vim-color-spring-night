@@ -2,7 +2,7 @@ use super::*;
 use regex::Regex;
 use std::collections::{HashMap, HashSet};
 use std::str;
-use toml_edit::DocumentMut;
+use toml_edit::{DocumentMut, Item as TomlItem, Value as TomlValue};
 
 #[test]
 fn test_color_code() {
@@ -376,83 +376,50 @@ fn test_write_airline_theme() {
 }
 
 #[test]
-fn test_write_alacritty_theme() {
-    let mut m = HashMap::new();
-    m.insert(
-        "color1",
-        Color {
-            gui: ColorCode::Normal("#ff0000"),
-            cterm: ColorCode::Normal(123),
-        },
-    );
-    m.insert(
-        "color2",
-        Color {
-            gui: ColorCode::Normal("#00ff00"),
-            cterm: ColorCode::Normal(123),
-        },
-    );
-    m.insert(
-        "color3",
-        Color {
-            gui: ColorCode::Normal("#0000ff"),
-            cterm: ColorCode::Normal(123),
-        },
-    );
-    m.insert(
-        "color4",
-        Color {
-            gui: ColorCode::Normal("#ffff00"),
-            cterm: ColorCode::Normal(123),
-        },
-    );
-    let palette = Palette(m);
-
-    let w = AlacrittyTheme {
-        palette: &palette,
-        background: "color1",
-        search_background: "color1",
-        search_focus_background: "color1",
-        dim: AlacrittyFgColors {
-            name: "dim",
-            foreground: "color4",
-            black: "color4",
-            red: "color4",
-            green: "color4",
-            yellow: "color4",
-            blue: "color4",
-            magenta: "color4",
-            cyan: "color4",
-            white: "color4",
-        },
-        normal: AlacrittyFgColors {
-            name: "normal",
-            foreground: "color2",
-            black: "color2",
-            red: "color2",
-            green: "color2",
-            yellow: "color2",
-            blue: "color2",
-            magenta: "color2",
-            cyan: "color2",
-            white: "color2",
-        },
-        bright: AlacrittyFgColors {
-            name: "bright",
-            foreground: "color3",
-            black: "color3",
-            red: "color3",
-            green: "color3",
-            yellow: "color3",
-            blue: "color3",
-            magenta: "color3",
-            cyan: "color3",
-            white: "color3",
-        },
-    };
-
+fn test_default_alacritty_theme() {
+    let p = Palette::default();
+    let w = AlacrittyTheme::new(&p);
     let mut out = vec![];
     w.write_to(&mut out).unwrap();
-    let rendered = str::from_utf8(&out).unwrap();
-    rendered.parse::<DocumentMut>().unwrap();
+    let src = str::from_utf8(&out).unwrap();
+    let doc: DocumentMut = src.parse().expect(src);
+
+    let hex_color = Regex::new(r"^#[[:xdigit:]]{6}$").unwrap();
+    let assert_color = move |path: &str| {
+        let mut item = doc.as_item();
+        for idx in path.split('.') {
+            item = item.get(idx).expect(path);
+        }
+        let TomlItem::Value(v) = item else {
+            panic!("{path} is not a primitive: {item:?}");
+        };
+        let TomlValue::String(s) = v else {
+            panic!("{path} is not a string: {v:?}");
+        };
+        let s = s.value().as_str();
+        assert!(hex_color.is_match(s), "{path} is not a hex color: {s:?}");
+    };
+
+    for path in [
+        "background",
+        "foreground",
+        "dim_foreground",
+        "bright_foreground",
+    ] {
+        assert_color(&format!("colors.primary.{path}"));
+    }
+
+    for mode in ["dim", "normal", "bright"] {
+        for color in [
+            "black", "red", "green", "yellow", "blue", "magenta", "cyan", "white",
+        ] {
+            assert_color(&format!("colors.{mode}.{color}"));
+        }
+    }
+
+    for item in ["matches", "focused_match"] {
+        for fgbg in ["foreground", "background"] {
+            assert_color(&format!("colors.search.{item}.{fgbg}"));
+        }
+    }
 }
