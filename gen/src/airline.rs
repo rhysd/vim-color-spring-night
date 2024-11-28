@@ -24,59 +24,63 @@ pub struct AirlineTheme<'a> {
 impl<'a> AirlineTheme<'a> {
     pub fn new(palette: &'a Palette) -> Self {
         //  Note: Pairs of strings are color names of (fg, bg)
+        let mut modes = HashMap::new();
+        let mut mode_colors = |name, colors| assert_eq!(modes.insert(name, colors), None);
+
+        mode_colors(
+            "normal",
+            ModeColors {
+                label: ("bg", "gold"),
+                info: ("gold", "hiddenfg"),
+                main: ("yellow", "bglight"),
+                modified: Some("green"),
+                modified_main: Some("whitegreen"),
+            },
+        );
+        mode_colors(
+            "insert",
+            ModeColors {
+                label: ("bg", "skyblue"),
+                info: ("skyblue", "hiddenfg"),
+                main: ("whiteblue", "bglight"),
+                modified: None,
+                modified_main: None,
+            },
+        );
+        mode_colors(
+            "visual",
+            ModeColors {
+                label: ("bg", "kakezakura"),
+                info: ("kakezakura", "hiddenfg"),
+                main: ("whitepink", "bglight"),
+                modified: Some("sakura"),
+                modified_main: None,
+            },
+        );
+        mode_colors(
+            "replace",
+            ModeColors {
+                label: ("bg", "red"),
+                info: ("red", "hiddenfg"),
+                main: ("whitered", "bglight"),
+                modified: Some("crimson"),
+                modified_main: None,
+            },
+        );
+        mode_colors(
+            "inactive",
+            ModeColors {
+                label: ("weakfg", "bglight"),
+                info: ("weakfg", "bglight"),
+                main: ("weakfg", "bglight"),
+                modified: None,
+                modified_main: None,
+            },
+        );
+
         Self {
             palette,
-            modes: {
-                let mut m = HashMap::new();
-
-                macro_rules! mode_colors {
-                    ($name:ident { $($n:ident: $e:expr,)+ }) => {
-                        assert_eq!(m.insert(stringify!($name), ModeColors { $($n: $e,)+ }), None)
-                    };
-                }
-
-                mode_colors!(normal {
-                    label: ("bg", "gold"),
-                    info: ("gold", "hiddenfg"),
-                    main: ("yellow", "bglight"),
-                    modified: Some("green"),
-                    modified_main: Some("whitegreen"),
-                });
-
-                mode_colors!(insert {
-                    label: ("bg", "skyblue"),
-                    info: ("skyblue", "hiddenfg"),
-                    main: ("whiteblue", "bglight"),
-                    modified: None,
-                    modified_main: None,
-                });
-
-                mode_colors!(visual {
-                    label: ("bg", "kakezakura"),
-                    info: ("kakezakura", "hiddenfg"),
-                    main: ("whitepink", "bglight"),
-                    modified: Some("sakura"),
-                    modified_main: None,
-                });
-
-                mode_colors!(replace {
-                    label: ("bg", "red"),
-                    info: ("red", "hiddenfg"),
-                    main: ("whitered", "bglight"),
-                    modified: Some("crimson"),
-                    modified_main: None,
-                });
-
-                mode_colors!(inactive {
-                    label: ("weakfg", "bglight"),
-                    info: ("weakfg", "bglight"),
-                    main: ("weakfg", "bglight"),
-                    modified: None,
-                    modified_main: None,
-                });
-
-                m
-            },
+            modes,
             paste: "mikan",
             info_mod: "hiddenfg",
             error: ("bg", "red"),
