@@ -4,7 +4,7 @@ mod test;
 use anyhow::{Context, Result};
 use std::collections::HashMap;
 use std::env;
-use std::fmt::Display;
+use std::fmt::{self, Display};
 use std::fs::File;
 use std::io::{self, BufWriter, Write};
 use std::ops::Deref;
@@ -76,62 +76,56 @@ impl Deref for Palette {
 impl Default for Palette {
     #[rustfmt::skip]
     fn default() -> Self {
-        fn normal<T: Display>(c: T) -> ColorCode<T> {
-            ColorCode::Normal(c)
-        }
-
-        fn contrast<T: Display>(high: T, low: T) -> ColorCode<T> {
-            ColorCode::Contrast(high, low)
-        }
+        use ColorCode::{Normal, Contrast};
 
         let mut table = HashMap::new();
         let mut color = |name, gui, cterm| {
             assert_eq!(table.insert(name, Color { gui, cterm }), None);
         };
 
-        color("bg",         contrast("#132132", "#334152"), normal(233));
-        color("bgweaker",   contrast("#213243", "#3a4b5c"), normal(235));
-        color("bgemphasis", normal("#3a4b5c"),              normal(235));
-        color("bglight",    normal("#435060"),              normal(236));
-        color("bgstrong",   normal("#536273"),              normal(238));
-        color("light",      normal("#646f7c"),              normal(60));
-        color("fg",         normal("#fffeeb"),              contrast(231, 230));
-        color("hiddenfg",   normal("#607080"),              normal(60));
-        color("weakfg",     normal("#8d9eb2"),              normal(103));
-        color("weakerfg",   normal("#788898"),              normal(102));
-        color("black",      normal("#111e25"),              normal(233));
-        color("gray",       normal("#545f6e"),              normal(59));
-        color("white",      normal("#ffffff"),              normal(231));
-        color("nasu",       normal("#605779"),              normal(61));
-        color("fuchsia",    normal("#b9a5cf"),              normal(183));
-        color("purple",     normal("#e7d5ff"),              normal(189));
-        color("yaezakura",  normal("#70495d"),              normal(95));
-        color("sakura",     normal("#a9667a"),              normal(132));
-        color("kakezakura", normal("#e996aa"),              normal(175));
-        color("palepink",   normal("#e7c6b7"),              normal(181));
-        color("mikan",      normal("#fb8965"),              normal(209));
-        color("orange",     normal("#f0aa8a"),              normal(216));
-        color("darkgreen",  normal("#5f8770"),              normal(65));
-        color("green",      normal("#a9dd9d"),              normal(150));
-        color("lime",       normal("#c9fd88"),              normal(149));
-        color("blue",       normal("#7098e6"),              normal(69));
-        color("paleblue",   normal("#98b8e6"),              normal(111));
-        color("cloudy",     normal("#90aecb"),              normal(75));
-        color("skyblue",    normal("#a8d2eb"),              normal(153));
-        color("sunny",      normal("#b8e2fb"),              normal(195));
-        color("yellow",     normal("#f0eaaa"),              normal(229));
-        color("gold",       normal("#fedf81"),              normal(222));
-        color("dullgold",   normal("#b6955b"),              normal(221));
-        color("darkgold",   contrast("#484000", "#685800"), normal(58));
-        color("mildred",    normal("#ab6560"),              normal(167));
-        color("red",        normal("#fd8489"),              normal(210));
-        color("crimson",    normal("#ff6a6f"),              normal(203));
-        color("darkblue",   normal("#00091e"),              normal(235));
-        color("whitepink",  normal("#ebeadb"),              normal(224));
-        color("whitegreen", normal("#eaf0aa"),              normal(194));
-        color("whiteblue",  normal("#d8e2f0"),              normal(195));
-        color("whitered",   normal("#ffbfaf"),              normal(217));
-        color("inu",        normal("#ddbc96"),              normal(180));
+        color("bg",         Contrast("#132132", "#334152"), Normal(233));
+        color("bgweaker",   Contrast("#213243", "#3a4b5c"), Normal(235));
+        color("bgemphasis", Normal("#3a4b5c"),              Normal(235));
+        color("bglight",    Normal("#435060"),              Normal(236));
+        color("bgstrong",   Normal("#536273"),              Normal(238));
+        color("light",      Normal("#646f7c"),              Normal(60));
+        color("fg",         Normal("#fffeeb"),              Contrast(231, 230));
+        color("hiddenfg",   Normal("#607080"),              Normal(60));
+        color("weakfg",     Normal("#8d9eb2"),              Normal(103));
+        color("weakerfg",   Normal("#788898"),              Normal(102));
+        color("black",      Normal("#111e25"),              Normal(233));
+        color("gray",       Normal("#545f6e"),              Normal(59));
+        color("white",      Normal("#ffffff"),              Normal(231));
+        color("nasu",       Normal("#605779"),              Normal(61));
+        color("fuchsia",    Normal("#b9a5cf"),              Normal(183));
+        color("purple",     Normal("#e7d5ff"),              Normal(189));
+        color("yaezakura",  Normal("#70495d"),              Normal(95));
+        color("sakura",     Normal("#a9667a"),              Normal(132));
+        color("kakezakura", Normal("#e996aa"),              Normal(175));
+        color("palepink",   Normal("#e7c6b7"),              Normal(181));
+        color("mikan",      Normal("#fb8965"),              Normal(209));
+        color("orange",     Normal("#f0aa8a"),              Normal(216));
+        color("darkgreen",  Normal("#5f8770"),              Normal(65));
+        color("green",      Normal("#a9dd9d"),              Normal(150));
+        color("lime",       Normal("#c9fd88"),              Normal(149));
+        color("blue",       Normal("#7098e6"),              Normal(69));
+        color("paleblue",   Normal("#98b8e6"),              Normal(111));
+        color("cloudy",     Normal("#90aecb"),              Normal(75));
+        color("skyblue",    Normal("#a8d2eb"),              Normal(153));
+        color("sunny",      Normal("#b8e2fb"),              Normal(195));
+        color("yellow",     Normal("#f0eaaa"),              Normal(229));
+        color("gold",       Normal("#fedf81"),              Normal(222));
+        color("dullgold",   Normal("#b6955b"),              Normal(221));
+        color("darkgold",   Contrast("#484000", "#685800"), Normal(58));
+        color("mildred",    Normal("#ab6560"),              Normal(167));
+        color("red",        Normal("#fd8489"),              Normal(210));
+        color("crimson",    Normal("#ff6a6f"),              Normal(203));
+        color("darkblue",   Normal("#00091e"),              Normal(235));
+        color("whitepink",  Normal("#ebeadb"),              Normal(224));
+        color("whitegreen", Normal("#eaf0aa"),              Normal(194));
+        color("whiteblue",  Normal("#d8e2f0"),              Normal(195));
+        color("whitered",   Normal("#ffbfaf"),              Normal(217));
+        color("inu",        Normal("#ddbc96"),              Normal(180));
 
         Self(table)
     }
@@ -822,10 +816,26 @@ let g:airline#themes#spring_night#palette.accents = {{
     }
 }
 
+#[derive(Clone, Copy, Debug)]
+enum AlacrittyBrightness {
+    Dim,
+    Normal,
+    Bright,
+}
+
+impl fmt::Display for AlacrittyBrightness {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Dim => write!(f, "dim"),
+            Self::Normal => write!(f, "normal"),
+            Self::Bright => write!(f, "bright"),
+        }
+    }
+}
+
 #[derive(Debug)]
 struct AlacrittyAnsiColors<'a> {
-    name: &'static str,
-    foreground: &'a str,
+    brightness: AlacrittyBrightness,
     black: &'a str,
     red: &'a str,
     green: &'a str,
@@ -837,18 +847,30 @@ struct AlacrittyAnsiColors<'a> {
 }
 
 #[derive(Debug)]
+struct AlacrittyForegroundColors<'a> {
+    dim: &'a str,
+    normal: &'a str,
+    bright: &'a str,
+    hint_head: &'a str,
+    hint_tail: &'a str,
+}
+
+#[derive(Debug)]
 struct AlacrittyBackgroundColors<'a> {
     normal: &'a str,
     search: &'a str,
     search_focus: &'a str,
     footer_bar: &'a str,
     line_indicator: &'a str,
+    hint_head: &'a str,
+    hint_tail: &'a str,
 }
 
 #[derive(Debug)]
 struct AlacrittyTheme<'a> {
     palette: &'a Palette,
-    background: AlacrittyBackgroundColors<'a>,
+    fg: AlacrittyForegroundColors<'a>,
+    bg: AlacrittyBackgroundColors<'a>,
     dim: AlacrittyAnsiColors<'a>,
     normal: AlacrittyAnsiColors<'a>,
     bright: AlacrittyAnsiColors<'a>,
@@ -858,16 +880,24 @@ impl<'a> AlacrittyTheme<'a> {
     fn new(palette: &'a Palette) -> Self {
         Self {
             palette,
-            background: AlacrittyBackgroundColors {
+            fg: AlacrittyForegroundColors {
+                dim: "yellow",
+                normal: "fg",
+                bright: "fg",
+                hint_head: "bg",
+                hint_tail: "bg",
+            },
+            bg: AlacrittyBackgroundColors {
                 normal: "bg",
                 search: "sakura",
                 search_focus: "kakezakura",
                 footer_bar: "bgstrong",
                 line_indicator: "yaezakura",
+                hint_head: "mikan",
+                hint_tail: "orange",
             },
             dim: AlacrittyAnsiColors {
-                name: "dim",
-                foreground: "yellow",
+                brightness: AlacrittyBrightness::Dim,
                 black: "black",
                 red: "mildred",
                 green: "darkgreen",
@@ -878,8 +908,7 @@ impl<'a> AlacrittyTheme<'a> {
                 white: "gray",
             },
             normal: AlacrittyAnsiColors {
-                name: "normal",
-                foreground: "fg",
+                brightness: AlacrittyBrightness::Normal,
                 black: "black",
                 red: "crimson",
                 green: "green",
@@ -890,8 +919,7 @@ impl<'a> AlacrittyTheme<'a> {
                 white: "white",
             },
             bright: AlacrittyAnsiColors {
-                name: "bright",
-                foreground: "fg",
+                brightness: AlacrittyBrightness::Bright,
                 black: "gray",
                 red: "red",
                 green: "lime",
@@ -927,16 +955,16 @@ impl<'a> AlacrittyTheme<'a> {
     fn write_primary_section(&self, w: &mut impl Write) -> io::Result<()> {
         writeln!(w)?;
         writeln!(w, "[colors.primary]")?;
-        writeln!(w, "background = \"{}\"",        self.color(self.background.normal))?;
-        writeln!(w, "foreground = \"{}\"",        self.color(self.normal.foreground))?;
-        writeln!(w, "dim_foreground = \"{}\"",    self.color(self.dim.foreground))?;
-        writeln!(w, "bright_foreground = \"{}\"", self.color(self.bright.foreground))
+        writeln!(w, "background = \"{}\"",        self.color(self.bg.normal))?;
+        writeln!(w, "foreground = \"{}\"",        self.color(self.fg.normal))?;
+        writeln!(w, "dim_foreground = \"{}\"",    self.color(self.fg.dim))?;
+        writeln!(w, "bright_foreground = \"{}\"", self.color(self.fg.bright))
     }
 
     #[rustfmt::skip]
-    fn write_colors_section(&self, w: &mut impl Write, colors: &AlacrittyAnsiColors<'a>) -> io::Result<()> {
+    fn write_ansi_colors_section(&self, w: &mut impl Write, colors: &AlacrittyAnsiColors<'a>) -> io::Result<()> {
         writeln!(w)?;
-        writeln!(w, "[colors.{}]",      colors.name)?;
+        writeln!(w, "[colors.{}]",      colors.brightness)?;
         writeln!(w, "black = \"{}\"",   self.color(colors.black))?;
         writeln!(w, "red = \"{}\"",     self.color(colors.red))?;
         writeln!(w, "green = \"{}\"",   self.color(colors.green))?;
@@ -953,14 +981,14 @@ impl<'a> AlacrittyTheme<'a> {
         writeln!(
             w,
             r#"matches = {{ foreground = "{fg}", background = "{bg}" }}"#,
-            fg = self.color(self.normal.foreground),
-            bg = self.color(self.background.search),
+            fg = self.color(self.fg.normal),
+            bg = self.color(self.bg.search),
         )?;
         writeln!(
             w,
             r#"focused_match = {{ foreground = "{fg}", background = "{bg}" }}"#,
-            fg = self.color(self.bright.foreground),
-            bg = self.color(self.background.search_focus),
+            fg = self.color(self.fg.bright),
+            bg = self.color(self.bg.search_focus),
         )
     }
 
@@ -978,20 +1006,27 @@ impl<'a> AlacrittyTheme<'a> {
     }
 
     fn write_footer_bar_section(&self, w: &mut impl Write) -> io::Result<()> {
-        self.write_single_color_section(
-            w,
-            "footer_bar",
-            self.normal.foreground,
-            self.background.footer_bar,
-        )
+        self.write_single_color_section(w, "footer_bar", self.fg.normal, self.bg.footer_bar)
     }
 
     fn write_line_indicator_section(&self, w: &mut impl Write) -> io::Result<()> {
-        self.write_single_color_section(
+        self.write_single_color_section(w, "line_indicator", self.fg.normal, self.bg.line_indicator)
+    }
+
+    fn write_hints_section(&self, w: &mut impl Write) -> io::Result<()> {
+        writeln!(w)?;
+        writeln!(w, "[colors.hints]")?;
+        writeln!(
             w,
-            "line_indicator",
-            self.normal.foreground,
-            self.background.line_indicator,
+            r#"start = {{ foreground = "{fg}", background = "{bg}" }}"#,
+            fg = self.color(self.fg.hint_head),
+            bg = self.color(self.bg.hint_head),
+        )?;
+        writeln!(
+            w,
+            r#"end = {{ foreground = "{fg}", background = "{bg}" }}"#,
+            fg = self.color(self.fg.hint_tail),
+            bg = self.color(self.bg.hint_tail),
         )
     }
 
@@ -999,11 +1034,12 @@ impl<'a> AlacrittyTheme<'a> {
         self.write_header_comment(w)?;
         self.write_primary_section(w)?;
         for colors in [&self.dim, &self.normal, &self.bright] {
-            self.write_colors_section(w, colors)?;
+            self.write_ansi_colors_section(w, colors)?;
         }
         self.write_search_section(w)?;
         self.write_footer_bar_section(w)?;
-        self.write_line_indicator_section(w)
+        self.write_line_indicator_section(w)?;
+        self.write_hints_section(w)
     }
 }
 

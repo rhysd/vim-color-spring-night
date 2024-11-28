@@ -54,3 +54,7 @@ background = "#536273"
 [colors.line_indicator]
 foreground = "#fffeeb"
 background = "#70495d"
+
+[colors.hints]
+start = { foreground = "#132132", background = "#fb8965" }
+end = { foreground = "#132132", background = "#f0aa8a" }
