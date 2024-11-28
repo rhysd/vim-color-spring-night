@@ -739,10 +739,10 @@ let g:airline#themes#spring_night#palette.accents = {{
         &self,
         w: &mut impl Write,
         name: &str,
-        fgbg: (&'a str, &'a str),
+        (fg, bg): (&'a str, &'a str),
     ) -> io::Result<()> {
-        let fg = &self.palette[fgbg.0];
-        let bg = &self.palette[fgbg.1];
+        let fg = &self.palette[fg];
+        let bg = &self.palette[bg];
         writeln!(
             w,
             "\\   'airline_{name}': ['{gui_fg}', '{gui_bg}', {cterm_fg}, {cterm_bg}, ''],",
@@ -822,8 +822,8 @@ let g:airline#themes#spring_night#palette.accents = {{
     }
 }
 
-#[derive(Debug, Default, Clone)]
-struct AlacrittyFgColors<'a> {
+#[derive(Debug)]
+struct AlacrittyAnsiColors<'a> {
     name: &'static str,
     foreground: &'a str,
     black: &'a str,
@@ -837,22 +837,35 @@ struct AlacrittyFgColors<'a> {
 }
 
 #[derive(Debug)]
+struct AlacrittyBackgroundColors<'a> {
+    normal: &'a str,
+    search: &'a str,
+    search_focus: &'a str,
+    footer_bar: &'a str,
+    line_indicator: &'a str,
+}
+
+#[derive(Debug)]
 struct AlacrittyTheme<'a> {
     palette: &'a Palette,
-    background: &'a str,
-    search_background: &'a str,
-    search_focus_background: &'a str,
-    dim: AlacrittyFgColors<'a>,
-    normal: AlacrittyFgColors<'a>,
-    bright: AlacrittyFgColors<'a>,
+    background: AlacrittyBackgroundColors<'a>,
+    dim: AlacrittyAnsiColors<'a>,
+    normal: AlacrittyAnsiColors<'a>,
+    bright: AlacrittyAnsiColors<'a>,
 }
 
 impl<'a> AlacrittyTheme<'a> {
     fn new(palette: &'a Palette) -> Self {
         Self {
             palette,
-            background: "bg",
-            dim: AlacrittyFgColors {
+            background: AlacrittyBackgroundColors {
+                normal: "bg",
+                search: "sakura",
+                search_focus: "kakezakura",
+                footer_bar: "bgstrong",
+                line_indicator: "yaezakura",
+            },
+            dim: AlacrittyAnsiColors {
                 name: "dim",
                 foreground: "yellow",
                 black: "black",
@@ -864,7 +877,7 @@ impl<'a> AlacrittyTheme<'a> {
                 cyan: "cloudy",
                 white: "gray",
             },
-            normal: AlacrittyFgColors {
+            normal: AlacrittyAnsiColors {
                 name: "normal",
                 foreground: "fg",
                 black: "black",
@@ -876,7 +889,7 @@ impl<'a> AlacrittyTheme<'a> {
                 cyan: "skyblue",
                 white: "white",
             },
-            bright: AlacrittyFgColors {
+            bright: AlacrittyAnsiColors {
                 name: "bright",
                 foreground: "fg",
                 black: "gray",
@@ -888,8 +901,6 @@ impl<'a> AlacrittyTheme<'a> {
                 cyan: "sunny",
                 white: "white",
             },
-            search_background: "sakura",
-            search_focus_background: "kakezakura",
         }
     }
 
@@ -916,14 +927,14 @@ impl<'a> AlacrittyTheme<'a> {
     fn write_primary_section(&self, w: &mut impl Write) -> io::Result<()> {
         writeln!(w)?;
         writeln!(w, "[colors.primary]")?;
-        writeln!(w, "background = \"{}\"",        self.color(self.background))?;
+        writeln!(w, "background = \"{}\"",        self.color(self.background.normal))?;
         writeln!(w, "foreground = \"{}\"",        self.color(self.normal.foreground))?;
         writeln!(w, "dim_foreground = \"{}\"",    self.color(self.dim.foreground))?;
         writeln!(w, "bright_foreground = \"{}\"", self.color(self.bright.foreground))
     }
 
     #[rustfmt::skip]
-    fn write_colors_section(&self, w: &mut impl Write, colors: &AlacrittyFgColors<'a>) -> io::Result<()> {
+    fn write_colors_section(&self, w: &mut impl Write, colors: &AlacrittyAnsiColors<'a>) -> io::Result<()> {
         writeln!(w)?;
         writeln!(w, "[colors.{}]",      colors.name)?;
         writeln!(w, "black = \"{}\"",   self.color(colors.black))?;
@@ -943,13 +954,44 @@ impl<'a> AlacrittyTheme<'a> {
             w,
             r#"matches = {{ foreground = "{fg}", background = "{bg}" }}"#,
             fg = self.color(self.normal.foreground),
-            bg = self.color(self.search_background),
+            bg = self.color(self.background.search),
         )?;
         writeln!(
             w,
             r#"focused_match = {{ foreground = "{fg}", background = "{bg}" }}"#,
             fg = self.color(self.bright.foreground),
-            bg = self.color(self.search_focus_background),
+            bg = self.color(self.background.search_focus),
+        )
+    }
+
+    fn write_single_color_section(
+        &self,
+        w: &mut impl Write,
+        name: &str,
+        fg: &str,
+        bg: &str,
+    ) -> io::Result<()> {
+        writeln!(w)?;
+        writeln!(w, "[colors.{name}]")?;
+        writeln!(w, "foreground = \"{}\"", &self.color(fg))?;
+        writeln!(w, "background = \"{}\"", &self.color(bg))
+    }
+
+    fn write_footer_bar_section(&self, w: &mut impl Write) -> io::Result<()> {
+        self.write_single_color_section(
+            w,
+            "footer_bar",
+            self.normal.foreground,
+            self.background.footer_bar,
+        )
+    }
+
+    fn write_line_indicator_section(&self, w: &mut impl Write) -> io::Result<()> {
+        self.write_single_color_section(
+            w,
+            "line_indicator",
+            self.normal.foreground,
+            self.background.line_indicator,
         )
     }
 
@@ -959,7 +1001,9 @@ impl<'a> AlacrittyTheme<'a> {
         for colors in [&self.dim, &self.normal, &self.bright] {
             self.write_colors_section(w, colors)?;
         }
-        self.write_search_section(w)
+        self.write_search_section(w)?;
+        self.write_footer_bar_section(w)?;
+        self.write_line_indicator_section(w)
     }
 }
 

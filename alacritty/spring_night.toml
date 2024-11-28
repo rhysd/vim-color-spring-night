@@ -46,3 +46,11 @@ white = "#ffffff"
 [colors.search]
 matches = { foreground = "#fffeeb", background = "#a9667a" }
 focused_match = { foreground = "#fffeeb", background = "#e996aa" }
+
+[colors.footer_bar]
+foreground = "#fffeeb"
+background = "#536273"
+
+[colors.line_indicator]
+foreground = "#fffeeb"
+background = "#70495d"

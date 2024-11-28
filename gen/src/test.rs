@@ -401,8 +401,8 @@ fn test_default_alacritty_theme() {
     };
 
     for path in [
-        "background",
         "foreground",
+        "background",
         "dim_foreground",
         "bright_foreground",
     ] {
@@ -417,9 +417,14 @@ fn test_default_alacritty_theme() {
         }
     }
 
-    for item in ["matches", "focused_match"] {
-        for fgbg in ["foreground", "background"] {
-            assert_color(&format!("colors.search.{item}.{fgbg}"));
+    for section in [
+        "search.matches",
+        "search.focused_match",
+        "footer_bar",
+        "line_indicator",
+    ] {
+        for color in ["foreground", "background"] {
+            assert_color(&format!("colors.{section}.{color}"));
         }
     }
 }
