@@ -48,6 +48,7 @@ pub struct AlacrittyTheme<'a> {
     line_indicator: Color<'a>,
     hint_head: Color<'a>,
     hint_tail: Color<'a>,
+    selection: Color<'a>,
 }
 
 impl<'a> AlacrittyTheme<'a> {
@@ -97,6 +98,7 @@ impl<'a> AlacrittyTheme<'a> {
             line_indicator: ("fg", "yaezakura"),
             hint_head: ("bg", "mikan"),
             hint_tail: ("bg", "orange"),
+            selection: ("fg", "sakura"),
         }
     }
 
@@ -165,6 +167,14 @@ impl<'a> AlacrittyTheme<'a> {
         self.write_color(w, "focused_match", self.search_focus)
     }
 
+    fn write_selection_section(&self, w: &mut impl Write) -> Result<()> {
+        let (fg, bg) = self.selection;
+        writeln!(w)?;
+        writeln!(w, "[colors.selection]")?;
+        writeln!(w, "text = \"{}\"", self.color(fg))?;
+        writeln!(w, "background = \"{}\"", self.color(bg))
+    }
+
     fn write_hints_section(&self, w: &mut impl Write) -> Result<()> {
         writeln!(w)?;
         writeln!(w, "[colors.hints]")?;
@@ -179,6 +189,7 @@ impl<'a> AlacrittyTheme<'a> {
         for colors in [&self.dim, &self.normal, &self.bright] {
             self.write_ansi_colors_section(w, colors)?;
         }
+        self.write_selection_section(w)?;
         self.write_search_section(w)?;
         self.write_hints_section(w)
     }
