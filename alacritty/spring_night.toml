@@ -49,7 +49,7 @@ white = "#ffffff"
 
 [colors.search]
 matches = { foreground = "#fffeeb", background = "#a9667a" }
-focused_match = { foreground = "#fffeeb", background = "#e996aa" }
+focused_match = { foreground = "#ffffff", background = "#e996aa" }
 
 [colors.hints]
 start = { foreground = "#132132", background = "#fb8965" }

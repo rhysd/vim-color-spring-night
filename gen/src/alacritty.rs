@@ -22,6 +22,7 @@ impl fmt::Display for Brightness {
 #[derive(Debug)]
 struct AnsiColors<'a> {
     brightness: Brightness,
+    foreground: &'a str,
     black: &'a str,
     red: &'a str,
     green: &'a str,
@@ -32,58 +33,31 @@ struct AnsiColors<'a> {
     white: &'a str,
 }
 
-#[derive(Debug)]
-struct ForegroundColors<'a> {
-    dim: &'a str,
-    normal: &'a str,
-    bright: &'a str,
-    hint_head: &'a str,
-    hint_tail: &'a str,
-}
-
-#[derive(Debug)]
-struct BackgroundColors<'a> {
-    normal: &'a str,
-    search: &'a str,
-    search_focus: &'a str,
-    footer_bar: &'a str,
-    line_indicator: &'a str,
-    hint_head: &'a str,
-    hint_tail: &'a str,
-}
+type Color<'a> = (&'a str, &'a str); // Pair of foreground/background colors
 
 #[derive(Debug)]
 pub struct AlacrittyTheme<'a> {
     palette: &'a Palette,
-    fg: ForegroundColors<'a>,
-    bg: BackgroundColors<'a>,
+    background: &'a str,
     dim: AnsiColors<'a>,
     normal: AnsiColors<'a>,
     bright: AnsiColors<'a>,
+    search: Color<'a>,
+    search_focus: Color<'a>,
+    footer_bar: Color<'a>,
+    line_indicator: Color<'a>,
+    hint_head: Color<'a>,
+    hint_tail: Color<'a>,
 }
 
 impl<'a> AlacrittyTheme<'a> {
     pub fn new(palette: &'a Palette) -> Self {
         Self {
             palette,
-            fg: ForegroundColors {
-                dim: "yellow",
-                normal: "fg",
-                bright: "fg",
-                hint_head: "bg",
-                hint_tail: "bg",
-            },
-            bg: BackgroundColors {
-                normal: "bg",
-                search: "sakura",
-                search_focus: "kakezakura",
-                footer_bar: "bgstrong",
-                line_indicator: "yaezakura",
-                hint_head: "mikan",
-                hint_tail: "orange",
-            },
+            background: "bg",
             dim: AnsiColors {
                 brightness: Brightness::Dim,
+                foreground: "yellow",
                 black: "black",
                 red: "mildred",
                 green: "darkgreen",
@@ -95,6 +69,7 @@ impl<'a> AlacrittyTheme<'a> {
             },
             normal: AnsiColors {
                 brightness: Brightness::Normal,
+                foreground: "fg",
                 black: "black",
                 red: "crimson",
                 green: "green",
@@ -106,6 +81,7 @@ impl<'a> AlacrittyTheme<'a> {
             },
             bright: AnsiColors {
                 brightness: Brightness::Bright,
+                foreground: "fg",
                 black: "gray",
                 red: "red",
                 green: "lime",
@@ -115,6 +91,12 @@ impl<'a> AlacrittyTheme<'a> {
                 cyan: "sunny",
                 white: "white",
             },
+            search: ("fg", "sakura"),
+            search_focus: ("white", "kakezakura"),
+            footer_bar: ("fg", "bgstrong"),
+            line_indicator: ("fg", "yaezakura"),
+            hint_head: ("bg", "mikan"),
+            hint_tail: ("bg", "orange"),
         }
     }
 
@@ -122,7 +104,7 @@ impl<'a> AlacrittyTheme<'a> {
         self.palette[name].gui.normal()
     }
 
-    fn write_color(&self, w: &mut impl Write, name: &str, fg: &str, bg: &str) -> Result<()> {
+    fn write_color(&self, w: &mut impl Write, name: &str, (fg, bg): Color<'_>) -> Result<()> {
         let (fg, bg) = (self.color(fg), self.color(bg));
         writeln!(
             w,
@@ -148,18 +130,18 @@ impl<'a> AlacrittyTheme<'a> {
     fn write_root_section(&self, w: &mut impl Write) -> Result<()> {
         writeln!(w)?;
         writeln!(w, "[colors]")?;
-        self.write_color(w, "footer_bar", self.fg.normal, self.bg.footer_bar)?;
-        self.write_color(w, "line_indicator", self.fg.normal, self.bg.line_indicator)
+        self.write_color(w, "footer_bar", self.footer_bar)?;
+        self.write_color(w, "line_indicator", self.line_indicator)
     }
 
     #[rustfmt::skip]
     fn write_primary_section(&self, w: &mut impl Write) -> Result<()> {
         writeln!(w)?;
         writeln!(w, "[colors.primary]")?;
-        writeln!(w, "background = \"{}\"",        self.color(self.bg.normal))?;
-        writeln!(w, "foreground = \"{}\"",        self.color(self.fg.normal))?;
-        writeln!(w, "dim_foreground = \"{}\"",    self.color(self.fg.dim))?;
-        writeln!(w, "bright_foreground = \"{}\"", self.color(self.fg.bright))
+        writeln!(w, "background = \"{}\"",        self.color(self.background))?;
+        writeln!(w, "foreground = \"{}\"",        self.color(self.normal.foreground))?;
+        writeln!(w, "dim_foreground = \"{}\"",    self.color(self.dim.foreground))?;
+        writeln!(w, "bright_foreground = \"{}\"", self.color(self.bright.foreground))
     }
 
     #[rustfmt::skip]
@@ -179,15 +161,15 @@ impl<'a> AlacrittyTheme<'a> {
     fn write_search_section(&self, w: &mut impl Write) -> Result<()> {
         writeln!(w)?;
         writeln!(w, "[colors.search]")?;
-        self.write_color(w, "matches", self.fg.normal, self.bg.search)?;
-        self.write_color(w, "focused_match", self.fg.bright, self.bg.search_focus)
+        self.write_color(w, "matches", self.search)?;
+        self.write_color(w, "focused_match", self.search_focus)
     }
 
     fn write_hints_section(&self, w: &mut impl Write) -> Result<()> {
         writeln!(w)?;
         writeln!(w, "[colors.hints]")?;
-        self.write_color(w, "start", self.fg.hint_head, self.bg.hint_head)?;
-        self.write_color(w, "end", self.fg.hint_tail, self.bg.hint_tail)
+        self.write_color(w, "start", self.hint_head)?;
+        self.write_color(w, "end", self.hint_tail)
     }
 
     pub fn write_to(&self, w: &mut impl Write) -> Result<()> {
