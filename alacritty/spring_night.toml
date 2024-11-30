@@ -56,5 +56,5 @@ matches = { foreground = "#fffeeb", background = "#a9667a" }
 focused_match = { foreground = "#ffffff", background = "#e996aa" }
 
 [colors.hints]
-start = { foreground = "#132132", background = "#fb8965" }
-end = { foreground = "#132132", background = "#f0aa8a" }
+start = { foreground = "#ffffff", background = "#70495d" }
+end = { foreground = "#fffeeb", background = "#a9667a" }

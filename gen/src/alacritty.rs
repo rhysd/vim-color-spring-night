@@ -97,8 +97,8 @@ impl<'a> AlacrittyTheme<'a> {
             selection: ("fg", "sakura"),
             footer_bar: ("fg", "bgstrong"),
             line_indicator: ("fg", "yaezakura"),
-            hint_head: ("bg", "mikan"),
-            hint_tail: ("bg", "orange"),
+            hint_head: ("white", "yaezakura"),
+            hint_tail: ("fg", "sakura"),
         }
     }
 
