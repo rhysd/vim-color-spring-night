@@ -48,21 +48,14 @@ fn write_to_files(dir: &str) -> Result<()> {
         .with_context(|| format!("Could not write to alacritty theme file {:?}", &path))
 }
 
-fn write_to_stdout() -> Result<()> {
+fn write_to(w: &mut impl Write) -> Result<()> {
     let palette = Palette::default();
-    let mut stdout = io::stdout().lock();
-
-    Colorscheme::new(&palette)
-        .write_to(&mut stdout)
-        .context("Could not write colorscheme to stdout")?;
-    writeln!(stdout)?;
-    AirlineTheme::new(&palette)
-        .write_to(&mut stdout)
-        .context("Could not write airline theme to stdout")?;
-    writeln!(stdout)?;
-    AlacrittyTheme::new(&palette)
-        .write_to(&mut stdout)
-        .context("Could not write alacritty theme to stdout")
+    Colorscheme::new(&palette).write_to(w)?;
+    writeln!(w)?;
+    AirlineTheme::new(&palette).write_to(w)?;
+    writeln!(w)?;
+    AlacrittyTheme::new(&palette).write_to(w)?;
+    Ok(())
 }
 
 fn main() -> Result<()> {
@@ -89,6 +82,18 @@ fn main() -> Result<()> {
     if let Some(dir) = matches.opt_str("d") {
         write_to_files(&dir)
     } else {
-        write_to_stdout()
+        write_to(&mut io::stdout().lock()).context("Could not write to stdout")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_write_to_stdout_successfully() {
+        let mut stdout = vec![];
+        write_to(&mut stdout).unwrap();
+        assert!(!stdout.is_empty());
     }
 }

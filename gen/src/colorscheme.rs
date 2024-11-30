@@ -732,7 +732,7 @@ mod tests {
     }
 
     #[test]
-    fn test_hilight_uniqueness() {
+    fn test_highlight_uniqueness() {
         let palette = Palette::default();
         let w = Colorscheme::new(&palette);
         let mut seen = HashSet::new();

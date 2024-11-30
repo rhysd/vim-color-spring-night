@@ -44,11 +44,11 @@ pub struct AlacrittyTheme<'a> {
     bright: AnsiColors<'a>,
     search: Color<'a>,
     search_focus: Color<'a>,
+    selection: Color<'a>,
     footer_bar: Color<'a>,
     line_indicator: Color<'a>,
     hint_head: Color<'a>,
     hint_tail: Color<'a>,
-    selection: Color<'a>,
 }
 
 impl<'a> AlacrittyTheme<'a> {
@@ -94,11 +94,11 @@ impl<'a> AlacrittyTheme<'a> {
             },
             search: ("fg", "sakura"),
             search_focus: ("white", "kakezakura"),
+            selection: ("fg", "sakura"),
             footer_bar: ("fg", "bgstrong"),
             line_indicator: ("fg", "yaezakura"),
             hint_head: ("bg", "mikan"),
             hint_tail: ("bg", "orange"),
-            selection: ("fg", "sakura"),
         }
     }
 
