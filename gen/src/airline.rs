@@ -13,7 +13,7 @@ struct ModeColors<'a> {
 
 #[derive(Debug)]
 pub struct AirlineTheme<'a> {
-    palette: &'a Palette,
+    palette: &'a Palette<'a>,
     modes: HashMap<&'a str, ModeColors<'a>>,
     paste: &'a str,
     info_mod: &'a str,

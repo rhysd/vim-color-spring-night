@@ -3,8 +3,8 @@ use std::fmt::Display;
 use std::ops::Deref;
 
 #[derive(Debug, PartialEq)]
-pub struct Color {
-    pub gui: ColorCode<&'static str>,
+pub struct Color<'a> {
+    pub gui: ColorCode<&'a str>,
     pub cterm: ColorCode<u8>,
 }
 
@@ -23,26 +23,26 @@ impl<T: Display> ColorCode<T> {
     }
 }
 
-type Colors = HashMap<&'static str, Color>;
+type Colors<'a> = HashMap<&'a str, Color<'a>>;
 
 #[derive(Debug)]
-pub struct Palette(Colors);
+pub struct Palette<'a>(Colors<'a>);
 
-impl Deref for Palette {
-    type Target = Colors;
+impl<'a> Deref for Palette<'a> {
+    type Target = Colors<'a>;
 
     fn deref(&self) -> &Self::Target {
         &self.0
     }
 }
 
-impl From<Colors> for Palette {
-    fn from(m: Colors) -> Self {
+impl<'a> From<Colors<'a>> for Palette<'a> {
+    fn from(m: Colors<'a>) -> Self {
         Self(m)
     }
 }
 
-impl Default for Palette {
+impl Default for Palette<'_> {
     #[rustfmt::skip]
     fn default() -> Self {
         use ColorCode::{Normal, Contrast};

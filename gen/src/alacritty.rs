@@ -37,7 +37,7 @@ type Color<'a> = (&'a str, &'a str); // Pair of foreground/background colors
 
 #[derive(Debug)]
 pub struct AlacrittyTheme<'a> {
-    palette: &'a Palette,
+    palette: &'a Palette<'a>,
     background: &'a str,
     dim: AnsiColors<'a>,
     normal: AnsiColors<'a>,

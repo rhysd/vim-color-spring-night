@@ -39,7 +39,7 @@ fn indent(level: u8) -> &'static str {
 
 #[derive(Debug)]
 pub struct Colorscheme<'a> {
-    palette: &'a Palette,
+    palette: &'a Palette<'a>,
     highlights: &'a [Highlight],
     term_colors: [&'static str; 16],
 }
