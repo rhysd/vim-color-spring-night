@@ -168,6 +168,13 @@ hi htmlLinkText term=NONE guifg=#a8d2eb ctermfg=153
 hi htmlTagName term=NONE guifg=#f0aa8a ctermfg=216
 exe 'hi' 'javaScriptBraces term=NONE' 'guifg=#fffeeb' 'ctermfg='.s:fg_cterm
 hi makeCommands term=NONE guifg=#f0eaaa ctermfg=229
+hi manFooter term=NONE guifg=#a9dd9d ctermfg=150
+hi manHeader term=NONE guifg=#a9dd9d ctermfg=150
+hi manLongOptionDesc term=NONE guifg=#f0eaaa ctermfg=229
+hi manOptionDesc term=NONE guifg=#f0eaaa ctermfg=229
+hi manReference term=NONE guifg=#a8d2eb ctermfg=153
+hi manSectionHeading term=NONE guifg=#fedf81 ctermfg=222
+hi manSubHeading term=NONE guifg=#f0aa8a ctermfg=216
 hi markdownCode term=NONE guifg=#f0eaaa ctermfg=229
 hi markdownUrl term=NONE guifg=#8d9eb2 ctermfg=103
 hi ocamlConstructor term=NONE guifg=#fedf81 ctermfg=222

@@ -133,6 +133,7 @@ Color layouts are optimized for following filetypes/plugins:
 - `help`
 - `html`
 - `javascript`
+- `man`
 - `markdown`
 - `ocaml`
 - `python`
