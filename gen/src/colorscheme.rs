@@ -179,6 +179,7 @@ impl<'a> Colorscheme<'a> {
             Fixed(hi!(gitCommitSummary,            yellow,     -,            -,      Nothing)),
             Fixed(hi!(gitCommitSelectedFile,       skyblue,    -,            -,      Nothing)),
             Fixed(hi!(gitconfigSection,            skyblue,    -,            -,      Bold)),
+            Fixed(hi!(glslQualifier,               yellow,     -,            -,      Nothing)),
             Fixed(hi!(goBuiltins,                  red,        -,            -,      Nothing)),
             Fixed(hi!(helpExample,                 skyblue,    -,            -,      Nothing)),
             Fixed(hi!(helpCommand,                 purple,     -,            -,      Nothing)),

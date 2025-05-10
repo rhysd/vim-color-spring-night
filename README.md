@@ -129,6 +129,7 @@ Color layouts are optimized for following filetypes/plugins:
 - `cpp`
 - `diff`
 - `gitcommit`
+- `glsl`
 - `go`
 - `help`
 - `html`

@@ -160,6 +160,7 @@ hi gitCommitOverflow term=NONE guibg=#ab6560 ctermbg=167
 hi gitCommitSummary term=NONE guifg=#f0eaaa ctermfg=229
 hi gitCommitSelectedFile term=NONE guifg=#a8d2eb ctermfg=153
 exe 'hi' 'gitconfigSection term=NONE' 'guifg=#a8d2eb' 'ctermfg=153' s:bold_attr
+hi glslQualifier term=NONE guifg=#f0eaaa ctermfg=229
 hi goBuiltins term=NONE guifg=#fd8489 ctermfg=210
 hi helpExample term=NONE guifg=#a8d2eb ctermfg=153
 hi helpCommand term=NONE guifg=#e7d5ff ctermfg=189
